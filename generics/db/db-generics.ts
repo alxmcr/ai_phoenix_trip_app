@@ -7,3 +7,11 @@ export interface DBOperations<T> {
   insertMany(items: Partial<T>[]): Promise<T[]>;
   filter(filters: Partial<T>): Promise<T[]>;
 }
+
+export interface DBAggregateFunctions<T> {
+  count(): Promise<number>;
+  sum(): Promise<number>;
+  avg(): Promise<number>;
+  min(): Promise<number>;
+  max(): Promise<number>;
+}
