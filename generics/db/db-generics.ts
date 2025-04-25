@@ -10,8 +10,4 @@ export interface DBOperations<T> {
 
 export interface DBAggregateFunctions<T> {
   count(): Promise<number>;
-  sum(): Promise<number>;
-  avg(): Promise<number>;
-  min(): Promise<number>;
-  max(): Promise<number>;
 }

@@ -97,28 +97,4 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
     const result = await this.pool.query(query);
     return result.rows[0].count;
   }
-
-  async sum(): Promise<number> {
-    const query = `SELECT SUM(rating) FROM recommendations`;
-    const result = await this.pool.query(query);
-    return result.rows[0].sum;
-  }
-
-  async avg(): Promise<number> {
-    const query = `SELECT AVG(rating) FROM recommendations`;
-    const result = await this.pool.query(query);
-    return result.rows[0].avg;
-  }
-
-  async min(): Promise<number> {
-    const query = `SELECT MIN(rating) FROM recommendations`;
-    const result = await this.pool.query(query);
-    return result.rows[0].min;
-  }
-
-  async max(): Promise<number> {
-    const query = `SELECT MAX(rating) FROM recommendations`;
-    const result = await this.pool.query(query);
-    return result.rows[0].max;
-  }
 }
