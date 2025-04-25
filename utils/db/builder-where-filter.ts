@@ -1,16 +1,16 @@
-type FilterValue = string | number;
+type FilterValue = string | number | boolean;
 type Filters<T> = Partial<Record<keyof T, FilterValue>>;
 
 export class WhereFilterBuilder<T> {
   private filters: string[] = [];
   private values: FilterValue[] = [];
 
-  where(filters: Filters<T>) {
+  where(filters: Filters<T>): string {
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         const idx = this.values.length + 1;
 
-        // Check if the field is a string or not
+        // Check if the field is a string, number, or boolean
         const columnType = typeof value;
 
         // If the column is a string (e.g., name, email),
@@ -20,6 +20,10 @@ export class WhereFilterBuilder<T> {
           this.values.push(`%${value}%`);
         } else if (columnType === "number") {
           // For numbers (e.g., age, id), use exact matching (=)
+          this.filters.push(`${key} = $${idx}`);
+          this.values.push(value as FilterValue);
+        } else if (columnType === "boolean") {
+          // For booleans, use exact matching (=)
           this.filters.push(`${key} = $${idx}`);
           this.values.push(value as FilterValue);
         }
