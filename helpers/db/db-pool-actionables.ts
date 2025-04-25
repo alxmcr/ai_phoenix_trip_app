@@ -28,12 +28,10 @@ export class DBPoolActionables implements DBOperations<ActionableData> {
     pk_id: string,
     item: Partial<ActionableData>
   ): Promise<ActionableData | null> {
-    // Build the SET clause
     const setClause = Object.keys(item)
       .map((key) => `${key} = $${key}`)
       .join(", ");
 
-    // Update the actionable
     const query = `
       UPDATE actionable
       SET ${setClause}
