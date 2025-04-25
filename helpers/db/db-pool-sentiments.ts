@@ -13,12 +13,12 @@ export class DBPoolSentiments implements IDBPoolSentiments {
   constructor(pool: Pool) {
     this.pool = pool;
   }
-  async read(pk_id: string): Promise<SentimentData | null> {
+  async findUnique(pk_id: string): Promise<SentimentData | null> {
     const query = `SELECT * FROM sentiments WHERE sentiment_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return result.rows[0] || null;
   }
-  async paginate(page: number, pageSize: number): Promise<SentimentData[]> {
+  async paginatexxxx(page: number, pageSize: number): Promise<SentimentData[]> {
     const query = `SELECT * FROM sentiments LIMIT $1 OFFSET $2`;
     const result = await this.pool.query(query, [
       pageSize,
@@ -46,7 +46,7 @@ export class DBPoolSentiments implements IDBPoolSentiments {
     const result = await this.pool.query(query, [pk_id]);
     return (result.rowCount ?? 0) > 0;
   }
-  async insert(item: Partial<SentimentData>): Promise<SentimentData> {
+  async create(item: Partial<SentimentData>): Promise<SentimentData> {
     const query = `INSERT INTO sentiments (${Object.keys(item)
       .map((key) => `${key}`)
       .join(", ")}) VALUES (${Object.keys(item)
@@ -55,7 +55,7 @@ export class DBPoolSentiments implements IDBPoolSentiments {
     const result = await this.pool.query(query, [...Object.values(item)]);
     return result.rows[0];
   }
-  async insertMany(items: Partial<SentimentData>[]): Promise<SentimentData[]> {
+  async insertManyxxxxx(items: Partial<SentimentData>[]): Promise<SentimentData[]> {
     const query = `INSERT INTO sentiments (${Object.keys(items[0])
       .map((key) => `${key}`)
       .join(", ")}) VALUES ${items
@@ -73,7 +73,7 @@ export class DBPoolSentiments implements IDBPoolSentiments {
 
     return result.rows;
   }
-  async filter(filters: Partial<SentimentData>): Promise<SentimentData[]> {
+  async filterxxxxx(filters: Partial<SentimentData>): Promise<SentimentData[]> {
     const whereBuilder = new WhereFilterBuilder<SentimentData>();
     const whereClause = whereBuilder.where(filters);
 

@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   const dbPoolActionables = new DBPoolActionables(pool);
 
-  const actionables = await dbPoolActionables.paginate(
+  const actionables = await dbPoolActionables.paginatexxxx(
     parseInt(page),
     parseInt(pageSize)
   );
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
   const dbPoolActionables = new DBPoolActionables(pool);
 
   const body = await request.json();
-  const actionable = await dbPoolActionables.insert(body);
+  const actionable = await dbPoolActionables.create(body);
 
   const responseMessage = {
     message: "Actionable created successfully",

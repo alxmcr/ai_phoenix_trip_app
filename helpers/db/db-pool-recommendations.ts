@@ -14,13 +14,13 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
     this.pool = pool;
   }
 
-  async read(pk_id: string): Promise<RecommendationData | null> {
+  async findUnique(pk_id: string): Promise<RecommendationData | null> {
     const query = `SELECT * FROM recommendations WHERE recommendation_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return result.rows[0] || null;
   }
 
-  async paginate(
+  async paginatexxxx(
     page: number,
     pageSize: number
   ): Promise<RecommendationData[]> {
@@ -52,7 +52,7 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
     return (result.rowCount ?? 0) > 0;
   }
 
-  async insert(item: Partial<RecommendationData>): Promise<RecommendationData> {
+  async create(item: Partial<RecommendationData>): Promise<RecommendationData> {
     const query = `INSERT INTO recommendations (${Object.keys(item)
       .map((key) => `${key}`)
       .join(", ")}) VALUES (${Object.keys(item)
@@ -62,7 +62,7 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
     return result.rows[0];
   }
 
-  async insertMany(
+  async insertManyxxxxx(
     items: Partial<RecommendationData>[]
   ): Promise<RecommendationData[]> {
     const query = `INSERT INTO recommendations (${Object.keys(items[0])
@@ -81,7 +81,7 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
     return result.rows;
   }
 
-  async filter(
+  async filterxxxxx(
     filters: Partial<RecommendationData>
   ): Promise<RecommendationData[]> {
     const whereBuilder = new WhereFilterBuilder<RecommendationData>();

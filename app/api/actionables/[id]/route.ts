@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
   const dbPoolActionables = new DBPoolActionables(pool);
 
-  const actionable = await dbPoolActionables.read(id);
+  const actionable = await dbPoolActionables.findUnique(id);
 
   return NextResponse.json(actionable, {
     status: HttpResponseCode.OK,

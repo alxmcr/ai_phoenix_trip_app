@@ -14,13 +14,13 @@ export class DBPoolReviews implements IDBPoolReviews {
     this.pool = pool;
   }
 
-  async read(pk_id: string): Promise<ReviewData | null> {
+  async findUnique(pk_id: string): Promise<ReviewData | null> {
     const query = `SELECT * FROM reviews WHERE review_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return result.rows[0] || null;
   }
 
-  async paginate(page: number, pageSize: number): Promise<ReviewData[]> {
+  async paginatexxxx(page: number, pageSize: number): Promise<ReviewData[]> {
     const query = `SELECT * FROM reviews LIMIT $1 OFFSET $2`;
     const result = await this.pool.query(query, [
       pageSize,
@@ -49,7 +49,7 @@ export class DBPoolReviews implements IDBPoolReviews {
     return (result.rowCount ?? 0) > 0;
   }
 
-  async insert(item: Partial<ReviewData>): Promise<ReviewData> {
+  async create(item: Partial<ReviewData>): Promise<ReviewData> {
     const query = `INSERT INTO reviews (${Object.keys(item)
       .map((key) => `${key}`)
       .join(", ")}) VALUES (${Object.keys(item)
@@ -59,7 +59,7 @@ export class DBPoolReviews implements IDBPoolReviews {
     return result.rows[0];
   }
 
-  async insertMany(items: Partial<ReviewData>[]): Promise<ReviewData[]> {
+  async insertManyxxxxx(items: Partial<ReviewData>[]): Promise<ReviewData[]> {
     const query = `INSERT INTO reviews (${Object.keys(items[0])
       .map((key) => `${key}`)
       .join(", ")}) VALUES ${items
@@ -76,7 +76,7 @@ export class DBPoolReviews implements IDBPoolReviews {
     return result.rows;
   }
 
-  async filter(filters: Partial<ReviewData>): Promise<ReviewData[]> {
+  async filterxxxxx(filters: Partial<ReviewData>): Promise<ReviewData[]> {
     const whereBuilder = new WhereFilterBuilder<ReviewData>();
     const whereClause = whereBuilder.where(filters);
 
