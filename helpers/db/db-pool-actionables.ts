@@ -39,42 +39,58 @@ export class DBPoolActionables implements IDBPoolActionables {
     pk_id: string,
     item: Partial<ActionableData>
   ): Promise<ActionableData | null> {
-    const setClause = this.columns
-      .filter((key) => key in item)
-      .map((key, index) => `${key} = $${index + 1}`)
+    const validColumns = this.columns.filter((key) => key in item);
+
+    if (validColumns.length === 0) {
+      throw new Error("No valid columns provided");
+    }
+
+    // Generate the SET clause for the UPDATE statement
+    // For each column, create a parameterized assignment (e.g., "column_name = $2")
+    // The first parameter ($1) is reserved for the WHERE clause (actionable_id)
+    const setClause = validColumns
+      .map((columnName, index) => `${columnName} = $${index + 2}`)
       .join(", ");
 
     const query = `
       UPDATE actionable
       SET ${setClause}
-      WHERE actionable_id = $${
-        this.columns.filter((key) => key in item).length + 1
-      }
+      WHERE actionable_id = $1
       RETURNING *
     `;
 
     const values = [
-      ...this.columns
-        .filter((key) => key in item)
-        .map((key) => item[key as keyof ActionableData]),
       pk_id,
+      ...validColumns.map((key) => item[key as keyof ActionableData]),
     ];
-
     const result = await this.pool.query(query, values);
+
     return result.rows[0] || null;
   }
 
   async create(item: Partial<ActionableData>): Promise<ActionableData> {
     const validColumns = this.columns.filter((key) => key in item);
+    if (validColumns.length === 0) {
+      throw new Error("No valid columns provided");
+    }
+
     const values = validColumns.map((key) => item[key as keyof ActionableData]);
+
+    // Generate SQL parameter placeholders ($1, $2, etc.)
+    const parameterPlaceholders = values
+      .map((_, index) => `$${index + 1}`)
+      .join(", ");
 
     const query = `
       INSERT INTO actionable (${validColumns.join(", ")})
-      VALUES (${values.map((_, index) => `$${index + 1}`).join(", ")})
+      VALUES (${parameterPlaceholders})
       RETURNING *
     `;
 
     const result = await this.pool.query(query, values);
+    if (!result.rows[0]) {
+      throw new Error("Failed to create actionable");
+    }
     return result.rows[0];
   }
 
