@@ -15,9 +15,6 @@ export async function GET(request: NextRequest) {
     parseInt(pageSize)
   );
 
-  // How many pages are there?
-  const totalPages = await dbPoolActionables.count();
-
   return NextResponse.json(actionables, { status: HttpResponseCode.OK });
 }
 
