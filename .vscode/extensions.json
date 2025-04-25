@@ -1,12 +1,14 @@
 {
   "recommendations": [
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
     "BeardedBear.beardedtheme",
     "ahmadawais.shades-of-purple",
     "sdras.night-owl",
     "akamud.vscode-theme-onelight",
     "vscode-icons-team.vscode-icons",
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint",
     "usernamehw.errorlens",
     "ChakrounAnas.turbo-console-log",
     "pomdtr.excalidraw-editor"
