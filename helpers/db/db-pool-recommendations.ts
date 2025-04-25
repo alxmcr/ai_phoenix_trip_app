@@ -1,9 +1,13 @@
-import { DBOperations } from "@/generics/db/db-generics";
+import { DBAggregateFunctions, DBOperations } from "@/generics/db/db-generics";
 import { RecommendationData } from "@/types/db/recommendation";
 import { WhereFilterBuilder } from "@/utils/db/builder-where-filter";
 import { Pool } from "pg";
 
-export class DBPoolRecommendations implements DBOperations<RecommendationData> {
+interface IDBPoolRecommendations
+  extends DBOperations<RecommendationData>,
+    DBAggregateFunctions<RecommendationData> {}
+
+export class DBPoolRecommendations implements IDBPoolRecommendations {
   private pool: Pool;
 
   constructor(pool: Pool) {
@@ -86,5 +90,11 @@ export class DBPoolRecommendations implements DBOperations<RecommendationData> {
     const query = `SELECT * FROM recommendations WHERE ${whereClause}`;
     const result = await this.pool.query(query, [...Object.values(filters)]);
     return result.rows;
+  }
+
+  async count(): Promise<number> {
+    const query = `SELECT COUNT(*) FROM recommendations`;
+    const result = await this.pool.query(query);
+    return result.rows[0].count;
   }
 }

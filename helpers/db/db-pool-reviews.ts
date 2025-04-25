@@ -1,9 +1,13 @@
-import { DBOperations } from "@/generics/db/db-generics";
+import { DBAggregateFunctions, DBOperations } from "@/generics/db/db-generics";
 import { ReviewData } from "@/types/db/review";
 import { WhereFilterBuilder } from "@/utils/db/builder-where-filter";
 import { Pool } from "pg";
 
-export class DBPoolReviews implements DBOperations<ReviewData> {
+interface IDBPoolReviews
+  extends DBOperations<ReviewData>,
+    DBAggregateFunctions<ReviewData> {}
+
+export class DBPoolReviews implements IDBPoolReviews {
   private pool: Pool;
 
   constructor(pool: Pool) {
@@ -79,5 +83,35 @@ export class DBPoolReviews implements DBOperations<ReviewData> {
     const query = `SELECT * FROM reviews WHERE ${whereClause}`;
     const result = await this.pool.query(query, [...Object.values(filters)]);
     return result.rows;
+  }
+
+  async count(): Promise<number> {
+    const query = `SELECT COUNT(*) FROM reviews`;
+    const result = await this.pool.query(query);
+    return result.rows[0].count;
+  }
+
+  async sum(): Promise<number> {
+    const query = `SELECT SUM(rating) FROM reviews`;
+    const result = await this.pool.query(query);
+    return result.rows[0].sum;
+  }
+
+  async avg(): Promise<number> {
+    const query = `SELECT AVG(rating) FROM reviews`;
+    const result = await this.pool.query(query);
+    return result.rows[0].avg;
+  }
+
+  async min(): Promise<number> {
+    const query = `SELECT MIN(rating) FROM reviews`;
+    const result = await this.pool.query(query);
+    return result.rows[0].min;
+  }
+
+  async max(): Promise<number> {
+    const query = `SELECT MAX(rating) FROM reviews`;
+    const result = await this.pool.query(query);
+    return result.rows[0].max;
   }
 }
