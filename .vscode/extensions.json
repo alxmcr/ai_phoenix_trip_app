@@ -8,6 +8,7 @@
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "usernamehw.errorlens",
-    "ChakrounAnas.turbo-console-log"
+    "ChakrounAnas.turbo-console-log",
+    "pomdtr.excalidraw-editor"
   ]
 }
