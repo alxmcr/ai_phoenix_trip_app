@@ -1,9 +1,13 @@
-import { DBOperations } from "@/generics/db/db-generics";
+import { DBAggregateFunctions, DBOperations } from "@/generics/db/db-generics";
 import { SentimentData } from "@/types/db/sentiment";
 import { WhereFilterBuilder } from "@/utils/db/builder-where-filter";
 import { Pool } from "pg";
 
-export class DBPoolSentiments implements DBOperations<SentimentData> {
+interface IDBPoolSentiments
+  extends DBOperations<SentimentData>,
+    DBAggregateFunctions<SentimentData> {}
+
+export class DBPoolSentiments implements IDBPoolSentiments {
   private pool: Pool;
 
   constructor(pool: Pool) {
@@ -77,5 +81,35 @@ export class DBPoolSentiments implements DBOperations<SentimentData> {
     const result = await this.pool.query(query, [...Object.values(filters)]);
 
     return result.rows;
+  }
+
+  async count(): Promise<number> {
+    const query = `SELECT COUNT(*) FROM sentiments`;
+    const result = await this.pool.query(query);
+    return result.rows[0].count;
+  }
+
+  async sum(): Promise<number> {
+    const query = `SELECT SUM(rating) FROM sentiments`;
+    const result = await this.pool.query(query);
+    return result.rows[0].sum;
+  }
+
+  async avg(): Promise<number> {
+    const query = `SELECT AVG(rating) FROM sentiments`;
+    const result = await this.pool.query(query);
+    return result.rows[0].avg;
+  }
+
+  async min(): Promise<number> {
+    const query = `SELECT MIN(rating) FROM sentiments`;
+    const result = await this.pool.query(query);
+    return result.rows[0].min;
+  }
+
+  async max(): Promise<number> {
+    const query = `SELECT MAX(rating) FROM sentiments`;
+    const result = await this.pool.query(query);
+    return result.rows[0].max;
   }
 }

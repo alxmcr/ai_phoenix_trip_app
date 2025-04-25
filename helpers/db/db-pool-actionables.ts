@@ -1,9 +1,13 @@
-import { DBOperations } from "@/generics/db/db-generics";
+import { DBAggregateFunctions, DBOperations } from "@/generics/db/db-generics";
 import { ActionableData } from "@/types/db/actionable";
 import { WhereFilterBuilder } from "@/utils/db/builder-where-filter";
 import { Pool } from "pg";
 
-export class DBPoolActionables implements DBOperations<ActionableData> {
+interface IDBPoolActionables
+  extends DBOperations<ActionableData>,
+    DBAggregateFunctions<ActionableData> {}
+
+export class DBPoolActionables implements IDBPoolActionables {
   private pool: Pool;
 
   constructor(pool: Pool) {
@@ -98,5 +102,35 @@ export class DBPoolActionables implements DBOperations<ActionableData> {
     const result = await this.pool.query(query, [...Object.values(filters)]);
 
     return result.rows;
+  }
+
+  async count(): Promise<number> {
+    const query = `SELECT COUNT(*) FROM actionable`;
+    const result = await this.pool.query(query);
+    return result.rows[0].count;
+  }
+
+  async sum(): Promise<number> {
+    const query = `SELECT SUM(priority) FROM actionable`;
+    const result = await this.pool.query(query);
+    return result.rows[0].sum;
+  }
+
+  async avg(): Promise<number> {
+    const query = `SELECT AVG(rating) FROM actionable`;
+    const result = await this.pool.query(query);
+    return result.rows[0].avg;
+  }
+
+  async min(): Promise<number> {
+    const query = `SELECT MIN(rating) FROM actionable`;
+    const result = await this.pool.query(query);
+    return result.rows[0].min;
+  }
+
+  async max(): Promise<number> {
+    const query = `SELECT MAX(rating) FROM actionable`;
+    const result = await this.pool.query(query);
+    return result.rows[0].max;
   }
 }
