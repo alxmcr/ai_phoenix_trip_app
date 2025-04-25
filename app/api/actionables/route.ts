@@ -1,5 +1,3 @@
-// Resources: https://nextjs.org/docs/app/api-reference/functions/next-response
-
 import pool from "@/config/db/db-config";
 import { HttpResponseCode } from "@/enums/http-response-code";
 import { DBPoolActionables } from "@/helpers/db/db-pool-actionables";
