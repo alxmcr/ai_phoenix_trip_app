@@ -5,7 +5,7 @@ export class WhereFilterBuilder<T> {
   private filters: string[] = [];
   private values: FilterValue[] = [];
 
-  where(filters: Filters<T>) {
+  where(filters: Filters<T>): string {
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         const idx = this.values.length + 1;

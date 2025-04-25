@@ -1,5 +1,6 @@
 import { DBOperations } from "@/generics/db/db-generics";
 import { ActionableData } from "@/types/db/actionable";
+import { WhereFilterBuilder } from "@/utils/db/builder-where-filter";
 import { Pool } from "pg";
 
 export class DBPoolActionables implements DBOperations<ActionableData> {
@@ -46,19 +47,56 @@ export class DBPoolActionables implements DBOperations<ActionableData> {
     return result.rows[0] || null;
   }
 
-  delete(pk_id: string): Promise<boolean> {
-    throw new Error("Method not implemented.");
+  async delete(pk_id: string): Promise<boolean> {
+    const query = `DELETE FROM actionable WHERE actionable_id = $1`;
+    const result = await this.pool.query(query, [pk_id]);
+    return (result.rowCount ?? 0) > 0;
   }
 
-  insert(item: Partial<ActionableData>): Promise<ActionableData> {
-    throw new Error("Method not implemented.");
+  async insert(item: Partial<ActionableData>): Promise<ActionableData> {
+    const query = `INSERT INTO actionable (actionable_id, review_id, priority, department, category, source_aspect, title, description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
+    const result = await this.pool.query(query, [
+      item.actionable_id,
+      item.review_id,
+      item.priority,
+      item.department,
+      item.category,
+      item.source_aspect,
+      item.title,
+      item.description,
+    ]);
+
+    return result.rows[0];
   }
 
-  insertMany(items: Partial<ActionableData>[]): Promise<ActionableData[]> {
-    throw new Error("Method not implemented.");
+  async insertMany(
+    items: Partial<ActionableData>[]
+  ): Promise<ActionableData[]> {
+    const query = `INSERT INTO actionable (actionable_id, review_id, priority, department, category, source_aspect, title, description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
+    const result = await this.pool.query(query, [
+      items.map((item) => [
+        item.actionable_id,
+        item.review_id,
+        item.priority,
+        item.department,
+        item.category,
+        item.source_aspect,
+        item.title,
+        item.description,
+      ]),
+    ]);
+
+    return result.rows;
   }
 
-  filter(filters: Partial<ActionableData>): Promise<ActionableData[]> {
-    throw new Error("Method not implemented.");
+  async filter(filters: Partial<ActionableData>): Promise<ActionableData[]> {
+    const whereBuilder = new WhereFilterBuilder();
+
+    const whereClause = whereBuilder.where(filters);
+
+    const query = `SELECT * FROM actionable WHERE ${whereClause}`;
+    const result = await this.pool.query(query, [...Object.values(filters)]);
+
+    return result.rows;
   }
 }
