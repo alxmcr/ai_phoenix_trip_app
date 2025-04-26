@@ -20,9 +20,15 @@ export async function GET(request: NextRequest) {
     sortOrder: "desc",
   });
 
+  // Count the total number of actionables
+  const totalString = await dbPoolActionables.count();
+
+  // Convert total to number
+  const total = Number(totalString);
+
   const buildResponse: PaginationResponse<ActionableData> = {
     data: actionables,
-    total: await dbPoolActionables.count(),
+    total,
     page: parseInt(page),
     pageSize: parseInt(pageSize),
   };
