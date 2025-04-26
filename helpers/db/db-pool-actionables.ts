@@ -91,6 +91,7 @@ export class DBPoolActionables implements IDBPoolActionables {
     if (!result.rows[0]) {
       throw new Error("Failed to create actionable");
     }
+
     return result.rows[0];
   }
 
