@@ -4,9 +4,11 @@ import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/reviews/:id
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const id = (await params).id;
 
   if (!id) {
     return NextResponse.json(
