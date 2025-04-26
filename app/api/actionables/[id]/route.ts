@@ -3,6 +3,7 @@ import { HttpResponseCode } from "@/enums/http-response-code";
 import { DBPoolActionables } from "@/helpers/db/db-pool-actionables";
 import { NextRequest, NextResponse } from "next/server";
 
+// GET /api/actionables/:id
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
@@ -23,6 +24,7 @@ export async function GET(request: NextRequest) {
   });
 }
 
+// PATCH /api/actionables/:id
 export async function PATCH(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
@@ -49,6 +51,7 @@ export async function PATCH(request: NextRequest) {
   });
 }
 
+// PUT /api/actionables/:id
 export async function PUT(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
@@ -75,6 +78,7 @@ export async function PUT(request: NextRequest) {
   });
 }
 
+// DELETE /api/actionables/:id
 export async function DELETE(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
