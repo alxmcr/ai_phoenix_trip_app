@@ -388,7 +388,13 @@ export function FormReview() {
           )}
         />
 
-        <Button type="submit">Submit Review</Button>
+        <Button type="submit" className="w-full" size="lg">
+          Submit Review
+        </Button>
+        <p className="text-xs text-center text-muted-foreground">
+          By submitting this form, you agree to our Terms of Service and Privacy
+          Policy.
+        </p>
       </form>
     </Form>
   );
