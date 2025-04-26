@@ -1,6 +1,5 @@
 import { DBAggregateFunctions, DBOperations } from "@/generics/db/db-generics";
 import { SentimentData } from "@/types/db/sentiment";
-import { WhereFilterBuilder } from "@/utils/db/builder-where-filter";
 import { Pool } from "pg";
 
 interface IDBPoolSentiments
@@ -9,78 +8,84 @@ interface IDBPoolSentiments
 
 export class DBPoolSentiments implements IDBPoolSentiments {
   private pool: Pool;
+  private readonly columns = [
+    "sentiment_id",
+    "review_id",
+    "score",
+    "emotion_tone",
+    "label",
+    "summary",
+    "created_at",
+    "updated_at"
+  ] as const;
 
   constructor(pool: Pool) {
     this.pool = pool;
   }
-  async read(pk_id: string): Promise<SentimentData | null> {
+
+  async findUnique(pk_id: string): Promise<SentimentData | null> {
     const query = `SELECT * FROM sentiments WHERE sentiment_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return result.rows[0] || null;
   }
-  async paginate(page: number, pageSize: number): Promise<SentimentData[]> {
-    const query = `SELECT * FROM sentiments LIMIT $1 OFFSET $2`;
-    const result = await this.pool.query(query, [
-      pageSize,
-      (page - 1) * pageSize,
-    ]);
-    return result.rows;
-  }
-  async update(
-    pk_id: string,
-    item: Partial<SentimentData>
-  ): Promise<SentimentData | null> {
-    const query = `UPDATE sentiments SET ${Object.keys(item)
-      .map((key) => `${key} = $${key}`)
-      .join(", ")} WHERE sentiment_id = $1 RETURNING *`;
 
-    const result = await this.pool.query(query, [
-      pk_id,
-      ...Object.values(item),
-    ]);
-
-    return result.rows[0] || null;
-  }
   async delete(pk_id: string): Promise<boolean> {
     const query = `DELETE FROM sentiments WHERE sentiment_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return (result.rowCount ?? 0) > 0;
   }
-  async insert(item: Partial<SentimentData>): Promise<SentimentData> {
-    const query = `INSERT INTO sentiments (${Object.keys(item)
-      .map((key) => `${key}`)
-      .join(", ")}) VALUES (${Object.keys(item)
-      .map((key) => `$${key}`)
-      .join(", ")}) RETURNING *`;
-    const result = await this.pool.query(query, [...Object.values(item)]);
+
+  async update(pk_id: string, item: Partial<SentimentData>): Promise<SentimentData | null> {
+    const validColumns = this.columns.filter((key) => key in item);
+
+    if (validColumns.length === 0) {
+      throw new Error("No valid columns provided");
+    }
+
+    const setClause = validColumns
+      .map((columnName, index) => `${columnName} = $${index + 2}`)
+      .join(", ");
+
+    const query = `
+      UPDATE sentiments
+      SET ${setClause}
+      WHERE sentiment_id = $1
+      RETURNING *
+    `;
+
+    const values = [
+      pk_id,
+      ...validColumns.map((key) => item[key as keyof SentimentData]),
+    ];
+    const result = await this.pool.query(query, values);
+
+    return result.rows[0] || null;
+  }
+
+  async create(item: Partial<SentimentData>): Promise<SentimentData> {
+    const validColumns = this.columns.filter((key) => key in item);
+    if (validColumns.length === 0) {
+      throw new Error("No valid columns provided");
+    }
+
+    const values = validColumns.map((key) => item[key as keyof SentimentData]);
+
+    const parameterPlaceholders = values
+      .map((_, index) => `$${index + 1}`)
+      .join(", ");
+
+    const query = `
+      INSERT INTO sentiments (${validColumns.join(", ")})
+      VALUES (${parameterPlaceholders})
+      RETURNING *
+    `;
+
+    const result = await this.pool.query(query, values);
+    if (!result.rows[0]) {
+      throw new Error("Failed to create sentiment");
+    }
+
     return result.rows[0];
-  }
-  async insertMany(items: Partial<SentimentData>[]): Promise<SentimentData[]> {
-    const query = `INSERT INTO sentiments (${Object.keys(items[0])
-      .map((key) => `${key}`)
-      .join(", ")}) VALUES ${items
-      .map(
-        (_, index) =>
-          `(${Object.keys(items[0])
-            .map((key, idx) => `$${index + idx + 1}`)
-            .join(", ")})`
-      )
-      .join(", ")} RETURNING *`;
-
-    const result = await this.pool.query(query, [
-      ...items.map((item) => Object.values(item)),
-    ]);
-
-    return result.rows;
-  }
-  async filter(filters: Partial<SentimentData>): Promise<SentimentData[]> {
-    const whereBuilder = new WhereFilterBuilder<SentimentData>();
-    const whereClause = whereBuilder.where(filters);
-
-    const query = `SELECT * FROM sentiments WHERE ${whereClause}`;
-    const result = await this.pool.query(query, [...Object.values(filters)]);
-
-    return result.rows;
   }
 
   async count(): Promise<number> {
