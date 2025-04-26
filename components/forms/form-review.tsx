@@ -135,7 +135,7 @@ export function FormReview() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select age group" />
                     </SelectTrigger>
                   </FormControl>
@@ -294,7 +294,7 @@ export function FormReview() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select transport mode" />
                     </SelectTrigger>
                   </FormControl>
@@ -324,7 +324,7 @@ export function FormReview() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select trip type" />
                     </SelectTrigger>
                   </FormControl>
@@ -352,7 +352,7 @@ export function FormReview() {
                   defaultValue={field.value.toString()}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a rating" />
                     </SelectTrigger>
                   </FormControl>
