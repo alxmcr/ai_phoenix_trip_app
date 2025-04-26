@@ -102,6 +102,18 @@ export async function createReview(formData: FormData) {
   // Create Review in DB
   const newReview = await dbPoolReviews.create(reviewData);
 
+  // Extract the review_id from the newReview object
+  const review_id = newReview.review_id;
+
+  // Check if the review_id is not null
+  if (!review_id) {
+    return {
+      errors: {
+        review_id: "Review ID is required",
+      },
+    };
+  }
+
   // Redirect to the review page
-  redirect(`/reviews/${newReview.review_id}`);
+  redirect(`/reviews/${review_id}`);
 }
