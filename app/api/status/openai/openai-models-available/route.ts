@@ -12,8 +12,6 @@ export async function GET() {
 
     return NextResponse.json({ models });
   } catch (error) {
-    console.log("🚀 ~ GET ~ error:", error);
-
     const { status, code, message } = parseOpenAIError(error);
 
     return NextResponse.json(

@@ -1,6 +1,7 @@
 import openaiClient from "@/config/openai/openai-config";
 import { HttpResponseCode } from "@/enums/http-response-code";
 import { OpenAIHealth } from "@/helpers/openai-health/openai-health";
+import { parseOpenAIError } from "@/utils/openai/parse-openai-error";
 import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   try {
@@ -24,11 +25,14 @@ export async function GET(request: Request) {
       { status: HttpResponseCode.OK }
     );
   } catch (error) {
+    const { status, code, message } = parseOpenAIError(error);
+
     return NextResponse.json(
       {
-        error: "Failed to check OpenAI models",
+        code,
+        error: message,
       },
-      { status: 500 }
+      { status }
     );
   }
 }
