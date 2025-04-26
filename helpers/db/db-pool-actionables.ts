@@ -1,6 +1,5 @@
 import { DBAggregateFunctions, DBOperations } from "@/generics/db/db-generics";
 import { ActionableData } from "@/types/db/actionable";
-import { WhereFilterBuilder } from "@/utils/db/builder-where-filter";
 import { Pool } from "pg";
 
 interface IDBPoolActionables
