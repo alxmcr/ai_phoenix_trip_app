@@ -33,6 +33,7 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useActionState } from "react";
 import { createReview } from "@/app/actions/create-review-action";
+import { useTransition } from "react";
 // Review form schema
 // - rating: number between 1 and 5
 // - start_date: date
@@ -98,7 +99,6 @@ const initialState = {
 };
 
 export function FormReview() {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -116,9 +116,20 @@ export function FormReview() {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const [isPending, startTransition] = useTransition();
+
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    startTransition(async () => {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value instanceof Date) {
+          formData.append(key, value.toISOString());
+        } else {
+          formData.append(key, value.toString());
+        }
+      });
+      await createReview(formData);
+    });
   }
 
   return (
@@ -403,8 +414,8 @@ export function FormReview() {
           )}
         />
 
-        <Button type="submit" className="w-full" size="lg">
-          Submit Review
+        <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+          {isPending ? "Submitting..." : "Submit Review"}
         </Button>
         <p className="text-xs text-center text-muted-foreground">
           By submitting this form, you agree to our Terms of Service and Privacy
