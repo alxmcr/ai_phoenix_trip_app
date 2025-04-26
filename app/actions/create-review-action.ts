@@ -46,9 +46,9 @@ export async function createReview(formData: FormData) {
   console.log(formData);
 
   const validatedFields = schema.safeParse({
-    rating: formData.get("rating"),
-    start_date: formData.get("start_date"),
-    end_date: formData.get("end_date"),
+    rating: Number(formData.get("rating")),
+    start_date: new Date(formData.get("start_date") as string),
+    end_date: new Date(formData.get("end_date") as string),
     destination: formData.get("destination"),
     company_name: formData.get("company_name"),
     origin: formData.get("origin"),
