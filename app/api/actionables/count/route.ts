@@ -1,11 +1,11 @@
 import pool from "@/config/db/db-config";
 import { HttpResponseCode } from "@/enums/http-response-code";
-import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
+import { DBPoolActionables } from "@/helpers/db/db-pool-actionables";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const dbPool = new DBPoolReviews(pool);
+    const dbPool = new DBPoolActionables(pool);
     const count = await dbPool.count();
 
     // Convert count to number
@@ -17,7 +17,7 @@ export async function GET() {
     );
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to get reviews count" },
+      { error: "Failed to get actionables count" },
       { status: HttpResponseCode.INTERNAL_SERVER_ERROR }
     );
   }
