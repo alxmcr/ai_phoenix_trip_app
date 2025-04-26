@@ -27,9 +27,11 @@ export async function GET(
 }
 
 // PATCH /api/actionables/:id
-export async function PATCH(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const id = (await params).id;
 
   if (!id) {
     return NextResponse.json(
@@ -54,9 +56,11 @@ export async function PATCH(request: NextRequest) {
 }
 
 // PUT /api/actionables/:id
-export async function PUT(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const id = (await params).id;
 
   if (!id) {
     return NextResponse.json(
@@ -81,9 +85,11 @@ export async function PUT(request: NextRequest) {
 }
 
 // DELETE /api/actionables/:id
-export async function DELETE(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const id = (await params).id;
 
   const dbPoolActionables = new DBPoolActionables(pool);
 
