@@ -34,13 +34,13 @@ export class DBPoolReviews implements IDBPoolReviews {
   }
 
   async findUnique(pk_id: string): Promise<ReviewData | null> {
-    const query = `SELECT * FROM reviews WHERE review_id = $1`;
+    const query = `SELECT * FROM review WHERE review_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return result.rows[0] || null;
   }
 
   async delete(pk_id: string): Promise<boolean> {
-    const query = `DELETE FROM reviews WHERE review_id = $1`;
+    const query = `DELETE FROM review WHERE review_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return (result.rowCount ?? 0) > 0;
   }
@@ -60,7 +60,7 @@ export class DBPoolReviews implements IDBPoolReviews {
       .join(", ");
 
     const query = `
-      UPDATE reviews
+      UPDATE review
       SET ${setClause}
       WHERE review_id = $1
       RETURNING *
@@ -88,7 +88,7 @@ export class DBPoolReviews implements IDBPoolReviews {
       .join(", ");
 
     const query = `
-      INSERT INTO reviews (${validColumns.join(", ")})
+      INSERT INTO review (${validColumns.join(", ")})
       VALUES (${parameterPlaceholders})
       RETURNING *
     `;
@@ -111,7 +111,7 @@ export class DBPoolReviews implements IDBPoolReviews {
   }
 
   async count(): Promise<number> {
-    const query = `SELECT COUNT(*) FROM reviews`;
+    const query = `SELECT COUNT(*) FROM review`;
     const result = await this.pool.query(query);
     return result.rows[0].count;
   }
@@ -133,7 +133,7 @@ export class DBPoolReviews implements IDBPoolReviews {
     }
 
     const query = `
-      SELECT * FROM reviews
+      SELECT * FROM review
       ORDER BY ${params.sortBy} ${params.sortOrder}
       LIMIT ${params.pageSize} OFFSET ${offset}
     `;
