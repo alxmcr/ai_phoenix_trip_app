@@ -30,13 +30,13 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
   }
 
   async findUnique(pk_id: string): Promise<RecommendationData | null> {
-    const query = `SELECT * FROM recommendations WHERE recommendation_id = $1`;
+    const query = `SELECT * FROM recommendation WHERE recommendation_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return result.rows[0] || null;
   }
 
   async delete(pk_id: string): Promise<boolean> {
-    const query = `DELETE FROM recommendations WHERE recommendation_id = $1`;
+    const query = `DELETE FROM recommendation WHERE recommendation_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return (result.rowCount ?? 0) > 0;
   }
@@ -56,7 +56,7 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
       .join(", ");
 
     const query = `
-      UPDATE recommendations
+      UPDATE recommendation
       SET ${setClause}
       WHERE recommendation_id = $1
       RETURNING *
@@ -86,7 +86,7 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
       .join(", ");
 
     const query = `
-      INSERT INTO recommendations (${validColumns.join(", ")})
+      INSERT INTO recommendation (${validColumns.join(", ")})
       VALUES (${parameterPlaceholders})
       RETURNING *
     `;
@@ -111,7 +111,7 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
   }
 
   async count(): Promise<number> {
-    const query = `SELECT COUNT(*) FROM recommendations`;
+    const query = `SELECT COUNT(*) FROM recommendation`;
     const result = await this.pool.query(query);
     return result.rows[0].count;
   }
@@ -133,7 +133,7 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
     }
 
     const query = `
-      SELECT * FROM recommendations
+      SELECT * FROM recommendation
       ORDER BY ${params.sortBy} ${params.sortOrder}
       LIMIT ${params.pageSize} OFFSET ${offset}
     `;
