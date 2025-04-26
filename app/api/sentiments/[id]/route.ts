@@ -4,9 +4,11 @@ import { DBPoolSentiments } from "@/helpers/db/db-pool-sentiments";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/sentiments/:id
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const id = (await params).id;
 
   if (!id) {
     return NextResponse.json(
@@ -25,9 +27,11 @@ export async function GET(request: NextRequest) {
 }
 
 // PATCH /api/sentiments/:id
-export async function PATCH(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const id = (await params).id;
 
   if (!id) {
     return NextResponse.json(
@@ -52,9 +56,11 @@ export async function PATCH(request: NextRequest) {
 }
 
 // PUT /api/sentiments/:id
-export async function PUT(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const id = (await params).id;
 
   if (!id) {
     return NextResponse.json(
@@ -79,9 +85,11 @@ export async function PUT(request: NextRequest) {
 }
 
 // DELETE /api/sentiments/:id
-export async function DELETE(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const id = (await params).id;
 
   const dbPool = new DBPoolSentiments(pool);
 
