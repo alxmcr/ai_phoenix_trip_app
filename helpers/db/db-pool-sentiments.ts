@@ -28,13 +28,13 @@ export class DBPoolSentiments implements IDBPoolSentiments {
   }
 
   async findUnique(pk_id: string): Promise<SentimentData | null> {
-    const query = `SELECT * FROM sentiments WHERE sentiment_id = $1`;
+    const query = `SELECT * FROM sentiment WHERE sentiment_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return result.rows[0] || null;
   }
 
   async delete(pk_id: string): Promise<boolean> {
-    const query = `DELETE FROM sentiments WHERE sentiment_id = $1`;
+    const query = `DELETE FROM sentiment WHERE sentiment_id = $1`;
     const result = await this.pool.query(query, [pk_id]);
     return (result.rowCount ?? 0) > 0;
   }
@@ -54,7 +54,7 @@ export class DBPoolSentiments implements IDBPoolSentiments {
       .join(", ");
 
     const query = `
-      UPDATE sentiments
+      UPDATE sentiment
       SET ${setClause}
       WHERE sentiment_id = $1
       RETURNING *
@@ -82,7 +82,7 @@ export class DBPoolSentiments implements IDBPoolSentiments {
       .join(", ");
 
     const query = `
-      INSERT INTO sentiments (${validColumns.join(", ")})
+      INSERT INTO sentiment (${validColumns.join(", ")})
       VALUES (${parameterPlaceholders})
       RETURNING *
     `;
@@ -105,7 +105,7 @@ export class DBPoolSentiments implements IDBPoolSentiments {
   }
 
   async count(): Promise<number> {
-    const query = `SELECT COUNT(*) FROM sentiments`;
+    const query = `SELECT COUNT(*) FROM sentiment`;
     const result = await this.pool.query(query);
     return result.rows[0].count;
   }
@@ -127,7 +127,7 @@ export class DBPoolSentiments implements IDBPoolSentiments {
     }
 
     const query = `
-      SELECT * FROM sentiments
+      SELECT * FROM sentiment
       ORDER BY ${params.sortBy} ${params.sortOrder}
       LIMIT ${params.pageSize} OFFSET ${offset}
     `;
