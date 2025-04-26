@@ -116,6 +116,12 @@ export class DBPoolReviews implements IDBPoolReviews {
     return result.rows[0].count;
   }
 
+  async getAverageRating(): Promise<number> {
+    const query = `SELECT AVG(rating) as average_rating FROM review`;
+    const result = await this.pool.query(query);
+    return parseFloat(result.rows[0].average_rating) || 0;
+  }
+
   async pagination(params: PaginationParams): Promise<ReviewData[]> {
     const page = params.page ?? 1;
     const pageSize = params.pageSize ?? 10;
