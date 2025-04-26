@@ -98,6 +98,17 @@ export class DBPoolActionables implements IDBPoolActionables {
     return result.rows[0];
   }
 
+  async createMany(
+    items: Partial<ActionableData>[]
+  ): Promise<ActionableData[]> {
+    const results: ActionableData[] = [];
+    for (const item of items) {
+      const result = await this.create(item);
+      results.push(result);
+    }
+    return results;
+  }
+
   async count(): Promise<number> {
     const query = `SELECT COUNT(*) FROM actionable`;
     const result = await this.pool.query(query);
