@@ -31,7 +31,8 @@ import {
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-
+import { useActionState } from "react";
+import { createReview } from "@/app/actions/create-review-action";
 // Review form schema
 // - rating: number between 1 and 5
 // - start_date: date
@@ -81,6 +82,20 @@ const transportModes = [
   { value: "car", label: "Car" },
   { value: "ship", label: "Ship" },
 ];
+
+const initialState = {
+  rating: 1,
+  start_date: new Date(),
+  end_date: new Date(),
+  destination: "",
+  company_name: "",
+  origin: "",
+  email: "",
+  age_group: "",
+  trip_type: "",
+  description: "",
+  transport_mode: "",
+};
 
 export function FormReview() {
   // 1. Define your form.
