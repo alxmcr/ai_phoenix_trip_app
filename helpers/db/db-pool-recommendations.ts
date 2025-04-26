@@ -1,4 +1,8 @@
-import { DBAggregateFunctions, DBOperations } from "@/generics/db/db-generics";
+import {
+  DBAggregateFunctions,
+  DBOperations,
+  PaginationParams,
+} from "@/generics/db/db-generics";
 import { RecommendationData } from "@/types/db/recommendation";
 import { Pool } from "pg";
 
@@ -18,7 +22,7 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
     "description",
     "impact",
     "created_at",
-    "updated_at"
+    "updated_at",
   ] as const;
 
   constructor(pool: Pool) {
@@ -37,7 +41,10 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
     return (result.rowCount ?? 0) > 0;
   }
 
-  async update(pk_id: string, item: Partial<RecommendationData>): Promise<RecommendationData | null> {
+  async update(
+    pk_id: string,
+    item: Partial<RecommendationData>
+  ): Promise<RecommendationData | null> {
     const validColumns = this.columns.filter((key) => key in item);
 
     if (validColumns.length === 0) {
@@ -70,7 +77,9 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
       throw new Error("No valid columns provided");
     }
 
-    const values = validColumns.map((key) => item[key as keyof RecommendationData]);
+    const values = validColumns.map(
+      (key) => item[key as keyof RecommendationData]
+    );
 
     const parameterPlaceholders = values
       .map((_, index) => `$${index + 1}`)
@@ -94,5 +103,31 @@ export class DBPoolRecommendations implements IDBPoolRecommendations {
     const query = `SELECT COUNT(*) FROM recommendations`;
     const result = await this.pool.query(query);
     return result.rows[0].count;
+  }
+
+  async pagination(params: PaginationParams): Promise<RecommendationData[]> {
+    const page = params.page ?? 1;
+    const pageSize = params.pageSize ?? 10;
+
+    const offset = (page - 1) * pageSize;
+
+    // if sortBy is not provided, default to created_at
+    if (!params.sortBy) {
+      params.sortBy = "created_at";
+    }
+
+    // if sortOrder is not provided, default to desc
+    if (!params.sortOrder) {
+      params.sortOrder = "desc";
+    }
+
+    const query = `
+      SELECT * FROM recommendations
+      ORDER BY ${params.sortBy} ${params.sortOrder}
+      LIMIT ${params.pageSize} OFFSET ${offset}
+    `;
+
+    const result = await this.pool.query(query);
+    return result.rows;
   }
 }

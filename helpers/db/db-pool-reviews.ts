@@ -1,4 +1,8 @@
-import { DBAggregateFunctions, DBOperations } from "@/generics/db/db-generics";
+import {
+  DBAggregateFunctions,
+  DBOperations,
+  PaginationParams,
+} from "@/generics/db/db-generics";
 import { ReviewData } from "@/types/db/review";
 import { Pool } from "pg";
 
@@ -22,7 +26,7 @@ export class DBPoolReviews implements IDBPoolReviews {
     "description",
     "transport_mode",
     "created_at",
-    "updated_at"
+    "updated_at",
   ] as const;
 
   constructor(pool: Pool) {
@@ -41,7 +45,10 @@ export class DBPoolReviews implements IDBPoolReviews {
     return (result.rowCount ?? 0) > 0;
   }
 
-  async update(pk_id: string, item: Partial<ReviewData>): Promise<ReviewData | null> {
+  async update(
+    pk_id: string,
+    item: Partial<ReviewData>
+  ): Promise<ReviewData | null> {
     const validColumns = this.columns.filter((key) => key in item);
 
     if (validColumns.length === 0) {
@@ -98,5 +105,31 @@ export class DBPoolReviews implements IDBPoolReviews {
     const query = `SELECT COUNT(*) FROM reviews`;
     const result = await this.pool.query(query);
     return result.rows[0].count;
+  }
+
+  async pagination(params: PaginationParams): Promise<ReviewData[]> {
+    const page = params.page ?? 1;
+    const pageSize = params.pageSize ?? 10;
+
+    const offset = (page - 1) * pageSize;
+
+    // if sortBy is not provided, default to created_at
+    if (!params.sortBy) {
+      params.sortBy = "created_at";
+    }
+
+    // if sortOrder is not provided, default to desc
+    if (!params.sortOrder) {
+      params.sortOrder = "desc";
+    }
+
+    const query = `
+      SELECT * FROM reviews
+      ORDER BY ${params.sortBy} ${params.sortOrder}
+      LIMIT ${params.pageSize} OFFSET ${offset}
+    `;
+
+    const result = await this.pool.query(query);
+    return result.rows;
   }
 }
