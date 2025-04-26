@@ -95,6 +95,15 @@ export class DBPoolSentiments implements IDBPoolSentiments {
     return result.rows[0];
   }
 
+  async createMany(items: Partial<SentimentData>[]): Promise<SentimentData[]> {
+    const results: SentimentData[] = [];
+    for (const item of items) {
+      const result = await this.create(item);
+      results.push(result);
+    }
+    return results;
+  }
+
   async count(): Promise<number> {
     const query = `SELECT COUNT(*) FROM sentiments`;
     const result = await this.pool.query(query);
