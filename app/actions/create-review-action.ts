@@ -86,7 +86,7 @@ export async function createReview(formData: FormData) {
 
   // Prepare the data for the database
   const reviewData: Partial<ReviewData> = {
-    rating,
+    rating: Number(rating),
     start_date: start_date.toISOString(),
     end_date: end_date.toISOString(),
     destination,
