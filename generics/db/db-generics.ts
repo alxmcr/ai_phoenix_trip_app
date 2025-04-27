@@ -14,7 +14,6 @@ export interface DBOperations<T> {
   create(item: Partial<T>): Promise<T>;
   createMany(items: Partial<T>[]): Promise<T[]>;
   update(pk_id: string, item: Partial<T>): Promise<T | null>;
-  pagination(params: PaginationParams): Promise<T[]>;
 }
 
 export interface DBAggregateFunctions<T> {
