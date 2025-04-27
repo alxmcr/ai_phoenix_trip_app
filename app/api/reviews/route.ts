@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   const sortBy = searchParams.get("sortBy") || "created_at";
   let sortOrder = searchParams.get("sortOrder") || "desc";
 
-  // Extract reviews params filters
+  // Review: Extract params filters
   const rating = searchParams.get("rating");
   const transportMode = searchParams.get("transport_mode");
   const tripType = searchParams.get("trip_type");
@@ -22,19 +22,30 @@ export async function GET(request: NextRequest) {
   const companyName = searchParams.get("company_name");
   const email = searchParams.get("email");
   const description = searchParams.get("description");
+  const origin = searchParams.get("origin");
+  const destination = searchParams.get("destination");
 
-  // if sortOrder is not asc or desc, default to desc
-  if (sortOrder !== "asc" && sortOrder !== "desc") {
-    sortOrder = "desc";
-  }
+  // Review: Build a partial data object
+  const filterReviewData: Partial<ReviewData> = {
+    rating: rating ? parseInt(rating) : undefined,
+    transport_mode: transportMode || undefined,
+    trip_type: tripType || undefined,
+    age_group: ageGroup || undefined,
+    company_name: companyName || undefined,
+    email: email || undefined,
+    description: description || undefined,
+    origin: origin || undefined,
+    destination: destination || undefined,
+  };
 
   const dbPool = new DBPoolReviews(pool);
 
   const paginationParams: PaginationParams = {
     page: parseInt(page),
     pageSize: parseInt(pageSize),
-    sortBy,
-    sortOrder,
+    sortBy: sortBy || "created_at",
+    sortOrder: sortOrder || "desc",
+    filterReviewData,
   };
 
   const reviews = await dbPool.pagination(paginationParams);

@@ -1,8 +1,11 @@
+import { ReviewData } from "@/types/db/review";
+
 export interface PaginationParams {
   page: number;
   pageSize: number;
   sortOrder: string;
   sortBy?: string;
+  filterReviewData?: Partial<ReviewData>;
 }
 
 export interface DBOperations<T> {
