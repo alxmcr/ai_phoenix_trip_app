@@ -4,6 +4,7 @@ import { PaginationResponse } from "@/generics/api/api-generics";
 import { DBPoolActionables } from "@/helpers/db/db-pool-actionables";
 import { ActionableData } from "@/types/db/actionable";
 import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@/prisma/app/generated/prisma";
 
 // GET /api/actionables?page=1&pageSize=10&sortBy=created_at&sortOrder=desc
 export async function GET(request: NextRequest) {
@@ -11,29 +12,30 @@ export async function GET(request: NextRequest) {
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "10";
 
-  const dbPoolActionables = new DBPoolActionables(pool);
+  // Prisma client
+  const prisma = new PrismaClient();
 
-  const actionables = await dbPoolActionables.pagination({
-    page: parseInt(page),
-    pageSize: parseInt(pageSize),
-    sortBy: "created_at",
-    sortOrder: "desc",
+  // Pagination
+  const actionables = await prisma.actionable.findMany({
+    skip: (parseInt(page) - 1) * parseInt(pageSize),
+    take: parseInt(pageSize),
+    orderBy: {
+      created_at: "desc",
+    },
   });
 
-  // Count the total number of actionables
-  const totalString = await dbPoolActionables.count();
-
-  // Convert total to number
-  const total = Number(totalString);
-
-  const buildResponse: PaginationResponse<ActionableData> = {
-    data: actionables,
-    total,
+  // Build the pagination response
+  const responsePagination = {
+    total: actionables.length,
     page: parseInt(page),
     pageSize: parseInt(pageSize),
+    totalPages: Math.ceil(actionables.length / parseInt(pageSize)),
+    data: actionables,
   };
 
-  return NextResponse.json(buildResponse, { status: HttpResponseCode.OK });
+  return NextResponse.json(responsePagination, {
+    status: HttpResponseCode.OK,
+  });
 }
 
 // POST /api/actionables
