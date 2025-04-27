@@ -78,8 +78,19 @@ export async function PUT(
 
   try {
     const dbPool = new DBPoolSentiments(pool);
-
     const body = await request.json();
+
+    // If review_id is being updated, check if it exists in another record
+    if (body.review_id) {
+      const existingSentiment = await dbPool.findUniqueByReviewId(body.review_id);
+      if (existingSentiment && existingSentiment.sentiment_id !== id) {
+        return NextResponse.json(
+          { error: "A sentiment with this review_id already exists" },
+          { status: HttpResponseCode.CONFLICT }
+        );
+      }
+    }
+
     const sentiment = await dbPool.update(id, body);
 
     const responseMessage = {

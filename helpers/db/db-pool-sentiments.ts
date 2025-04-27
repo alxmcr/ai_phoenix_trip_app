@@ -33,6 +33,12 @@ export class DBPoolSentiments implements IDBPoolSentiments {
     return result.rows[0] || null;
   }
 
+  async findUniqueByReviewId(review_id: string): Promise<SentimentData | null> {
+    const query = `SELECT * FROM sentiment WHERE review_id = $1`;
+    const result = await this.pool.query(query, [review_id]);
+    return result.rows[0] || null;
+  }
+
   async delete(pk_id: string): Promise<boolean> {
     const query = `DELETE FROM sentiment WHERE sentiment_id = $1`;
     const result = await this.pool.query(query, [pk_id]);

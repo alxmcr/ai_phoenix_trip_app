@@ -51,11 +51,24 @@ export async function POST(request: NextRequest) {
   const dbPool = new DBPoolSentiments(pool);
 
   const body = await request.json();
+
+  // Check if the sentiment with review_id already exists
+  const existingSentimentWithReviewId = await dbPool.findUniqueByReviewId(
+    body.review_id
+  );
+
+  if (existingSentimentWithReviewId) {
+    return NextResponse.json(
+      { error: "A sentiment with this review_id already exists" },
+      { status: HttpResponseCode.CONFLICT }
+    );
+  }
+
   const sentiment = await dbPool.create(body);
 
   const responseMessage = {
     message: "Sentiment created successfully",
-    review: sentiment,
+    sentiment,
   };
 
   return NextResponse.json(responseMessage, {
