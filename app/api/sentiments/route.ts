@@ -38,7 +38,6 @@ export async function GET(request: NextRequest) {
       status: HttpResponseCode.OK,
     });
   } catch (error) {
-    console.log("🚀 ~ GET ~ error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: HttpResponseCode.INTERNAL_SERVER_ERROR }

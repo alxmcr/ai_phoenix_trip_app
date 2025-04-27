@@ -102,7 +102,6 @@ export async function PUT(
       status: HttpResponseCode.OK,
     });
   } catch (error) {
-    console.log("🚀 ~ PUT ~ error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: HttpResponseCode.INTERNAL_SERVER_ERROR }

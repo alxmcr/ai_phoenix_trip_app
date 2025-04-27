@@ -146,10 +146,6 @@ export class DBPoolReviews implements IDBPoolReviews {
     const sortBy = params.sortBy ?? "created_at";
     const sortOrder = params.sortOrder ?? "desc";
     const filterReviewData = params.filterReviewData ?? {};
-    console.log(
-      "🚀 ~ DBPoolReviews ~ pagination ~ filterReviewData:",
-      filterReviewData
-    );
 
     // Check if sortOrder is asc or desc
     if (sortOrder !== "asc" && sortOrder !== "desc") {
@@ -219,16 +215,9 @@ export class DBPoolReviews implements IDBPoolReviews {
     }
 
     const whereConditions = conditions.join(" AND ");
-    console.log(
-      "🚀 ~ DBPoolReviews ~ pagination ~ whereConditions:",
-      whereConditions
-    );
 
     const whereClause =
       whereConditions.length > 0 ? `WHERE ${whereConditions}` : "";
-    console.log("🚀 ~ DBPoolReviews ~ pagination ~ whereClause:", {
-      whereClause,
-    });
 
     // Build the query
     const query = `
@@ -237,9 +226,6 @@ export class DBPoolReviews implements IDBPoolReviews {
       ORDER BY ${sortBy} ${sortOrder}
       LIMIT ${pageSize} OFFSET ${offset}
     `;
-
-    console.log(query);
-    console.log({ query });
 
     const result = await this.pool.query(query);
     return result.rows;

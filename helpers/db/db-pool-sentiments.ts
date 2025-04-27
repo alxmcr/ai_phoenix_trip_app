@@ -75,7 +75,6 @@ export class DBPoolSentiments implements IDBPoolSentiments {
 
       return result.rows[0] || null;
     } catch (error) {
-      console.log("🚀 ~ update ~ error:", error);
       throw error;
     }
   }
