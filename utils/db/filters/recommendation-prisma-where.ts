@@ -14,8 +14,12 @@ export const buildRecommendationWhereFilter = (
     where.review_id = query.review_id;
   }
 
-  if (query.data_driven) {
-    where.data_driven = query.data_driven;
+  if (query.data_driven !== undefined) {
+    // Convert string "true"/"false" to boolean
+    const dataDrivenValue = query.data_driven as string | boolean;
+    where.data_driven = typeof dataDrivenValue === 'string'
+      ? dataDrivenValue.toLowerCase() === 'true'
+      : dataDrivenValue;
   }
 
   if (query.target_area) {

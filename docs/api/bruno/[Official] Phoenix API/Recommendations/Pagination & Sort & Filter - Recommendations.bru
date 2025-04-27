@@ -1,11 +1,11 @@
 meta {
   name: Pagination & Sort & Filter - Recommendations
   type: http
-  seq: 4
+  seq: 3
 }
 
 get {
-  url: {{IP_SERVER}}/api/recommendations?page=1&limit=6&sortBy=impact&sortOrder=desc&data_driven=true
+  url: {{IP_SERVER}}/api/recommendations?page=1&limit=6&sortBy=impact&sortOrder=desc&data_driven=false
   body: none
   auth: inherit
 }
@@ -15,5 +15,5 @@ params:query {
   limit: 6
   sortBy: impact
   sortOrder: desc
-  data_driven: true
+  data_driven: false
 }
