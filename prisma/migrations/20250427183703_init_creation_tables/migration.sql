@@ -19,7 +19,7 @@ CREATE TABLE "review" (
 );
 
 -- CreateTable
-CREATE TABLE "sentiments" (
+CREATE TABLE "sentiment" (
     "sentiment_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "score" DECIMAL,
     "label" TEXT,
@@ -29,7 +29,7 @@ CREATE TABLE "sentiments" (
     "updated_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
     "review_id" UUID NOT NULL,
 
-    CONSTRAINT "sentiments_pkey" PRIMARY KEY ("sentiment_id")
+    CONSTRAINT "sentiment_pkey" PRIMARY KEY ("sentiment_id")
 );
 
 -- CreateTable
@@ -68,10 +68,10 @@ CREATE TABLE "recommendation" (
 CREATE INDEX "idx_review_id" ON "review"("review_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "sentiments_review_id_key" ON "sentiments"("review_id");
+CREATE UNIQUE INDEX "sentiment_review_id_key" ON "sentiment"("review_id");
 
 -- CreateIndex
-CREATE INDEX "idx_sentiment_review_id" ON "sentiments"("review_id");
+CREATE INDEX "idx_sentiment_review_id" ON "sentiment"("review_id");
 
 -- CreateIndex
 CREATE INDEX "idx_actionable_review_id" ON "actionable"("review_id");
@@ -80,7 +80,7 @@ CREATE INDEX "idx_actionable_review_id" ON "actionable"("review_id");
 CREATE INDEX "idx_recommendation_review_id" ON "recommendation"("review_id");
 
 -- AddForeignKey
-ALTER TABLE "sentiments" ADD CONSTRAINT "sentiments_review_id_fkey" FOREIGN KEY ("review_id") REFERENCES "review"("review_id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "sentiment" ADD CONSTRAINT "sentiment_review_id_fkey" FOREIGN KEY ("review_id") REFERENCES "review"("review_id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "actionable" ADD CONSTRAINT "actionable_review_id_fkey" FOREIGN KEY ("review_id") REFERENCES "review"("review_id") ON DELETE CASCADE ON UPDATE NO ACTION;
