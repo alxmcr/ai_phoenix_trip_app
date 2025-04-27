@@ -14,7 +14,7 @@ const schema = z.object({
 });
 
 export async function createRecommendation(
-  recommendationData: RecommendationData
+  recommendationData: Partial<RecommendationData>
 ) {
   const dbPoolRecommendations = new DBPoolRecommendations(pool);
 
