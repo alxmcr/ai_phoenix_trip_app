@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "reviews" (
+CREATE TABLE "review" (
     "review_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "email" TEXT,
     "age_group" TEXT,
@@ -15,7 +15,7 @@ CREATE TABLE "reviews" (
     "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "reviews_pkey" PRIMARY KEY ("review_id")
+    CONSTRAINT "review_pkey" PRIMARY KEY ("review_id")
 );
 
 -- CreateTable
@@ -31,7 +31,7 @@ CREATE TABLE "sentiments" (
 );
 
 -- CreateTable
-CREATE TABLE "actionables" (
+CREATE TABLE "actionable" (
     "actionable_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "title" TEXT,
     "description" TEXT,
@@ -43,11 +43,11 @@ CREATE TABLE "actionables" (
     "updated_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
     "review_id" UUID NOT NULL,
 
-    CONSTRAINT "actionables_pkey" PRIMARY KEY ("actionable_id")
+    CONSTRAINT "actionable_pkey" PRIMARY KEY ("actionable_id")
 );
 
 -- CreateTable
-CREATE TABLE "recommendations" (
+CREATE TABLE "recommendation" (
     "recommendation_id" UUID NOT NULL DEFAULT uuid_generate_v4(),
     "title" TEXT,
     "description" TEXT,
@@ -59,11 +59,11 @@ CREATE TABLE "recommendations" (
     "updated_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
     "review_id" UUID NOT NULL,
 
-    CONSTRAINT "recommendations_pkey" PRIMARY KEY ("recommendation_id")
+    CONSTRAINT "recommendation_pkey" PRIMARY KEY ("recommendation_id")
 );
 
 -- CreateIndex
-CREATE INDEX "idx_review_id" ON "reviews"("review_id");
+CREATE INDEX "idx_review_id" ON "review"("review_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "sentiments_review_id_key" ON "sentiments"("review_id");
@@ -72,22 +72,16 @@ CREATE UNIQUE INDEX "sentiments_review_id_key" ON "sentiments"("review_id");
 CREATE INDEX "idx_sentiment_review_id" ON "sentiments"("review_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "actionables_review_id_key" ON "actionables"("review_id");
+CREATE INDEX "idx_actionable_review_id" ON "actionable"("review_id");
 
 -- CreateIndex
-CREATE INDEX "idx_actionable_review_id" ON "actionables"("review_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "recommendations_review_id_key" ON "recommendations"("review_id");
-
--- CreateIndex
-CREATE INDEX "idx_recommendation_review_id" ON "recommendations"("review_id");
+CREATE INDEX "idx_recommendation_review_id" ON "recommendation"("review_id");
 
 -- AddForeignKey
-ALTER TABLE "sentiments" ADD CONSTRAINT "sentiments_review_id_fkey" FOREIGN KEY ("review_id") REFERENCES "reviews"("review_id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "sentiments" ADD CONSTRAINT "sentiments_review_id_fkey" FOREIGN KEY ("review_id") REFERENCES "review"("review_id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "actionables" ADD CONSTRAINT "actionables_review_id_fkey" FOREIGN KEY ("review_id") REFERENCES "reviews"("review_id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "actionable" ADD CONSTRAINT "actionable_review_id_fkey" FOREIGN KEY ("review_id") REFERENCES "review"("review_id") ON DELETE CASCADE ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "recommendations" ADD CONSTRAINT "recommendations_review_id_fkey" FOREIGN KEY ("review_id") REFERENCES "reviews"("review_id") ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE "recommendation" ADD CONSTRAINT "recommendation_review_id_fkey" FOREIGN KEY ("review_id") REFERENCES "review"("review_id") ON DELETE CASCADE ON UPDATE NO ACTION;
