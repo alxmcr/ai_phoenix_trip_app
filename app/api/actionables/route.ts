@@ -49,8 +49,6 @@ export async function GET(request: NextRequest) {
       status: HttpResponseCode.OK,
     });
   } catch (error) {
-    console.log("🚀 ~ GET ~ error:", error);
-
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(
         { error: "Invalid input data" },
