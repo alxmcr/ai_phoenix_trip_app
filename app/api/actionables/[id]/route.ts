@@ -21,6 +21,13 @@ export async function GET(
 
   const actionable = await dbPoolActionables.findUnique(id);
 
+  if (!actionable) {
+    return NextResponse.json(
+      { error: "Actionable not found" },
+      { status: HttpResponseCode.NOT_FOUND }
+    );
+  }
+
   return NextResponse.json(actionable, {
     status: HttpResponseCode.OK,
   });
