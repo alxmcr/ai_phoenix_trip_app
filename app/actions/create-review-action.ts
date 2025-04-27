@@ -196,9 +196,30 @@ export async function createReview(formData: FormData) {
   // b. Create many actionables
   const actionableData = mockActionablesData(review_id);
 
-  // b.1. Slice the actionableData array into chunks of 10
+  // b.1. Slice the actionableData array for batching
+  // This reduces the array into chunks of 10 items each to prevent overwhelming the database
+  // Example: If actionableData has 25 items, it will be split into:
+  // Chunk 0: [item0, item1, ..., item9]
+  // Chunk 1: [item10, item11, ..., item19]
+  // Chunk 2: [item20, item21, item22, item23, item24]
+  const actionableDataChunks = actionableData.reduce((acc, curr, index) => {
+    const chunkIndex = Math.floor(index / 10);
+    if (!acc[chunkIndex]) {
+      acc[chunkIndex] = [];
+    }
+    acc[chunkIndex].push(curr);
+    return acc;
+  }, [] as Partial<ActionableData>[][]);
 
   // b.2. Create the actionables in chunks
+  // Process each chunk of 10 items
+  for (const chunk of actionableDataChunks) {
+    // Process each actionable item within the chunk
+    for (const actionable of chunk) {
+      // Create individual actionable in the database
+      await createActionable(actionable);
+    }
+  }
 
   // c. Create many recommendations
   const recommendationData = mockRecommendationsData(review_id);
