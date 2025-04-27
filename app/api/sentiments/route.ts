@@ -3,15 +3,24 @@ import { DBPoolSentiments } from "@/helpers/db/db-pool-sentiments";
 import pool from "@/lib/db/db-config";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaClientValidationError } from "@/prisma/app/generated/prisma/runtime/library";
+import { buildSentimentWhereFilter } from "@/utils/db/filters/sentiment-prisma-where";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/sentiments?page=1&pageSize=10&sortBy=created_at&sortOrder=desc
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const page = searchParams.get("page") || "1";
-  const pageSize = searchParams.get("pageSize") || "10";
-  const sortBy = searchParams.get("sortBy") || "created_at";
-  const sortOrder = searchParams.get("sortOrder") || "desc";
+
+  // Extract the query parameters
+  const {
+    page = "1",
+    pageSize = "10",
+    sortBy = "created_at",
+    sortOrder = "desc",
+    ...rest
+  } = Object.fromEntries(searchParams.entries());
+
+  // Prisma where filter
+  const where = buildSentimentWhereFilter(rest);
 
   // Prisma client
   const prisma = new PrismaClient();
@@ -24,14 +33,17 @@ export async function GET(request: NextRequest) {
       orderBy: {
         [sortBy]: sortOrder,
       },
+      where,
     });
 
     // Build the pagination response
+    const totalPages = Math.ceil(actionables.length / parseInt(pageSize));
+
     const responsePagination = {
       total: actionables.length,
       page: parseInt(page),
       pageSize: parseInt(pageSize),
-      totalPages: Math.ceil(actionables.length / parseInt(pageSize)),
+      totalPages,
       data: actionables,
     };
 
