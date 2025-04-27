@@ -3,42 +3,35 @@ import { DBPoolActionables } from "@/helpers/db/db-pool-actionables";
 import pool from "@/lib/db/db-config";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaClientValidationError } from "@/prisma/app/generated/prisma/runtime/library";
+import { buildActionableWhereFilter } from "@/utils/db/filters/actionable-prisma-where";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/actionables?page=1&pageSize=10&sortBy=created_at&sortOrder=desc
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const page = searchParams.get("page") || "1";
-  const pageSize = searchParams.get("pageSize") || "10";
-  const sortBy = searchParams.get("sortBy") || "created_at";
-  const sortOrder = searchParams.get("sortOrder") || "desc";
-  const search = searchParams.get("search") || "";
+
+  // Extract the query parameters
+  const {
+    page = "1",
+    pageSize = "10",
+    sortBy = "created_at",
+    sortOrder = "desc",
+    ...rest
+  } = Object.fromEntries(searchParams.entries());
 
   // Prisma client
   const prisma = new PrismaClient();
 
   try {
-    // Pagination
+    // Prisma where filter
+    const where = buildActionableWhereFilter(rest);
+
+    // Get the actionables
     const actionables = await prisma.actionable.findMany({
+      where,
       skip: (parseInt(page) - 1) * parseInt(pageSize),
       take: parseInt(pageSize),
-      orderBy: {
-        [sortBy]: sortOrder,
-      },
-      where: {
-        OR: [
-          ...(search.length === 36
-            ? [{ actionable_id: { equals: search } }]
-            : []),
-          { title: { contains: search, mode: "insensitive" } },
-          { description: { contains: search, mode: "insensitive" } },
-          { source_aspect: { contains: search, mode: "insensitive" } },
-          { department: { contains: search, mode: "insensitive" } },
-          { category: { contains: search, mode: "insensitive" } },
-          { priority: { contains: search, mode: "insensitive" } },
-          ...(search.length === 36 ? [{ review_id: { equals: search } }] : []),
-        ],
-      },
+      orderBy: { [sortBy]: sortOrder },
     });
 
     // Build the pagination response
