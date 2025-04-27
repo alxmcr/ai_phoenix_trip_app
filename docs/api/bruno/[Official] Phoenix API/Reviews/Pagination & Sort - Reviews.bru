@@ -1,11 +1,11 @@
 meta {
-  name: Pagination & Sort - Recommendations
+  name: Pagination & Sort - Reviews
   type: http
   seq: 2
 }
 
 get {
-  url: {{IP_SERVER}}/api/recommendations?page=1&limit=6&sortBy=impact&sortOrder=desc
+  url: {{IP_SERVER}}/api/reviews?page=1&limit=6&sortBy=impact&sortOrder=desc
   body: none
   auth: inherit
 }
