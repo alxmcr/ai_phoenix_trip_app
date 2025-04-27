@@ -1,0 +1,27 @@
+meta {
+  name: Create - Review
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{IP_SERVER}}/api/reviews
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "test7@test.com",
+    "age_group": "40-49",
+    "trip_type": "family",
+    "description": "This is another test review",
+    "transport_mode": "bus",
+    "rating": 3,
+    "company_name": "Test Company 3",
+    "origin": "CDMX",
+    "destination": "Portland",
+    "start_date": "2021-03-01T04:00:00.000Z",
+    "end_date": "2021-03-05T04:00:00.000Z"
+  }
+}
