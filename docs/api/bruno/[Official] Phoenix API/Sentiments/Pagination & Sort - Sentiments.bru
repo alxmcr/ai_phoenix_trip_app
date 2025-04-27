@@ -1,0 +1,18 @@
+meta {
+  name: Pagination & Sort - Sentiments
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{IP_SERVER}}/api/sentiments?page=1&limit=6&sortBy=score&sortOrder=desc
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 6
+  sortBy: score
+  sortOrder: desc
+}
