@@ -1,9 +1,7 @@
-import pool from "@/lib/db/db-config";
 import { HttpResponseCode } from "@/enums/http-response-code";
-import { PaginationResponse } from "@/generics/api/api-generics";
-import { PaginationParams } from "@/generics/db/db-generics";
 import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
-import { ReviewData } from "@/types/db/review";
+import pool from "@/lib/db/db-config";
+import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 // POST /api/reviews
@@ -31,50 +29,36 @@ export async function GET(request: NextRequest) {
   const sortBy = searchParams.get("sortBy") || "created_at";
   const sortOrder = searchParams.get("sortOrder") || "desc";
 
-  // Review: Extract params filters
-  const reviewId = searchParams.get("review_id");
-  const rating = searchParams.get("rating");
-  const transportMode = searchParams.get("transport_mode");
-  const tripType = searchParams.get("trip_type");
-  const ageGroup = searchParams.get("age_group");
-  const companyName = searchParams.get("company_name");
-  const email = searchParams.get("email");
-  const description = searchParams.get("description");
-  const origin = searchParams.get("origin");
-  const destination = searchParams.get("destination");
+  // Prisma client
+  const prisma = new PrismaClient();
 
-  // Review: Build a partial data object
-  const filterReviewData: Partial<ReviewData> = {
-    review_id: reviewId || undefined,
-    rating: rating ? parseInt(rating) : undefined,
-    transport_mode: transportMode || undefined,
-    trip_type: tripType || undefined,
-    age_group: ageGroup || undefined,
-    company_name: companyName || undefined,
-    email: email || undefined,
-    description: description || undefined,
-    origin: origin || undefined,
-    destination: destination || undefined,
-  };
+  try {
+    // Pagination
+    const reviews = await prisma.review.findMany({
+      skip: (parseInt(page) - 1) * parseInt(pageSize),
+      take: parseInt(pageSize),
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+    });
 
-  const dbPool = new DBPoolReviews(pool);
+    // Build the pagination response
+    const responsePagination = {
+      total: reviews.length,
+      page: parseInt(page),
+      pageSize: parseInt(pageSize),
+      totalPages: Math.ceil(reviews.length / parseInt(pageSize)),
+      data: reviews,
+    };
 
-  const paginationParams: PaginationParams = {
-    page: parseInt(page),
-    pageSize: parseInt(pageSize),
-    sortBy: sortBy || "created_at",
-    sortOrder: sortOrder || "desc",
-    filterReviewData,
-  };
-
-  const reviews = await dbPool.pagination(paginationParams);
-
-  const buildResponse: PaginationResponse<ReviewData> = {
-    data: reviews,
-    total: await dbPool.count(),
-    page: parseInt(page),
-    pageSize: parseInt(pageSize),
-  };
-
-  return NextResponse.json(buildResponse, { status: HttpResponseCode.OK });
+    return NextResponse.json(responsePagination, {
+      status: HttpResponseCode.OK,
+    });
+  } catch (error) {
+    console.log("🚀 ~ GET ~ error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: HttpResponseCode.INTERNAL_SERVER_ERROR }
+    );
+  }
 }
