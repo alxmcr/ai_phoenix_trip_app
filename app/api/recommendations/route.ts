@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const prisma = new PrismaClient();
 
     // Pagination
-    const actionables = await prisma.recommendation.findMany({
+    const recommendations = await prisma.recommendation.findMany({
       skip: (parseInt(page) - 1) * parseInt(pageSize),
       take: parseInt(pageSize),
       orderBy: {
@@ -27,11 +27,11 @@ export async function GET(request: NextRequest) {
 
     // Build the pagination response
     const responsePagination = {
-      total: actionables.length,
+      total: recommendations.length,
       page: parseInt(page),
       pageSize: parseInt(pageSize),
-      totalPages: Math.ceil(actionables.length / parseInt(pageSize)),
-      data: actionables,
+      totalPages: Math.ceil(recommendations.length / parseInt(pageSize)),
+      data: recommendations,
     };
 
     return NextResponse.json(responsePagination, {
