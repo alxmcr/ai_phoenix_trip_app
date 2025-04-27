@@ -3,6 +3,7 @@ import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
 import pool from "@/lib/db/db-config";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaClientValidationError } from "@/prisma/app/generated/prisma/runtime/library";
+import { buildReviewWhereFilter } from "@/utils/db/filters/review-prisma-where";
 import { NextRequest, NextResponse } from "next/server";
 
 // POST /api/reviews
@@ -25,10 +26,18 @@ export async function POST(request: NextRequest) {
 // GET /api/reviews?page=1&pageSize=10&sortBy=created_at&sortOrder=desc&rating=5&transport_mode=car&trip_type=business&age_group=20-30&company_name=test&email=test@test.com&description=test&origin=test&destination=test
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const page = searchParams.get("page") || "1";
-  const pageSize = searchParams.get("pageSize") || "10";
-  const sortBy = searchParams.get("sortBy") || "created_at";
-  const sortOrder = searchParams.get("sortOrder") || "desc";
+
+  // Extract the query parameters
+  const {
+    page = "1",
+    pageSize = "10",
+    sortBy = "created_at",
+    sortOrder = "desc",
+    ...rest
+  } = Object.fromEntries(searchParams.entries());
+
+  // Prisma where filter
+  const where = buildReviewWhereFilter(rest);
 
   // Prisma client
   const prisma = new PrismaClient();
@@ -41,6 +50,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         [sortBy]: sortOrder,
       },
+      where,
     });
 
     // Build the pagination response
@@ -56,6 +66,8 @@ export async function GET(request: NextRequest) {
       status: HttpResponseCode.OK,
     });
   } catch (error) {
+    console.error(error);
+
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(
         { error: "Invalid input data" },
