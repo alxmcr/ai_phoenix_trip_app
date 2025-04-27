@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
   const pageSize = searchParams.get("pageSize") || "10";
   const sortBy = searchParams.get("sortBy") || "created_at";
   const sortOrder = searchParams.get("sortOrder") || "desc";
+  const search = searchParams.get("search") || "";
 
   // Prisma client
   const prisma = new PrismaClient();
@@ -23,6 +24,20 @@ export async function GET(request: NextRequest) {
       take: parseInt(pageSize),
       orderBy: {
         [sortBy]: sortOrder,
+      },
+      where: {
+        OR: [
+          ...(search.length === 36
+            ? [{ actionable_id: { equals: search } }]
+            : []),
+          { title: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
+          { source_aspect: { contains: search, mode: "insensitive" } },
+          { department: { contains: search, mode: "insensitive" } },
+          { category: { contains: search, mode: "insensitive" } },
+          { priority: { contains: search, mode: "insensitive" } },
+          ...(search.length === 36 ? [{ review_id: { equals: search } }] : []),
+        ],
       },
     });
 
@@ -39,6 +54,8 @@ export async function GET(request: NextRequest) {
       status: HttpResponseCode.OK,
     });
   } catch (error) {
+    console.log("🚀 ~ GET ~ error:", error);
+
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(
         { error: "Invalid input data" },
