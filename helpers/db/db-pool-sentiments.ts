@@ -97,10 +97,28 @@ export class DBPoolSentiments implements IDBPoolSentiments {
 
   async createMany(items: Partial<SentimentData>[]): Promise<SentimentData[]> {
     const results: SentimentData[] = [];
-    for (const item of items) {
-      const result = await this.create(item);
-      results.push(result);
+
+    // Slice the items array into chunks of 10
+    const chunks = items.reduce((acc, item, index) => {
+      const chunkIndex = Math.floor(index / 10);
+      if (!acc[chunkIndex]) {
+        acc[chunkIndex] = [];
+      }
+
+      acc[chunkIndex].push(item);
+      return acc;
+    }, [] as Partial<SentimentData>[][]);
+
+    // Process each chunk of 10 items
+    for (const chunk of chunks) {
+      // Process each sentiment item within the chunk
+      for (const sentiment of chunk) {
+        // Create individual sentiment in the database
+        const result = await this.create(sentiment);
+        results.push(result);
+      }
     }
+
     return results;
   }
 
