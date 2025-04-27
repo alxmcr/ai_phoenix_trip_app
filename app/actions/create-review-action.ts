@@ -111,8 +111,6 @@ function mockRecommendationsData(review_id: string) {
 }
 
 export async function createReview(formData: FormData) {
-  console.log(formData);
-
   const validatedFields = schema.safeParse({
     rating: Number(formData.get("rating")),
     start_date: new Date(formData.get("start_date") as string),
