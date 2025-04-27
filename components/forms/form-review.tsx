@@ -82,20 +82,6 @@ const transportModes = [
   { value: "ship", label: "Ship" },
 ];
 
-const initialState = {
-  rating: 1,
-  start_date: new Date(),
-  end_date: new Date(),
-  destination: "",
-  company_name: "",
-  origin: "",
-  email: "",
-  age_group: "",
-  trip_type: "",
-  description: "",
-  transport_mode: "",
-};
-
 export function FormReview() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
