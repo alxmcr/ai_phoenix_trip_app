@@ -155,8 +155,14 @@ export class DBPoolReviews implements IDBPoolReviews {
       params.sortOrder = "desc";
     }
 
+    // if sortOrder is not asc or desc, default to desc
+    if (params.sortOrder !== "asc" && params.sortOrder !== "desc") {
+      params.sortOrder = "desc";
+    }
+
     const query = `
-      SELECT * FROM review
+      SELECT *
+      FROM review
       ORDER BY ${params.sortBy} ${params.sortOrder}
       LIMIT ${params.pageSize} OFFSET ${offset}
     `;

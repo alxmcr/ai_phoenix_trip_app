@@ -1,8 +1,8 @@
 export interface PaginationParams {
   page: number;
   pageSize: number;
+  sortOrder: string;
   sortBy?: string;
-  sortOrder?: "asc" | "desc";
 }
 
 export interface DBOperations<T> {
