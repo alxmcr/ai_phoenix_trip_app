@@ -11,13 +11,13 @@ export async function GET() {
     return NextResponse.json(
       {
         average_rating: averageRating,
-        formatted_average: averageRating.toFixed(2)
+        formatted_average: averageRating.toFixed(2),
       },
       { status: HttpResponseCode.OK }
     );
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to get average rating" },
+      { error },
       { status: HttpResponseCode.INTERNAL_SERVER_ERROR }
     );
   }
