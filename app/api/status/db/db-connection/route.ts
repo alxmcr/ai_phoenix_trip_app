@@ -1,11 +1,24 @@
-import pool from "@/lib/db/db-config";
 import { HttpResponseCode } from "@/enums/http-response-code";
-import { DBPoolHealth } from "@/helpers/db-health/db-pool-health";
+import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET() {
-  const dbPoolHealth = new DBPoolHealth(pool);
-  const isConnected = await dbPoolHealth.checkConnection();
+const prisma = new PrismaClient();
 
-  return NextResponse.json({ isConnected }, { status: HttpResponseCode.OK });
+export async function GET() {
+  try {
+    // Test connection to Prisma
+    await prisma.$connect();
+
+    return NextResponse.json(
+      { isConnected: true },
+      { status: HttpResponseCode.OK }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { isConnected: false, error: error },
+      { status: HttpResponseCode.INTERNAL_SERVER_ERROR }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
 }
