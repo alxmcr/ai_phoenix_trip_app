@@ -21,6 +21,13 @@ export async function GET(
 
   const sentiment = await dbPool.findUnique(id);
 
+  if (!sentiment) {
+    return NextResponse.json(
+      { error: "Sentiment not found" },
+      { status: HttpResponseCode.NOT_FOUND }
+    );
+  }
+
   return NextResponse.json(sentiment, {
     status: HttpResponseCode.OK,
   });
@@ -69,19 +76,27 @@ export async function PUT(
     );
   }
 
-  const dbPool = new DBPoolSentiments(pool);
+  try {
+    const dbPool = new DBPoolSentiments(pool);
 
-  const body = await request.json();
-  const sentiment = await dbPool.update(id, body);
+    const body = await request.json();
+    const sentiment = await dbPool.update(id, body);
 
-  const responseMessage = {
-    message: "Sentiment updated successfully",
-    sentiment,
-  };
+    const responseMessage = {
+      message: "Sentiment updated successfully",
+      sentiment,
+    };
 
-  return NextResponse.json(responseMessage, {
-    status: HttpResponseCode.OK,
-  });
+    return NextResponse.json(responseMessage, {
+      status: HttpResponseCode.OK,
+    });
+  } catch (error) {
+    console.log("🚀 ~ PUT ~ error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: HttpResponseCode.INTERNAL_SERVER_ERROR }
+    );
+  }
 }
 
 // DELETE /api/sentiments/:id

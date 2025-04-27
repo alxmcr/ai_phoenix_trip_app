@@ -49,24 +49,29 @@ export class DBPoolSentiments implements IDBPoolSentiments {
       throw new Error("No valid columns provided");
     }
 
-    const setClause = validColumns
-      .map((columnName, index) => `${columnName} = $${index + 2}`)
-      .join(", ");
+    try {
+      const setClause = validColumns
+        .map((columnName, index) => `${columnName} = $${index + 2}`)
+        .join(", ");
 
-    const query = `
+      const query = `
       UPDATE sentiment
       SET ${setClause}
       WHERE sentiment_id = $1
       RETURNING *
     `;
 
-    const values = [
-      pk_id,
-      ...validColumns.map((key) => item[key as keyof SentimentData]),
-    ];
-    const result = await this.pool.query(query, values);
+      const values = [
+        pk_id,
+        ...validColumns.map((key) => item[key as keyof SentimentData]),
+      ];
+      const result = await this.pool.query(query, values);
 
-    return result.rows[0] || null;
+      return result.rows[0] || null;
+    } catch (error) {
+      console.log("🚀 ~ update ~ error:", error);
+      throw error;
+    }
   }
 
   async create(item: Partial<SentimentData>): Promise<SentimentData> {
