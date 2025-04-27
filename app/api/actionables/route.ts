@@ -19,10 +19,10 @@ export async function GET(request: NextRequest) {
     ...rest
   } = Object.fromEntries(searchParams.entries());
 
-  // Prisma client
-  const prisma = new PrismaClient();
-
   try {
+    // Prisma client
+    const prisma = new PrismaClient();
+
     // Prisma where filter
     const where = buildActionableWhereFilter(rest);
 
@@ -35,11 +35,13 @@ export async function GET(request: NextRequest) {
     });
 
     // Build the pagination response
+    const totalPages = Math.ceil(actionables.length / parseInt(pageSize));
+
     const responsePagination = {
       total: actionables.length,
       page: parseInt(page),
       pageSize: parseInt(pageSize),
-      totalPages: Math.ceil(actionables.length / parseInt(pageSize)),
+      totalPages,
       data: actionables,
     };
 

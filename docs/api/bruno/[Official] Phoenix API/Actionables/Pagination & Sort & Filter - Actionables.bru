@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{IP_SERVER}}/api/actionables?page=1&limit=6&sortBy=created_at&sortOrder=desc&search=engineering
+  url: {{IP_SERVER}}/api/actionables?page=1&limit=6&sortBy=created_at&sortOrder=desc&review_id=550e8400-e29b-41d4-a716-446655440002
   body: none
   auth: inherit
 }
@@ -15,5 +15,5 @@ params:query {
   limit: 6
   sortBy: created_at
   sortOrder: desc
-  search: engineering
+  review_id: 550e8400-e29b-41d4-a716-446655440002
 }
