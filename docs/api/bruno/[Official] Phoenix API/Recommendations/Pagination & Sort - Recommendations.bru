@@ -1,0 +1,19 @@
+meta {
+  name: Pagination & Sort - Recommendations
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{IP_SERVER}}/api/recommendations?page=1&limit=6&sortBy=impact&sortOrder=desc&review_id=550e8400-e29b-41d4-a716-446655440002
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 6
+  sortBy: impact
+  sortOrder: desc
+  review_id: 550e8400-e29b-41d4-a716-446655440002
+}

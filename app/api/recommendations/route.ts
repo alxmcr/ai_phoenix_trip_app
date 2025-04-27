@@ -3,15 +3,24 @@ import { DBPoolRecommendations } from "@/helpers/db/db-pool-recommendations";
 import pool from "@/lib/db/db-config";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaClientValidationError } from "@/prisma/app/generated/prisma/runtime/library";
+import { buildRecommendationWhereFilter } from "@/utils/db/filters/recommendation-prisma-where";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/recommendations?page=1&pageSize=10&sortBy=created_at&sortOrder=desc
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const page = searchParams.get("page") || "1";
-  const pageSize = searchParams.get("pageSize") || "10";
-  const sortBy = searchParams.get("sortBy") || "created_at";
-  const sortOrder = searchParams.get("sortOrder") || "desc";
+
+  // Extract the query parameters
+  const {
+    page = "1",
+    pageSize = "10",
+    sortBy = "created_at",
+    sortOrder = "desc",
+    ...rest
+  } = Object.fromEntries(searchParams.entries());
+
+  // Prisma where filter
+  const where = buildRecommendationWhereFilter(rest);
 
   try {
     // Prisma client
@@ -24,6 +33,7 @@ export async function GET(request: NextRequest) {
       orderBy: {
         [sortBy]: sortOrder,
       },
+      where,
     });
 
     // Build the pagination response
@@ -39,6 +49,8 @@ export async function GET(request: NextRequest) {
       status: HttpResponseCode.OK,
     });
   } catch (error) {
+    console.error(error);
+
     if (error instanceof PrismaClientValidationError) {
       return NextResponse.json(
         { error: "Invalid input data" },
