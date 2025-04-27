@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{IP_SERVER}}/api/actionables?page=1&limit=6&sortBy=created_at&sortOrder=desc
+  url: {{IP_SERVER}}/api/actionables?page=1&limit=6&sortBy=created_at&sortOrder=desc&department=engineering
   body: none
   auth: inherit
 }
@@ -15,4 +15,5 @@ params:query {
   limit: 6
   sortBy: created_at
   sortOrder: desc
+  department: engineering
 }
