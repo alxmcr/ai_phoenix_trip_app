@@ -1,4 +1,4 @@
-import pool from "@/config/db/db-config";
+import pool from "@/lib/db/db-config";
 import { DBPoolRecommendations } from "@/helpers/db/db-pool-recommendations";
 import { RecommendationData } from "@/types/db/recommendation";
 import { z } from "zod";

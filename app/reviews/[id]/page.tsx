@@ -1,4 +1,4 @@
-import pool from "@/config/db/db-config";
+import pool from "@/lib/db/db-config";
 import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
 
 export default async function ReviewPage({

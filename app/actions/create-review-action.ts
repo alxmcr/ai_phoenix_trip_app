@@ -1,6 +1,6 @@
 "use server";
 
-import pool from "@/config/db/db-config";
+import pool from "@/lib/db/db-config";
 import { DBPoolActionables } from "@/helpers/db/db-pool-actionables";
 import { DBPoolRecommendations } from "@/helpers/db/db-pool-recommendations";
 import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";

@@ -1,4 +1,4 @@
-import pool from "@/config/db/db-config";
+import pool from "@/lib/db/db-config";
 import { HttpResponseCode } from "@/enums/http-response-code";
 import { PaginationResponse } from "@/generics/api/api-generics";
 import { PaginationParams } from "@/generics/db/db-generics";

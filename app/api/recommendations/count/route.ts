@@ -1,4 +1,4 @@
-import pool from "@/config/db/db-config";
+import pool from "@/lib/db/db-config";
 import { HttpResponseCode } from "@/enums/http-response-code";
 import { DBPoolRecommendations } from "@/helpers/db/db-pool-recommendations";
 import { NextResponse } from "next/server";
