@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "10";
   const sortBy = searchParams.get("sortBy") || "created_at";
-  let sortOrder = searchParams.get("sortOrder") || "desc";
+  const sortOrder = searchParams.get("sortOrder") || "desc";
 
   // Review: Extract params filters
   const reviewId = searchParams.get("review_id");

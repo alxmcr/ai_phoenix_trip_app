@@ -17,7 +17,7 @@ export async function GET() {
     );
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to get recommendations count" },
+      { error },
       { status: HttpResponseCode.INTERNAL_SERVER_ERROR }
     );
   }
