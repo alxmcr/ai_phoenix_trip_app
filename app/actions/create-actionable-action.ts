@@ -1,4 +1,4 @@
-import pool from "@/config/db/db-config";
+import pool from "@/lib/db/db-config";
 import { DBPoolActionables } from "@/helpers/db/db-pool-actionables";
 import { ActionableData } from "@/types/db/actionable";
 import { z } from "zod";

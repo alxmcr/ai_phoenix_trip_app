@@ -1,4 +1,4 @@
-import pool from "@/config/db/db-config";
+import pool from "@/lib/db/db-config";
 import { DBPoolSentiments } from "@/helpers/db/db-pool-sentiments";
 import { SentimentData } from "@/types/db/sentiment";
 import { z } from "zod";
