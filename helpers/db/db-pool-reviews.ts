@@ -12,7 +12,7 @@ interface IDBPoolReviews
 
 export class DBPoolReviews implements IDBPoolReviews {
   private pool: Pool;
-  private readonly columns = [
+  private columns = [
     "review_id",
     "rating",
     "start_date",
@@ -27,7 +27,7 @@ export class DBPoolReviews implements IDBPoolReviews {
     "transport_mode",
     "created_at",
     "updated_at",
-  ] as const;
+  ];
 
   constructor(pool: Pool) {
     this.pool = pool;
@@ -142,30 +142,104 @@ export class DBPoolReviews implements IDBPoolReviews {
   async pagination(params: PaginationParams): Promise<ReviewData[]> {
     const page = params.page ?? 1;
     const pageSize = params.pageSize ?? 10;
-
     const offset = (page - 1) * pageSize;
+    const sortBy = params.sortBy ?? "created_at";
+    const sortOrder = params.sortOrder ?? "desc";
+    const filterReviewData = params.filterReviewData ?? {};
+    console.log(
+      "🚀 ~ DBPoolReviews ~ pagination ~ filterReviewData:",
+      filterReviewData
+    );
 
-    // if sortBy is not provided, default to created_at
-    if (!params.sortBy) {
-      params.sortBy = "created_at";
+    // Check if sortOrder is asc or desc
+    if (sortOrder !== "asc" && sortOrder !== "desc") {
+      throw new Error("Invalid sort order");
     }
 
-    // if sortOrder is not provided, default to desc
-    if (!params.sortOrder) {
-      params.sortOrder = "desc";
+    // Check if sortBy is a valid value
+    if (!this.columns.includes(sortBy)) {
+      throw new Error("Invalid sort by");
     }
 
-    // if sortOrder is not asc or desc, default to desc
-    if (params.sortOrder !== "asc" && params.sortOrder !== "desc") {
-      params.sortOrder = "desc";
+    // Conditions: array of conditions
+    const conditions: string[] = [];
+
+    if (filterReviewData.review_id) {
+      conditions.push(
+        `review_id::TEXT ILIKE '%${filterReviewData.review_id}%'`
+      );
     }
 
+    if (filterReviewData.rating) {
+      conditions.push(`rating ILIKE '%${filterReviewData.rating}%'`);
+    }
+
+    if (filterReviewData.start_date) {
+      conditions.push(`start_date ILIKE '%${filterReviewData.start_date}%'`);
+    }
+
+    if (filterReviewData.end_date) {
+      conditions.push(`end_date ILIKE '%${filterReviewData.end_date}%'`);
+    }
+
+    if (filterReviewData.destination) {
+      conditions.push(`destination ILIKE '%${filterReviewData.destination}%'`);
+    }
+
+    if (filterReviewData.origin) {
+      conditions.push(`origin ILIKE '%${filterReviewData.origin}%'`);
+    }
+
+    if (filterReviewData.transport_mode) {
+      conditions.push(
+        `transport_mode ILIKE '%${filterReviewData.transport_mode}%'`
+      );
+    }
+
+    if (filterReviewData.trip_type) {
+      conditions.push(`trip_type ILIKE '%${filterReviewData.trip_type}%'`);
+    }
+
+    if (filterReviewData.age_group) {
+      conditions.push(`age_group ILIKE '%${filterReviewData.age_group}%'`);
+    }
+
+    if (filterReviewData.company_name) {
+      conditions.push(
+        `company_name ILIKE '%${filterReviewData.company_name}%'`
+      );
+    }
+
+    if (filterReviewData.email) {
+      conditions.push(`email ILIKE '%${filterReviewData.email}%'`);
+    }
+
+    if (filterReviewData.description) {
+      conditions.push(`description ILIKE '%${filterReviewData.description}%'`);
+    }
+
+    const whereConditions = conditions.join(" AND ");
+    console.log(
+      "🚀 ~ DBPoolReviews ~ pagination ~ whereConditions:",
+      whereConditions
+    );
+
+    const whereClause =
+      whereConditions.length > 0 ? `WHERE ${whereConditions}` : "";
+    console.log("🚀 ~ DBPoolReviews ~ pagination ~ whereClause:", {
+      whereClause,
+    });
+
+    // Build the query
     const query = `
-      SELECT *
-      FROM review
-      ORDER BY ${params.sortBy} ${params.sortOrder}
-      LIMIT ${params.pageSize} OFFSET ${offset}
+      SELECT * FROM review
+      ${whereClause}
+      ORDER BY ${sortBy} ${sortOrder}
+      LIMIT ${pageSize} OFFSET ${offset}
     `;
+
+    console.log(query);
+    console.log({ query });
 
     const result = await this.pool.query(query);
     return result.rows;

@@ -6,6 +6,23 @@ import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
 import { ReviewData } from "@/types/db/review";
 import { NextRequest, NextResponse } from "next/server";
 
+// POST /api/reviews
+export async function POST(request: NextRequest) {
+  const dbPool = new DBPoolReviews(pool);
+
+  const body = await request.json();
+  const review = await dbPool.create(body);
+
+  const responseMessage = {
+    message: "Review created successfully",
+    review,
+  };
+
+  return NextResponse.json(responseMessage, {
+    status: HttpResponseCode.CREATED,
+  });
+}
+
 // GET /api/reviews?page=1&pageSize=10&sortBy=created_at&sortOrder=desc&rating=5&transport_mode=car&trip_type=business&age_group=20-30&company_name=test&email=test@test.com&description=test&origin=test&destination=test
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -15,6 +32,7 @@ export async function GET(request: NextRequest) {
   let sortOrder = searchParams.get("sortOrder") || "desc";
 
   // Review: Extract params filters
+  const reviewId = searchParams.get("review_id");
   const rating = searchParams.get("rating");
   const transportMode = searchParams.get("transport_mode");
   const tripType = searchParams.get("trip_type");
@@ -27,6 +45,7 @@ export async function GET(request: NextRequest) {
 
   // Review: Build a partial data object
   const filterReviewData: Partial<ReviewData> = {
+    review_id: reviewId || undefined,
     rating: rating ? parseInt(rating) : undefined,
     transport_mode: transportMode || undefined,
     trip_type: tripType || undefined,
@@ -58,21 +77,4 @@ export async function GET(request: NextRequest) {
   };
 
   return NextResponse.json(buildResponse, { status: HttpResponseCode.OK });
-}
-
-// POST /api/reviews
-export async function POST(request: NextRequest) {
-  const dbPool = new DBPoolReviews(pool);
-
-  const body = await request.json();
-  const review = await dbPool.create(body);
-
-  const responseMessage = {
-    message: "Review created successfully",
-    review,
-  };
-
-  return NextResponse.json(responseMessage, {
-    status: HttpResponseCode.CREATED,
-  });
 }
