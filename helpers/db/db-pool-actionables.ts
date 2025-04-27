@@ -102,10 +102,27 @@ export class DBPoolActionables implements IDBPoolActionables {
     items: Partial<ActionableData>[]
   ): Promise<ActionableData[]> {
     const results: ActionableData[] = [];
-    for (const item of items) {
-      const result = await this.create(item);
-      results.push(result);
+
+    // Slice the items array into chunks of 10
+    const chunks = items.reduce((acc, item, index) => {
+      const chunkIndex = Math.floor(index / 10);
+      if (!acc[chunkIndex]) {
+        acc[chunkIndex] = [];
+      }
+      acc[chunkIndex].push(item);
+      return acc;
+    }, [] as Partial<ActionableData>[][]);
+
+    // Process each chunk of 10 items
+    for (const chunk of chunks) {
+      // Process each actionable item within the chunk
+      for (const actionable of chunk) {
+        // Create individual actionable in the database
+        const result = await this.create(actionable);
+        results.push(result);
+      }
     }
+
     return results;
   }
 

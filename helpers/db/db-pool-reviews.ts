@@ -103,10 +103,27 @@ export class DBPoolReviews implements IDBPoolReviews {
 
   async createMany(items: Partial<ReviewData>[]): Promise<ReviewData[]> {
     const results: ReviewData[] = [];
-    for (const item of items) {
-      const result = await this.create(item);
-      results.push(result);
+
+    // Slice the items array into chunks of 10
+    const chunks = items.reduce((acc, item, index) => {
+      const chunkIndex = Math.floor(index / 10);
+      if (!acc[chunkIndex]) {
+        acc[chunkIndex] = [];
+      }
+      acc[chunkIndex].push(item);
+      return acc;
+    }, [] as Partial<ReviewData>[][]);
+
+    // Process each chunk of 10 items
+    for (const chunk of chunks) {
+      // Process each review item within the chunk
+      for (const review of chunk) {
+        // Create individual review in the database
+        const result = await this.create(review);
+        results.push(result);
+      }
     }
+
     return results;
   }
 
