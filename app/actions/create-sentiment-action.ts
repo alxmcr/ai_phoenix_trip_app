@@ -11,7 +11,7 @@ const schema = z.object({
   summary: z.string(),
 });
 
-export async function createSentiment(sentimentData: SentimentData) {
+export async function createSentiment(sentimentData: Partial<SentimentData>) {
   const dbPoolSentiments = new DBPoolSentiments(pool);
 
   const validatedFields = schema.safeParse({

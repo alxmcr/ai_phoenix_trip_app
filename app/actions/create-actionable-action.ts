@@ -13,7 +13,7 @@ const schema = z.object({
   description: z.string(),
 });
 
-export async function createActionable(actionableData: ActionableData) {
+export async function createActionable(actionableData: Partial<ActionableData>) {
   const dbPoolActionables = new DBPoolActionables(pool);
 
   const validatedFields = schema.safeParse({
