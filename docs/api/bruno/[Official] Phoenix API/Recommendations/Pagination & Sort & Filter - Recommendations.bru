@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{IP_SERVER}}/api/recommendations?page=1&limit=6&sortBy=impact&sortOrder=desc&data_driven=false
+  url: {{IP_SERVER}}/api/recommendations?page=1&limit=6&sortBy=impact&sortOrder=desc&review_id=550e8400-e29b-41d4-a716-446655440001
   body: none
   auth: inherit
 }
@@ -15,5 +15,5 @@ params:query {
   limit: 6
   sortBy: impact
   sortOrder: desc
-  data_driven: false
+  review_id: 550e8400-e29b-41d4-a716-446655440001
 }
