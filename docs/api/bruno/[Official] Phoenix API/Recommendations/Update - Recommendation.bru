@@ -1,0 +1,20 @@
+meta {
+  name: Update - Recommendation
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{IP_SERVER}}/api/recommendations/6b0bf32e-a711-4208-8f9c-d82e2a83945b
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "impact": "high",
+    "target_area": "customer satisfaction",
+    "effort_level": "high",
+    "data_driven": true
+  }
+}
