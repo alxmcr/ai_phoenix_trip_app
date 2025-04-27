@@ -1,0 +1,16 @@
+meta {
+  name: Pagination - Reviews
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{IP_SERVER}}/api/reviews?page=1&limit=6
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 6
+}

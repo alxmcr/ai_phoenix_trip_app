@@ -1,0 +1,16 @@
+meta {
+  name: Pagination - Sentiments
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{IP_SERVER}}/api/sentiments?page=1&limit=6
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 6
+}

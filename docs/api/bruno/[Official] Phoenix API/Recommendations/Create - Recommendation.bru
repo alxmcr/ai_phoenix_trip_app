@@ -1,0 +1,23 @@
+meta {
+  name: Create - Recommendation
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{IP_SERVER}}/api/recommendations
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Test Recommendation xyz",
+    "description": "This is a test recommendation",
+    "impact": "low",
+    "target_area": "customer satisfaction",
+    "effort_level": "low",
+    "data_driven": false,
+    "review_id": "550e8400-e29b-41d4-a716-446655440000"
+  }
+}

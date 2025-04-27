@@ -1,0 +1,23 @@
+meta {
+  name: Create - Actionable
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{IP_SERVER}}/api/actionables
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Test Actionable 4",
+    "description": "This is another test actionable",
+    "priority": "low",
+    "department": "engineering",
+    "category": "engineering",
+    "source_aspect": "customer feedback",
+    "review_id": "550e8400-e29b-41d4-a716-446655440002"
+  }
+}

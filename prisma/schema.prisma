@@ -48,7 +48,7 @@ model Sentiment {
   review_id    String    @unique @db.Uuid // Make sure userId is unique to enforce the one-to-one relationship
 
   @@index([review_id], map: "idx_sentiment_review_id")
-  @@map("sentiments")
+  @@map("sentiment")
 }
 
 model Actionable {

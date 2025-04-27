@@ -21,6 +21,13 @@ export async function GET(
 
   const recommendation = await dbPoolRecommendations.findUnique(id);
 
+  if (!recommendation) {
+    return NextResponse.json(
+      { error: "Recommendation not found" },
+      { status: HttpResponseCode.NOT_FOUND }
+    );
+  }
+
   return NextResponse.json(recommendation, {
     status: HttpResponseCode.OK,
   });

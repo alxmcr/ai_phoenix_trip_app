@@ -1,0 +1,21 @@
+meta {
+  name: Update - Sentiment
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{IP_SERVER}}/api/sentiments/952d17b9-da8b-4a11-a20c-5063c8c51961
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "score": "4",
+    "label": "good",
+    "summary": "Excited",
+    "emotion_tone": "Very excited",
+    "review_id": "e7292a42-3059-488a-8248-e4bcb0927e60"
+  }
+}

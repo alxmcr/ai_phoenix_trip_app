@@ -21,6 +21,13 @@ export async function GET(
 
   const review = await dbPool.findUnique(id);
 
+  if (!review) {
+    return NextResponse.json(
+      { error: "Review not found" },
+      { status: HttpResponseCode.NOT_FOUND }
+    );
+  }
+
   return NextResponse.json(review, {
     status: HttpResponseCode.OK,
   });

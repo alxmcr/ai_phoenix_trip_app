@@ -1,0 +1,17 @@
+meta {
+  name: Update - Actionable
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{IP_SERVER}}/api/actionables/dd80c43d-52c6-48cc-9d5e-7a8e9f9ae766
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "priority": "high"
+  }
+}
