@@ -1,6 +1,8 @@
 "use server";
 
 import pool from "@/config/db/db-config";
+import { DBPoolActionables } from "@/helpers/db/db-pool-actionables";
+import { DBPoolRecommendations } from "@/helpers/db/db-pool-recommendations";
 import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
 import { ActionableData } from "@/types/db/actionable";
 import { RecommendationData } from "@/types/db/recommendation";
@@ -9,8 +11,6 @@ import { SentimentData } from "@/types/db/sentiment";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSentiment } from "./create-sentiment-action";
-import { createActionable } from "./create-actionable-action";
-import { createRecommendation } from "./create-recommendation-action";
 
 const schema = z.object({
   rating: z.number({
@@ -51,7 +51,7 @@ const schema = z.object({
 function mockActionablesData(review_id: string) {
   const actionableData001: Partial<ActionableData> = {
     review_id,
-    title: "Organize Ski Sessions",
+    title: "[test] Organize Ski Sessions",
     description: "Offer off-peak ski sessions to reduce crowding.",
     priority: "High",
     department: "Event Planning",
@@ -61,7 +61,7 @@ function mockActionablesData(review_id: string) {
 
   const actionableData002: Partial<ActionableData> = {
     review_id,
-    title: "Enhance Eco-Tourist Engagement",
+    title: "[test] Enhance Eco-Tourist Engagement",
     description:
       "Provide more interactive sessions on sustainability during eco-tours.",
     priority: "Medium",
@@ -76,7 +76,7 @@ function mockActionablesData(review_id: string) {
 function mockRecommendationsData(review_id: string) {
   const recommendationData001: Partial<RecommendationData> = {
     review_id,
-    title: "Road Trip Enhancements",
+    title: "[test] Road Trip Enhancements",
     description:
       "Offer more scenic stops and personalized experiences during the trip.",
     impact: "Medium",
@@ -87,7 +87,7 @@ function mockRecommendationsData(review_id: string) {
 
   const recommendationData002: Partial<RecommendationData> = {
     review_id,
-    title: "Romantic Getaway Packages",
+    title: "[test] Romantic Getaway Packages",
     description:
       "Create exclusive honeymoon packages tailored to individual needs.",
     impact: "High",
@@ -98,7 +98,7 @@ function mockRecommendationsData(review_id: string) {
 
   const recommendationData003: Partial<RecommendationData> = {
     review_id,
-    title: "Exclusive Luxury Services",
+    title: "[test] Exclusive Luxury Services",
     description:
       "Develop bespoke luxury experiences, including personalized itineraries.",
     impact: "High",
@@ -111,8 +111,6 @@ function mockRecommendationsData(review_id: string) {
 }
 
 export async function createReview(formData: FormData) {
-  console.log(formData);
-
   const validatedFields = schema.safeParse({
     rating: Number(formData.get("rating")),
     start_date: new Date(formData.get("start_date") as string),
@@ -149,8 +147,10 @@ export async function createReview(formData: FormData) {
     age_group,
   } = validatedFields.data;
 
-  // Create DBPoolReviews
+  // Create DBPool's
   const dbPoolReviews = new DBPoolReviews(pool);
+  const dbPoolActionables = new DBPoolActionables(pool);
+  const dbPoolRecommendations = new DBPoolRecommendations(pool);
 
   // Prepare the data for the database
   const reviewData: Partial<ReviewData> = {
@@ -193,36 +193,13 @@ export async function createReview(formData: FormData) {
   };
   await createSentiment(sentimentData);
 
-  // b. Create many actionables
+  // b. Actionables: Create many
   const actionableData = mockActionablesData(review_id);
+  await dbPoolActionables.createMany(actionableData);
 
-  // b.1. Slice the actionableData array for batching
-  // This reduces the array into chunks of 10 items each to prevent overwhelming the database
-  // Example: If actionableData has 25 items, it will be split into:
-  // Chunk 0: [item0, item1, ..., item9]
-  // Chunk 1: [item10, item11, ..., item19]
-  // Chunk 2: [item20, item21, item22, item23, item24]
-  const actionableDataChunks = actionableData.reduce((acc, curr, index) => {
-    const chunkIndex = Math.floor(index / 10);
-    if (!acc[chunkIndex]) {
-      acc[chunkIndex] = [];
-    }
-    acc[chunkIndex].push(curr);
-    return acc;
-  }, [] as Partial<ActionableData>[][]);
-
-  // b.2. Create the actionables in chunks
-  // Process each chunk of 10 items
-  for (const chunk of actionableDataChunks) {
-    // Process each actionable item within the chunk
-    for (const actionable of chunk) {
-      // Create individual actionable in the database
-      await createActionable(actionable);
-    }
-  }
-
-  // c. Create many recommendations
+  // c. Recommendations: Create many
   const recommendationData = mockRecommendationsData(review_id);
+  await dbPoolRecommendations.createMany(recommendationData);
 
   // Redirect to the review page
   redirect(`/reviews/${review_id}`);
