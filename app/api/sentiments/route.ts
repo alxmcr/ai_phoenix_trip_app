@@ -2,6 +2,7 @@ import { HttpResponseCode } from "@/enums/http-response-code";
 import { DBPoolSentiments } from "@/helpers/db/db-pool-sentiments";
 import pool from "@/lib/db/db-config";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
+import { PrismaClientValidationError } from "@/prisma/app/generated/prisma/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/sentiments?page=1&pageSize=10&sortBy=created_at&sortOrder=desc
@@ -38,6 +39,13 @@ export async function GET(request: NextRequest) {
       status: HttpResponseCode.OK,
     });
   } catch (error) {
+    if (error instanceof PrismaClientValidationError) {
+      return NextResponse.json(
+        { error: "Invalid input data" },
+        { status: HttpResponseCode.BAD_REQUEST }
+      );
+    }
+
     return NextResponse.json(
       { error: "Internal server error" },
       { status: HttpResponseCode.INTERNAL_SERVER_ERROR }
