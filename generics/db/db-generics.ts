@@ -1,8 +1,11 @@
+import { ReviewData } from "@/types/db/review";
+
 export interface PaginationParams {
   page: number;
   pageSize: number;
+  sortOrder: string;
   sortBy?: string;
-  sortOrder?: "asc" | "desc";
+  filterReviewData?: Partial<ReviewData>;
 }
 
 export interface DBOperations<T> {
@@ -11,7 +14,6 @@ export interface DBOperations<T> {
   create(item: Partial<T>): Promise<T>;
   createMany(items: Partial<T>[]): Promise<T[]>;
   update(pk_id: string, item: Partial<T>): Promise<T | null>;
-  pagination(params: PaginationParams): Promise<T[]>;
 }
 
 export interface DBAggregateFunctions<T> {
