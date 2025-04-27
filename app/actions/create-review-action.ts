@@ -51,7 +51,7 @@ const schema = z.object({
 function mockActionablesData(review_id: string) {
   const actionableData001: Partial<ActionableData> = {
     review_id,
-    title: "Organize Ski Sessions",
+    title: "[test] Organize Ski Sessions",
     description: "Offer off-peak ski sessions to reduce crowding.",
     priority: "High",
     department: "Event Planning",
@@ -61,7 +61,7 @@ function mockActionablesData(review_id: string) {
 
   const actionableData002: Partial<ActionableData> = {
     review_id,
-    title: "Enhance Eco-Tourist Engagement",
+    title: "[test] Enhance Eco-Tourist Engagement",
     description:
       "Provide more interactive sessions on sustainability during eco-tours.",
     priority: "Medium",
@@ -76,7 +76,7 @@ function mockActionablesData(review_id: string) {
 function mockRecommendationsData(review_id: string) {
   const recommendationData001: Partial<RecommendationData> = {
     review_id,
-    title: "Road Trip Enhancements",
+    title: "[test] Road Trip Enhancements",
     description:
       "Offer more scenic stops and personalized experiences during the trip.",
     impact: "Medium",
@@ -87,7 +87,7 @@ function mockRecommendationsData(review_id: string) {
 
   const recommendationData002: Partial<RecommendationData> = {
     review_id,
-    title: "Romantic Getaway Packages",
+    title: "[test] Romantic Getaway Packages",
     description:
       "Create exclusive honeymoon packages tailored to individual needs.",
     impact: "High",
@@ -98,7 +98,7 @@ function mockRecommendationsData(review_id: string) {
 
   const recommendationData003: Partial<RecommendationData> = {
     review_id,
-    title: "Exclusive Luxury Services",
+    title: "[test] Exclusive Luxury Services",
     description:
       "Develop bespoke luxury experiences, including personalized itineraries.",
     impact: "High",
