@@ -37,13 +37,15 @@ model Review {
 
 // sentiment is a one-to-one relationship with review
 model Sentiment {
-  sentiment_id String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  score        Decimal? @db.Decimal
+  sentiment_id String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  score        Decimal?  @db.Decimal
   label        String?
   summary      String?
   emotion_tone String?
-  review       Review   @relation(fields: [review_id], references: [review_id], onDelete: Cascade, onUpdate: NoAction)
-  review_id    String   @unique @db.Uuid // Make sure userId is unique to enforce the one-to-one relationship
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+  review       Review    @relation(fields: [review_id], references: [review_id], onDelete: Cascade, onUpdate: NoAction)
+  review_id    String    @unique @db.Uuid // Make sure userId is unique to enforce the one-to-one relationship
 
   @@index([review_id], map: "idx_sentiment_review_id")
   @@map("sentiments")

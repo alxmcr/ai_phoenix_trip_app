@@ -25,6 +25,8 @@ CREATE TABLE "sentiments" (
     "label" TEXT,
     "summary" TEXT,
     "emotion_tone" TEXT,
+    "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
     "review_id" UUID NOT NULL,
 
     CONSTRAINT "sentiments_pkey" PRIMARY KEY ("sentiment_id")
