@@ -1,8 +1,7 @@
-import pool from "@/lib/db/db-config";
 import { HttpResponseCode } from "@/enums/http-response-code";
-import { PaginationResponse } from "@/generics/api/api-generics";
 import { DBPoolSentiments } from "@/helpers/db/db-pool-sentiments";
-import { SentimentData } from "@/types/db/sentiment";
+import pool from "@/lib/db/db-config";
+import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/sentiments?page=1&pageSize=10&sortBy=created_at&sortOrder=desc
@@ -10,24 +9,41 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "10";
+  const sortBy = searchParams.get("sortBy") || "created_at";
+  const sortOrder = searchParams.get("sortOrder") || "desc";
 
-  const dbPool = new DBPoolSentiments(pool);
+  // Prisma client
+  const prisma = new PrismaClient();
 
-  const sentiment = await dbPool.pagination({
-    page: parseInt(page),
-    pageSize: parseInt(pageSize),
-    sortBy: "created_at",
-    sortOrder: "desc",
-  });
+  try {
+    // Pagination
+    const actionables = await prisma.sentiment.findMany({
+      skip: (parseInt(page) - 1) * parseInt(pageSize),
+      take: parseInt(pageSize),
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+    });
 
-  const buildResponse: PaginationResponse<SentimentData> = {
-    data: sentiment,
-    total: await dbPool.count(),
-    page: parseInt(page),
-    pageSize: parseInt(pageSize),
-  };
+    // Build the pagination response
+    const responsePagination = {
+      total: actionables.length,
+      page: parseInt(page),
+      pageSize: parseInt(pageSize),
+      totalPages: Math.ceil(actionables.length / parseInt(pageSize)),
+      data: actionables,
+    };
 
-  return NextResponse.json(buildResponse, { status: HttpResponseCode.OK });
+    return NextResponse.json(responsePagination, {
+      status: HttpResponseCode.OK,
+    });
+  } catch (error) {
+    console.log("🚀 ~ GET ~ error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: HttpResponseCode.INTERNAL_SERVER_ERROR }
+    );
+  }
 }
 
 // POST /api/sentiments
