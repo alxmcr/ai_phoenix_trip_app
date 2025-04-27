@@ -11,31 +11,41 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "10";
+  const sortBy = searchParams.get("sortBy") || "created_at";
+  const sortOrder = searchParams.get("sortOrder") || "desc";
 
   // Prisma client
   const prisma = new PrismaClient();
 
-  // Pagination
-  const actionables = await prisma.actionable.findMany({
-    skip: (parseInt(page) - 1) * parseInt(pageSize),
-    take: parseInt(pageSize),
-    orderBy: {
-      created_at: "desc",
-    },
-  });
+  try {
+    // Pagination
+    const actionables = await prisma.actionable.findMany({
+      skip: (parseInt(page) - 1) * parseInt(pageSize),
+      take: parseInt(pageSize),
+      orderBy: {
+        [sortBy]: sortOrder,
+      },
+    });
 
-  // Build the pagination response
-  const responsePagination = {
-    total: actionables.length,
-    page: parseInt(page),
-    pageSize: parseInt(pageSize),
-    totalPages: Math.ceil(actionables.length / parseInt(pageSize)),
-    data: actionables,
-  };
+    // Build the pagination response
+    const responsePagination = {
+      total: actionables.length,
+      page: parseInt(page),
+      pageSize: parseInt(pageSize),
+      totalPages: Math.ceil(actionables.length / parseInt(pageSize)),
+      data: actionables,
+    };
 
-  return NextResponse.json(responsePagination, {
-    status: HttpResponseCode.OK,
-  });
+    return NextResponse.json(responsePagination, {
+      status: HttpResponseCode.OK,
+    });
+  } catch (error) {
+    console.log("🚀 ~ GET ~ error:", error)
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: HttpResponseCode.INTERNAL_SERVER_ERROR }
+    );
+  }
 }
 
 // POST /api/actionables
