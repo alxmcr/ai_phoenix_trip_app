@@ -45,172 +45,119 @@ const schema = z.object({
   }),
 });
 
-function mockActionablesData(review_id: string) {
-  const actionableData001: Partial<ActionableData> = {
-    review_id,
-    title: "[test] Organize Ski Sessions",
-    description: "Offer off-peak ski sessions to reduce crowding.",
-    priority: "High",
-    department: "Event Planning",
-    category: "Winter Sports",
-    source_aspect: "Crowd control",
-  };
+export async function createReviewAction(prevState: any, formData: FormData) {
+  try {
+    const validatedFields = schema.safeParse({
+      rating: Number(formData.get("rating")),
+      start_date: new Date(formData.get("start_date") as string),
+      end_date: new Date(formData.get("end_date") as string),
+      destination: formData.get("destination"),
+      company_name: formData.get("company_name"),
+      origin: formData.get("origin"),
+      trip_type: formData.get("trip_type"),
+      description: formData.get("description"),
+      transport_mode: formData.get("transport_mode"),
+      email: formData.get("email"),
+      age_group: formData.get("age_group"),
+    });
 
-  const actionableData002: Partial<ActionableData> = {
-    review_id,
-    title: "[test] Enhance Eco-Tourist Engagement",
-    description:
-      "Provide more interactive sessions on sustainability during eco-tours.",
-    priority: "Medium",
-    department: "Marketing",
-    category: "Eco-Tourism",
-    source_aspect: "Guest engagement",
-  };
+    // Return early if the form data is invalid
+    if (!validatedFields.success) {
+      return {
+        errors: validatedFields.error.flatten().fieldErrors,
+      };
+    }
 
-  return [actionableData001, actionableData002];
-}
+    // Prepare the data for the database
+    const {
+      rating,
+      start_date,
+      end_date,
+      destination,
+      company_name,
+      origin,
+      trip_type,
+      description,
+      transport_mode,
+      email,
+      age_group,
+    } = validatedFields.data;
 
-function mockRecommendationsData(review_id: string) {
-  const recommendationData001: Partial<RecommendationData> = {
-    review_id,
-    title: "[test] Road Trip Enhancements",
-    description:
-      "Offer more scenic stops and personalized experiences during the trip.",
-    impact: "Medium",
-    target_area: "Route Planning",
-    effort_level: "Low",
-    data_driven: false,
-  };
-
-  const recommendationData002: Partial<RecommendationData> = {
-    review_id,
-    title: "[test] Romantic Getaway Packages",
-    description:
-      "Create exclusive honeymoon packages tailored to individual needs.",
-    impact: "High",
-    target_area: "Sales",
-    effort_level: "Medium",
-    data_driven: true,
-  };
-
-  const recommendationData003: Partial<RecommendationData> = {
-    review_id,
-    title: "[test] Exclusive Luxury Services",
-    description:
-      "Develop bespoke luxury experiences, including personalized itineraries.",
-    impact: "High",
-    target_area: "Luxury Travel",
-    effort_level: "High",
-    data_driven: true,
-  };
-
-  return [recommendationData001, recommendationData002, recommendationData003];
-}
-
-export async function createReview(formData: FormData) {
-  const validatedFields = schema.safeParse({
-    rating: formData.get("rating") || "0",
-    start_date: new Date(formData.get("start_date") as string),
-    end_date: new Date(formData.get("end_date") as string),
-    destination: formData.get("destination"),
-    company_name: formData.get("company_name"),
-    origin: formData.get("origin"),
-    trip_type: formData.get("trip_type"),
-    description: formData.get("description"),
-    transport_mode: formData.get("transport_mode"),
-    email: formData.get("email"),
-    age_group: formData.get("age_group"),
-  });
-
-  // Return early if the form data is invalid
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
+    // Prepare the data for the database
+    const reviewData = {
+      rating: Number(rating),
+      start_date: start_date.toISOString(),
+      end_date: end_date.toISOString(),
+      destination: destination || "",
+      company_name: company_name || "",
+      origin: origin || "",
+      trip_type: trip_type || "",
+      description: description || "",
+      transport_mode: transport_mode || "",
+      email: email || "",
+      age_group: age_group || "",
     };
-  }
 
-  // Prepare the data for the database
-  const {
-    rating,
-    start_date,
-    end_date,
-    destination,
-    company_name,
-    origin,
-    trip_type,
-    description,
-    transport_mode,
-    email,
-    age_group,
-  } = validatedFields.data;
+    // Prisma Client
+    const prisma = new PrismaClient();
 
-  // Prepare the data for the database
-  const reviewData = {
-    rating: Number(rating),
-    start_date: start_date.toISOString(),
-    end_date: end_date.toISOString(),
-    destination: destination || "",
-    company_name: company_name || "",
-    origin: origin || "",
-    trip_type: trip_type || "",
-    description: description || "",
-    transport_mode: transport_mode || "",
-    email: email || "",
-    age_group: age_group || "",
-  };
+    // Create the review
+    const newReview = await prisma.review.create({
+      data: reviewData,
+    });
 
-  // Prisma Client
-  const prisma = new PrismaClient();
+    // Extract the review_id from the newReview object
+    const review_id = newReview.review_id;
 
-  // Create the review
-  const newReview = await prisma.review.create({
-    data: reviewData,
-  });
+    // OpenAI: Analyze the review
+    const reviewAnalyzer = new ReviewAnalyzer();
+    const formattedReview = formatReviewForAnalysis(newReview);
+    const response = await reviewAnalyzer.analyzeReview(formattedReview);
 
-  // Extract the review_id from the newReview object
-  const review_id = newReview.review_id;
+    // Parse the response
+    const parsedResponse = parseAnalyzerOpenAIChatCompletion(
+      response.choices[0].message.content || ""
+    );
 
-  // OpenAI: Analyze the review
-  const reviewAnalyzer = new ReviewAnalyzer();
-  const formattedReview = formatReviewForAnalysis(newReview);
-  const response = await reviewAnalyzer.analyzeReview(formattedReview);
+    // Extract the sentiment, actionables, and recommendations from the response
+    const { sentiment, actionables, recommendations } = parsedResponse;
 
-  // Parse the response
-  const parsedResponse = parseAnalyzerOpenAIChatCompletion(
-    response.choices[0].message.content || ""
-  );
-
-  // Extract the sentiment, actionables, and recommendations from the response
-  const { sentiment, actionables, recommendations } = parsedResponse;
-
-  // Sentiment: create one
-  await prisma.sentiment.create({
-    data: {
-      ...sentiment,
-      review: {
-        connect: {
-          review_id,
+    // Sentiment: create one
+    await prisma.sentiment.create({
+      data: {
+        ...sentiment,
+        review: {
+          connect: {
+            review_id,
+          },
         },
       },
-    },
-  });
+    });
 
-  // Actionables: create many
-  await prisma.actionable.createMany({
-    data: actionables.map((actionable) => ({
-      ...actionable,
-      review_id,
-    })),
-  });
+    // Actionables: create many
+    await prisma.actionable.createMany({
+      data: actionables.map((actionable) => ({
+        ...actionable,
+        review_id,
+      })),
+    });
 
-  // Recommendations: create many
-  await prisma.recommendation.createMany({
-    data: recommendations.map((recommendation) => ({
-      ...recommendation,
-      review_id,
-    })),
-  });
+    // Recommendations: create many
+    await prisma.recommendation.createMany({
+      data: recommendations.map((recommendation) => ({
+        ...recommendation,
+        review_id,
+      })),
+    });
 
-  // Redirect to the review page
-  redirect(`/reviews/${newReview.review_id}`);
+    // Redirect to the review page
+    redirect(`/reviews/${review_id}`);
+  } catch (error) {
+    console.error(error);
+    return {
+      errors: {
+        root: "Failed to create review",
+      },
+    };
+  }
 }
