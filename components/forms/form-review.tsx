@@ -135,7 +135,7 @@ export function FormReview() {
                 <FormLabel>Age Group</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -294,7 +294,7 @@ export function FormReview() {
                 <FormLabel>Transport Mode</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -324,7 +324,7 @@ export function FormReview() {
                 <FormLabel>Trip Type</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -352,7 +352,7 @@ export function FormReview() {
                 <FormLabel>Rating</FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
-                  defaultValue={field.value.toString()}
+                  value={field.value?.toString()}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
