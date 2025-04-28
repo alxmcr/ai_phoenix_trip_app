@@ -1,4 +1,4 @@
-import { HttpResponseCode } from "@/enums/http-response-code";
+import { HttpResponseCode } from "@/enums/api/http-response-code";
 import { DBPoolSentiments } from "@/helpers/db/db-pool-sentiments";
 import pool from "@/lib/db/db-config";
 import { PrismaClient } from "@/prisma/app/generated/prisma";

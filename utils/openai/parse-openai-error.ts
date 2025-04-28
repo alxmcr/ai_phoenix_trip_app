@@ -1,4 +1,4 @@
-import { HttpResponseCode } from "@/enums/http-response-code";
+import { HttpResponseCode } from "@/enums/api/http-response-code";
 
 export function parseOpenAIError(error: any) {
   if (error?.status && error?.error) {
