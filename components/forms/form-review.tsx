@@ -1,117 +1,117 @@
 "use client";
 
-import { createReviewAction } from "@/app/actions/create-review-action";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useActionState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-// Review form schema
-// - rating: number between 1 and 5
-// - start_date: date
-// - end_date: date
-// - destination: string
-// - company_name: string
-// - origin: string
-// - email: email
-// - age_group: string
-// - trip_type: string
-// - description: string
-// - transport_mode: string
+import { cn } from "@/lib/utils";
+import { createReviewAction } from "@/app/actions/create-review-action";
+
+// Define constants for select options
+const AGE_GROUPS = ["18-24", "25-34", "35-44", "45-54", "55+"] as const;
+const TRIP_TYPES = ["business", "leisure", "family", "solo"] as const;
+const TRANSPORT_MODES = ["air", "train", "bus", "car"] as const;
+
+// Create type from constants
+type AgeGroup = typeof AGE_GROUPS[number];
+type TripType = typeof TRIP_TYPES[number];
+type TransportMode = typeof TRANSPORT_MODES[number];
 
 const formSchema = z.object({
-  rating: z.number().min(1).max(5),
-  start_date: z.date(),
-  end_date: z.date(),
-  destination: z.string().min(1),
-  company_name: z.string().min(1),
-  origin: z.string().min(1),
-  email: z.string().email(),
-  age_group: z.string().min(1),
-  trip_type: z.string().min(1),
-  description: z.string().min(1),
-  transport_mode: z.string().min(1),
+  email: z.string().email("Invalid email address"),
+  age_group: z.enum(AGE_GROUPS, {
+    required_error: "Please select your age group",
+    invalid_type_error: "Invalid age group selected",
+  }),
+  trip_type: z.enum(TRIP_TYPES, {
+    required_error: "Please select a trip type",
+    invalid_type_error: "Invalid trip type selected",
+  }),
+  description: z.string()
+    .min(10, "Description must be at least 10 characters")
+    .max(1000, "Description must not exceed 1000 characters"),
+  transport_mode: z.enum(TRANSPORT_MODES, {
+    required_error: "Please select a transport mode",
+    invalid_type_error: "Invalid transport mode selected",
+  }),
+  rating: z.number()
+    .min(1, "Rating must be at least 1")
+    .max(5, "Rating must not exceed 5"),
+  company_name: z.string()
+    .min(1, "Company name is required")
+    .max(100, "Company name must not exceed 100 characters"),
+  origin: z.string()
+    .min(1, "Origin is required")
+    .max(100, "Origin must not exceed 100 characters"),
+  destination: z.string()
+    .min(1, "Destination is required")
+    .max(100, "Destination must not exceed 100 characters"),
+  start_date: z.date({
+    required_error: "Please select a start date",
+    invalid_type_error: "Invalid start date",
+  }),
+  end_date: z.date({
+    required_error: "Please select an end date",
+    invalid_type_error: "Invalid end date",
+  }),
+}).refine((data) => {
+  if (data.start_date && data.end_date) {
+    return data.end_date >= data.start_date;
+  }
+  return true;
+}, {
+  message: "End date must be after start date",
+  path: ["end_date"],
 });
-
-const ageGroups = [
-  { value: "18-24", label: "18-24" },
-  { value: "25-34", label: "25-34" },
-  { value: "35-44", label: "35-44" },
-  { value: "45-54", label: "45-54" },
-  { value: "55+", label: "55+" },
-];
-
-const tripTypes = [
-  { value: "business", label: "Business" },
-  { value: "leisure", label: "Leisure" },
-  { value: "family", label: "Family" },
-  { value: "solo", label: "Solo" },
-];
-
-const transportModes = [
-  { value: "air", label: "Air" },
-  { value: "train", label: "Train" },
-  { value: "bus", label: "Bus" },
-  { value: "car", label: "Car" },
-  { value: "ship", label: "Ship" },
-];
 
 export function FormReview() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      email: "",
+      age_group: undefined,
+      trip_type: undefined,
+      description: "",
+      transport_mode: undefined,
       rating: 1,
-      start_date: new Date(),
-      end_date: new Date(),
-      destination: "",
       company_name: "",
       origin: "",
-      email: "",
-      age_group: "",
-      trip_type: "",
-      description: "",
-      transport_mode: "",
+      destination: "",
     },
   });
 
-  const initialState = {
-    errors: {},
-  };
-
-  const [state, formAction, pending] = useActionState(
-    createReviewAction,
-    initialState
-  );
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const formData = new FormData();
+    Object.entries(values).forEach(([key, value]) => {
+      if (value instanceof Date) {
+        formData.append(key, value.toISOString());
+      } else {
+        formData.append(key, value.toString());
+      }
+    });
+    await createReviewAction(null, formData);
+  }
 
   return (
     <Form {...form}>
-      <form action={formAction} className="space-y-8 p-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
@@ -120,7 +120,7 @@ export function FormReview() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="Enter email" {...field} />
+                  <Input placeholder="your@email.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -133,19 +133,16 @@ export function FormReview() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Age Group</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select age group" />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your age group" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {ageGroups.map((group) => (
-                      <SelectItem key={group.value} value={group.value}>
-                        {group.label}
+                    {AGE_GROUPS.map((ageGroup) => (
+                      <SelectItem key={ageGroup} value={ageGroup}>
+                        {ageGroup}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -154,9 +151,126 @@ export function FormReview() {
               </FormItem>
             )}
           />
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="trip_type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Trip Type</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select trip type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {TRIP_TYPES.map((tripType) => (
+                      <SelectItem key={tripType} value={tripType}>
+                        {tripType.charAt(0).toUpperCase() + tripType.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="transport_mode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Transport Mode</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select transport mode" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {TRANSPORT_MODES.map((mode) => (
+                      <SelectItem key={mode} value={mode}>
+                        {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="company_name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Company name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="rating"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Rating</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={(value) => field.onChange(Number(value))}
+                    defaultValue={field.value.toString()}
+                    className="flex flex-row space-x-2"
+                  >
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <FormItem key={value} className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value={value.toString()} />
+                        </FormControl>
+                        <FormLabel className="font-normal">{value}</FormLabel>
+                      </FormItem>
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="origin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Origin</FormLabel>
+                <FormControl>
+                  <Input placeholder="Where did you start your trip?" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="destination"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Destination</FormLabel>
+                <FormControl>
+                  <Input placeholder="Where did you go?" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="start_date"
@@ -242,137 +356,6 @@ export function FormReview() {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="origin"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Origin</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter origin" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="destination"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Destination</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter destination" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="company_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Company Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter company name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="transport_mode"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Transport Mode</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select transport mode" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {transportModes.map((mode) => (
-                      <SelectItem key={mode.value} value={mode.value}>
-                        {mode.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="trip_type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Trip Type</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select trip type" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {tripTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="rating"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Rating</FormLabel>
-                <Select
-                  onValueChange={(value) => field.onChange(Number(value))}
-                  value={field.value?.toString()}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a rating" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {[1, 2, 3, 4, 5].map((value) => (
-                      <SelectItem key={value} value={value.toString()}>
-                        {value} {value === 1 ? "star" : "stars"}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
         <FormField
           control={form.control}
           name="description"
@@ -381,25 +364,24 @@ export function FormReview() {
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Enter your review description"
-                  className="resize-none"
+                  placeholder="Tell us about your trip experience..."
+                  className="min-h-[100px]"
                   {...field}
                 />
               </FormControl>
+              <FormDescription>
+                Please provide detailed information about your trip experience.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full" size="lg" disabled={pending}>
-          {pending ? "Submitting..." : "Submit Review"}
+        <Button type="submit" className="w-full">
+          Submit Review
         </Button>
-        <p aria-live="polite">{JSON.stringify(state.errors)}</p>
-        <p className="text-xs text-center text-muted-foreground">
-          By submitting this form, you agree to our Terms of Service and Privacy
-          Policy.
-        </p>
       </form>
     </Form>
   );
 }
+
