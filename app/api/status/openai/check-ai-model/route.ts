@@ -1,5 +1,5 @@
 import openaiClient from "@/lib/openai/openai-config";
-import { HttpResponseCode } from "@/enums/http-response-code";
+import { HttpResponseCode } from "@/enums/api/http-response-code";
 import { OpenAIHealth } from "@/helpers/openai-health/openai-health";
 import { parseOpenAIError } from "@/utils/openai/parse-openai-error";
 import { NextResponse } from "next/server";

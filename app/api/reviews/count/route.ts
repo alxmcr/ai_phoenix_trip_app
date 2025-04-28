@@ -1,5 +1,5 @@
 import pool from "@/lib/db/db-config";
-import { HttpResponseCode } from "@/enums/http-response-code";
+import { HttpResponseCode } from "@/enums/api/http-response-code";
 import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
 import { NextResponse } from "next/server";
 

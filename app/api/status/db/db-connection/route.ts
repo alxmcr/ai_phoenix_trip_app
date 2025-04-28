@@ -1,4 +1,4 @@
-import { HttpResponseCode } from "@/enums/http-response-code";
+import { HttpResponseCode } from "@/enums/api/http-response-code";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { NextResponse } from "next/server";
 
