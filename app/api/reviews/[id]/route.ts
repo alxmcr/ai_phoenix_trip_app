@@ -2,6 +2,7 @@ import pool from "@/lib/db/db-config";
 import { HttpResponseCode } from "@/enums/http-response-code";
 import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
 import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@/prisma/app/generated/prisma";
 
 // GET /api/reviews/:id
 export async function GET(
@@ -17,9 +18,18 @@ export async function GET(
     );
   }
 
-  const dbPool = new DBPoolReviews(pool);
+  // Prisma client
+  const prisma = new PrismaClient();
 
-  const review = await dbPool.findUnique(id);
+  // Find review by id
+  const review = await prisma.review.findUnique({
+    where: { review_id: id },
+    include: {
+      sentiment: true,
+      actionables: true,
+      recommendations: true,
+    },
+  });
 
   if (!review) {
     return NextResponse.json(
