@@ -1,12 +1,10 @@
 "use server";
 
-import { parseAnalyzerResponse } from "@/helpers/openai/parse-analyzer-response";
+import { parseAnalyzerOpenAIChatCompletion } from "@/helpers/openai/parse-analyzer-response";
 import { ReviewAnalyzer } from "@/helpers/openai/review-analyzer";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { ActionableData } from "@/types/db/actionable";
 import { RecommendationData } from "@/types/db/recommendation";
-import { ReviewData } from "@/types/db/review";
-import { PrismaReview } from "@/types/prisma/prisma-types";
 import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -178,13 +176,15 @@ export async function createReview(formData: FormData) {
   const response = await reviewAnalyzer.analyzeReview(formattedReview);
 
   // Parse the response
-  const parsedResponse = parseAnalyzerResponse(response);
+  const parsedResponse = parseAnalyzerOpenAIChatCompletion(
+    response.choices[0].message.content || ""
+  );
 
   // Extract the sentiment, actionables, and recommendations from the response
   const { sentiment, actionables, recommendations } = parsedResponse;
 
   // Sentiment: create
-  const newSentiment = await prisma.sentiment.create({
+  await prisma.sentiment.create({
     data: {
       ...sentiment,
       review: {
@@ -196,26 +196,18 @@ export async function createReview(formData: FormData) {
   });
 
   // Actionables: create many
-  const newActionables = await prisma.actionable.createMany({
+  await prisma.actionable.createMany({
     data: actionables.map((actionable) => ({
       ...actionable,
-      review: {
-        connect: {
-          review_id,
-        },
-      },
+      review_id,
     })),
   });
 
   // Recommendations: create many
-  const newRecommendations = await prisma.recommendation.createMany({
+  await prisma.recommendation.createMany({
     data: recommendations.map((recommendation) => ({
       ...recommendation,
-      review: {
-        connect: {
-          review_id,
-        },
-      },
+      review_id,
     })),
   });
 
