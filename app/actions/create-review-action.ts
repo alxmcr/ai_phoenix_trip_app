@@ -1,10 +1,13 @@
 "use server";
 
+import { parseAnalyzerResponse } from "@/helpers/openai/parse-analyzer-response";
 import { ReviewAnalyzer } from "@/helpers/openai/review-analyzer";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { ActionableData } from "@/types/db/actionable";
 import { RecommendationData } from "@/types/db/recommendation";
 import { ReviewData } from "@/types/db/review";
+import { PrismaReview } from "@/types/prisma/prisma-types";
+import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -168,48 +171,53 @@ export async function createReview(formData: FormData) {
 
   // Extract the review_id from the newReview object
   const review_id = newReview.review_id;
-  const review_rating = newReview.rating;
-
-  // Check if the review_id is not null
-  if (!review_rating) {
-    return {
-      errors: {
-        review_id: "Review ID is required",
-      },
-    };
-  }
-
-  // Check if the rating is not null
-  if (!rating) {
-    return {
-      errors: {
-        rating: "Rating is required",
-      },
-    };
-  }
 
   // OpenAI: Analyze the review
   const reviewAnalyzer = new ReviewAnalyzer();
-  const response = await reviewAnalyzer.analyzeReview({
-    ...newReview,
-    rating: newReview.rating ?? 0,
-    start_date: newReview.start_date?.toISOString() ?? '',
-    end_date: newReview.end_date?.toISOString() ?? '',
-    destination: newReview.destination ?? '',
-    company_name: newReview.company_name ?? '',
-    origin: newReview.origin ?? '',
-    trip_type: newReview.trip_type ?? '',
-    description: newReview.description ?? '',
-    transport_mode: newReview.transport_mode ?? '',
-    email: newReview.email ?? '',
-    age_group: newReview.age_group ?? '',
-    created_at: newReview.created_at?.toISOString() ?? '',
-    updated_at: newReview.updated_at?.toISOString() ?? '',
+  const formattedReview = formatReviewForAnalysis(newReview);
+  const response = await reviewAnalyzer.analyzeReview(formattedReview);
+
+  // Parse the response
+  const parsedResponse = parseAnalyzerResponse(response);
+
+  // Extract the sentiment, actionables, and recommendations from the response
+  const { sentiment, actionables, recommendations } = parsedResponse;
+
+  // Sentiment: create
+  const newSentiment = await prisma.sentiment.create({
+    data: {
+      ...sentiment,
+      review: {
+        connect: {
+          review_id,
+        },
+      },
+    },
   });
 
-  // Extract the analysis from the response
-  const analysis = response.choices[0].message.content;
+  // Actionables: create many
+  const newActionables = await prisma.actionable.createMany({
+    data: actionables.map((actionable) => ({
+      ...actionable,
+      review: {
+        connect: {
+          review_id,
+        },
+      },
+    })),
+  });
 
+  // Recommendations: create many
+  const newRecommendations = await prisma.recommendation.createMany({
+    data: recommendations.map((recommendation) => ({
+      ...recommendation,
+      review: {
+        connect: {
+          review_id,
+        },
+      },
+    })),
+  });
 
   // Redirect to the review page
   redirect(`/reviews/${newReview.review_id}`);
