@@ -4,11 +4,7 @@ import { OpenAITemperatures } from "@/enums/openai/openai-temperatures";
 import clientOpenAI from "@/lib/openai/openai-config";
 import { ReviewData } from "@/types/db/review";
 import { buildPromptReview } from "@/utils/openai/builder-prompt-review";
-
-// OpenAI System Directives
-
-export const TRAVEL_ASSISTANT_REVIEW_ANALYZER =
-  "You are a helpful assistant that analyzes reviews.";
+import { DEFINITION_SYSTEM_TRAVEL_ASSISTANT_REVIEW_ANALYZER_JSON } from "./system-directive-json";
 
 export class ReviewAnalyzer {
   private model: OpenAIModels;
@@ -19,7 +15,8 @@ export class ReviewAnalyzer {
   constructor() {
     this.model = OpenAIModels.GPT_3_5_TURBO;
     this.temperature = OpenAITemperatures.BALANCED_CREATIVE;
-    this.directiveSystem = TRAVEL_ASSISTANT_REVIEW_ANALYZER;
+    this.directiveSystem =
+      DEFINITION_SYSTEM_TRAVEL_ASSISTANT_REVIEW_ANALYZER_JSON;
     this.maxTokens = 2000;
   }
 

@@ -1,16 +1,12 @@
 "use server";
 
-import pool from "@/lib/db/db-config";
-import { DBPoolActionables } from "@/helpers/db/db-pool-actionables";
-import { DBPoolRecommendations } from "@/helpers/db/db-pool-recommendations";
-import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
+import { ReviewAnalyzer } from "@/helpers/openai/review-analyzer";
+import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { ActionableData } from "@/types/db/actionable";
 import { RecommendationData } from "@/types/db/recommendation";
 import { ReviewData } from "@/types/db/review";
-import { SentimentData } from "@/types/db/sentiment";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { createSentiment } from "./create-sentiment-action";
 
 const schema = z.object({
   rating: z.number({
@@ -112,7 +108,7 @@ function mockRecommendationsData(review_id: string) {
 
 export async function createReview(formData: FormData) {
   const validatedFields = schema.safeParse({
-    rating: Number(formData.get("rating")),
+    rating: formData.get("rating") || "0",
     start_date: new Date(formData.get("start_date") as string),
     end_date: new Date(formData.get("end_date") as string),
     destination: formData.get("destination"),
@@ -147,34 +143,35 @@ export async function createReview(formData: FormData) {
     age_group,
   } = validatedFields.data;
 
-  // Create DBPool's
-  const dbPoolReviews = new DBPoolReviews(pool);
-  const dbPoolActionables = new DBPoolActionables(pool);
-  const dbPoolRecommendations = new DBPoolRecommendations(pool);
-
   // Prepare the data for the database
-  const reviewData: Partial<ReviewData> = {
+  const reviewData = {
     rating: Number(rating),
     start_date: start_date.toISOString(),
     end_date: end_date.toISOString(),
-    destination,
-    company_name,
-    origin,
-    trip_type,
-    description,
-    transport_mode,
-    email,
-    age_group,
+    destination: destination || "",
+    company_name: company_name || "",
+    origin: origin || "",
+    trip_type: trip_type || "",
+    description: description || "",
+    transport_mode: transport_mode || "",
+    email: email || "",
+    age_group: age_group || "",
   };
 
-  // Create Review in DB
-  const newReview = await dbPoolReviews.create(reviewData);
+  // Prisma Client
+  const prisma = new PrismaClient();
+
+  // Create the review
+  const newReview = await prisma.review.create({
+    data: reviewData,
+  });
 
   // Extract the review_id from the newReview object
   const review_id = newReview.review_id;
+  const review_rating = newReview.rating;
 
   // Check if the review_id is not null
-  if (!review_id) {
+  if (!review_rating) {
     return {
       errors: {
         review_id: "Review ID is required",
@@ -182,25 +179,38 @@ export async function createReview(formData: FormData) {
     };
   }
 
-  // Create insights data
-  // a. Create Sentiment
-  const sentimentData: Partial<SentimentData> = {
-    review_id,
-    score: 2,
-    emotion_tone: "Bad",
-    label: "Bad experience",
-    summary: "I do not like this trip",
-  };
-  await createSentiment(sentimentData);
+  // Check if the rating is not null
+  if (!rating) {
+    return {
+      errors: {
+        rating: "Rating is required",
+      },
+    };
+  }
 
-  // b. Actionables: Create many
-  const actionableData = mockActionablesData(review_id);
-  await dbPoolActionables.createMany(actionableData);
+  // OpenAI: Analyze the review
+  const reviewAnalyzer = new ReviewAnalyzer();
+  const response = await reviewAnalyzer.analyzeReview({
+    ...newReview,
+    rating: newReview.rating ?? 0,
+    start_date: newReview.start_date?.toISOString() ?? '',
+    end_date: newReview.end_date?.toISOString() ?? '',
+    destination: newReview.destination ?? '',
+    company_name: newReview.company_name ?? '',
+    origin: newReview.origin ?? '',
+    trip_type: newReview.trip_type ?? '',
+    description: newReview.description ?? '',
+    transport_mode: newReview.transport_mode ?? '',
+    email: newReview.email ?? '',
+    age_group: newReview.age_group ?? '',
+    created_at: newReview.created_at?.toISOString() ?? '',
+    updated_at: newReview.updated_at?.toISOString() ?? '',
+  });
 
-  // c. Recommendations: Create many
-  const recommendationData = mockRecommendationsData(review_id);
-  await dbPoolRecommendations.createMany(recommendationData);
+  // Extract the analysis from the response
+  const analysis = response.choices[0].message.content;
+
 
   // Redirect to the review page
-  redirect(`/reviews/${review_id}`);
+  redirect(`/reviews/${newReview.review_id}`);
 }
