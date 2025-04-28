@@ -1,6 +1,6 @@
 "use client";
 
-import { createReview } from "@/app/actions/create-review-action";
+import { createReviewAction } from "@/app/actions/create-review-action";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -9,7 +9,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -29,7 +29,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useTransition } from "react";
+import { useActionState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 // Review form schema
@@ -100,25 +100,18 @@ export function FormReview() {
     },
   });
 
-  const [isPending, startTransition] = useTransition();
+  const initialState = {
+    errors: {},
+  };
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
-    startTransition(async () => {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        if (value instanceof Date) {
-          formData.append(key, value.toISOString());
-        } else {
-          formData.append(key, value.toString());
-        }
-      });
-      await createReview(formData);
-    });
-  }
+  const [state, formAction, pending] = useActionState(
+    createReviewAction,
+    initialState
+  );
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-4">
+      <form action={formAction} className="space-y-8 p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
@@ -142,7 +135,7 @@ export function FormReview() {
                 <FormLabel>Age Group</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -301,7 +294,7 @@ export function FormReview() {
                 <FormLabel>Transport Mode</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -331,7 +324,7 @@ export function FormReview() {
                 <FormLabel>Trip Type</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -359,7 +352,7 @@ export function FormReview() {
                 <FormLabel>Rating</FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
-                  defaultValue={field.value.toString()}
+                  value={field.value?.toString()}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -398,9 +391,10 @@ export function FormReview() {
           )}
         />
 
-        <Button type="submit" className="w-full" size="lg" disabled={isPending}>
-          {isPending ? "Submitting..." : "Submit Review"}
+        <Button type="submit" className="w-full" size="lg" disabled={pending}>
+          {pending ? "Submitting..." : "Submit Review"}
         </Button>
+        <p aria-live="polite">{JSON.stringify(state.errors)}</p>
         <p className="text-xs text-center text-muted-foreground">
           By submitting this form, you agree to our Terms of Service and Privacy
           Policy.
