@@ -1,6 +1,6 @@
 import { AnalyzerResponse } from '../../types/openai/analyzer';
 
-export function parseAnalyzerResponse(response: string): AnalyzerResponse {
+export function parseAnalyzerOpenAIChatCompletion(response: string): AnalyzerResponse {
   try {
     // Remove any potential markdown code block formatting
     const cleanResponse = response.replace(/```json\n?|\n?```/g, '').trim();
