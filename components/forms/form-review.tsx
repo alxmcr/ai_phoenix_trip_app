@@ -20,9 +20,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createReviewAction } from "@/app/actions/create-review-action";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 // Define constants for select options
 const AGE_GROUPS = ["18-24", "25-34", "35-44", "45-54", "55+"] as const;
@@ -82,6 +84,7 @@ const formSchema = z.object({
 });
 
 export function FormReview() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -98,15 +101,54 @@ export function FormReview() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const formData = new FormData();
-    Object.entries(values).forEach(([key, value]) => {
-      if (value instanceof Date) {
-        formData.append(key, value.toISOString());
-      } else {
-        formData.append(key, value.toString());
+    try {
+      setIsSubmitting(true);
+      const formData = new FormData();
+      Object.entries(values).forEach(([key, value]) => {
+        if (value instanceof Date) {
+          formData.append(key, value.toISOString());
+        } else {
+          formData.append(key, value.toString());
+        }
+      });
+      await createReviewAction(null, formData);
+    } catch (error) {
+      console.error("Form submission error:", error);
+
+      if (error instanceof Error) {
+        if (error.message.includes("429") || error.message.includes("quota")) {
+          toast.error(
+            "We're currently experiencing high demand. Please try again later or contact support.",
+            {
+              duration: 5000,
+              position: "top-center",
+              style: {
+                background: "#ef4444",
+                color: "#fff",
+                padding: "16px",
+                borderRadius: "8px",
+              },
+            }
+          );
+        } else {
+          toast.error(
+            "An error occurred while submitting your review. Please try again.",
+            {
+              duration: 5000,
+              position: "top-center",
+              style: {
+                background: "#ef4444",
+                color: "#fff",
+                padding: "16px",
+                borderRadius: "8px",
+              },
+            }
+          );
+        }
       }
-    });
-    await createReviewAction(null, formData);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -284,7 +326,8 @@ export function FormReview() {
                         variant={"outline"}
                         className={cn(
                           "w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
+                          "h-10"
                         )}
                       >
                         {field.value ? (
@@ -305,6 +348,7 @@ export function FormReview() {
                         date > new Date() || date < new Date("1900-01-01")
                       }
                       initialFocus
+                      className="rounded-md border"
                     />
                   </PopoverContent>
                 </Popover>
@@ -326,7 +370,8 @@ export function FormReview() {
                         variant={"outline"}
                         className={cn(
                           "w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
+                          "h-10"
                         )}
                       >
                         {field.value ? (
@@ -347,6 +392,7 @@ export function FormReview() {
                         date > new Date() || date < new Date("1900-01-01")
                       }
                       initialFocus
+                      className="rounded-md border"
                     />
                   </PopoverContent>
                 </Popover>
@@ -377,8 +423,19 @@ export function FormReview() {
           )}
         />
 
-        <Button type="submit" className="w-full">
-          Submit Review
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            "Submit Review"
+          )}
         </Button>
       </form>
     </Form>
