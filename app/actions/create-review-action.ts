@@ -183,7 +183,7 @@ export async function createReview(formData: FormData) {
   // Extract the sentiment, actionables, and recommendations from the response
   const { sentiment, actionables, recommendations } = parsedResponse;
 
-  // Sentiment: create
+  // Sentiment: create one
   await prisma.sentiment.create({
     data: {
       ...sentiment,
