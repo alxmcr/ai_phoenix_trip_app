@@ -1,5 +1,4 @@
-import pool from "@/lib/db/db-config";
-import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
+import { PrismaClient } from "@/prisma/app/generated/prisma";
 
 export default async function ReviewPage({
   params,
@@ -8,9 +7,18 @@ export default async function ReviewPage({
 }) {
   const { id } = await params;
 
-  const dbPoolReviews = new DBPoolReviews(pool);
+  // Prisma client
+  const prisma = new PrismaClient();
 
-  const review = await dbPoolReviews.findUnique(id);
+  // Find review by id
+  const review = await prisma.review.findUnique({
+    where: { review_id: id },
+    include: {
+      sentiment: true,
+      actionables: true,
+      recommendations: true,
+    },
+  });
 
   if (!id) {
     return <div>Review not found</div>;
