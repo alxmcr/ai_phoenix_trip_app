@@ -148,6 +148,19 @@ export async function createReviewAction(prevState: any, formData: FormData) {
     redirect(`/reviews/${review_id}`);
   } catch (error) {
     console.error(error);
+
+    // Check if it's an OpenAI quota error
+    if (error instanceof Error &&
+        (error.message.includes("429") ||
+         error.message.includes("quota") ||
+         error.message.includes("exceeded"))) {
+      return {
+        errors: {
+          root: "openai_quota_exceeded",
+        },
+      };
+    }
+
     return {
       errors: {
         root: "Failed to create review",

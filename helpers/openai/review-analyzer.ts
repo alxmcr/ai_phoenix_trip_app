@@ -24,36 +24,41 @@ export class ReviewAnalyzer {
   // Source: https://platform.openai.com/docs/api-reference/responses/create
   // Roles: system, user
   async analyzeReview(review: ReviewData) {
-    const prompt = buildPromptReview(review);
+    try {
+      const prompt = buildPromptReview(review);
 
-    // Create a response from OpenAI
-    const response = await clientOpenAI.chat.completions.create({
-      model: this.model,
-      store: false,
-      temperature: this.temperature,
-      max_tokens: this.maxTokens,
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: OpenAIMessageRoles.SYSTEM,
-          content: this.directiveSystem,
-        },
-        {
-          role: OpenAIMessageRoles.USER,
-          content: prompt,
-        },
-      ],
-    });
+      // Create a response from OpenAI
+      const response = await clientOpenAI.chat.completions.create({
+        model: this.model,
+        store: false,
+        temperature: this.temperature,
+        max_tokens: this.maxTokens,
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: OpenAIMessageRoles.SYSTEM,
+            content: this.directiveSystem,
+          },
+          {
+            role: OpenAIMessageRoles.USER,
+            content: prompt,
+          },
+        ],
+      });
 
-    // Print the response
-    console.log("🚀 ~ ReviewAnalyzer ~ analyzeReview ~ response:", response);
+      // Print the response
+      console.log("🚀 ~ ReviewAnalyzer ~ analyzeReview ~ response:", response);
 
-    // Printy typeof response
-    console.log(
-      "🚀 ~ ReviewAnalyzer ~ analyzeReview ~ typeof response:",
-      typeof response
-    );
+      // Printy typeof response
+      console.log(
+        "🚀 ~ ReviewAnalyzer ~ analyzeReview ~ typeof response:",
+        typeof response
+      );
 
-    return response;
+      return response;
+    } catch (error) {
+      console.error("Error analyzing review:", error);
+      throw error;
+    }
   }
 }

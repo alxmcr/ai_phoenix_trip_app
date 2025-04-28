@@ -16,9 +16,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -26,62 +36,81 @@ import { createReviewAction } from "@/app/actions/create-review-action";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
+// Define types for the server action response
+type ServerActionResponse = {
+  errors?: {
+    root?: string;
+    [key: string]: string[] | string | undefined;
+  };
+  review_id?: string;
+};
+
 // Define constants for select options
 const AGE_GROUPS = ["18-24", "25-34", "35-44", "45-54", "55+"] as const;
 const TRIP_TYPES = ["business", "leisure", "family", "solo"] as const;
 const TRANSPORT_MODES = ["air", "train", "bus", "car"] as const;
 
 // Create type from constants
-type AgeGroup = typeof AGE_GROUPS[number];
-type TripType = typeof TRIP_TYPES[number];
-type TransportMode = typeof TRANSPORT_MODES[number];
+type AgeGroup = (typeof AGE_GROUPS)[number];
+type TripType = (typeof TRIP_TYPES)[number];
+type TransportMode = (typeof TRANSPORT_MODES)[number];
 
-const formSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  age_group: z.enum(AGE_GROUPS, {
-    required_error: "Please select your age group",
-    invalid_type_error: "Invalid age group selected",
-  }),
-  trip_type: z.enum(TRIP_TYPES, {
-    required_error: "Please select a trip type",
-    invalid_type_error: "Invalid trip type selected",
-  }),
-  description: z.string()
-    .min(10, "Description must be at least 10 characters")
-    .max(1000, "Description must not exceed 1000 characters"),
-  transport_mode: z.enum(TRANSPORT_MODES, {
-    required_error: "Please select a transport mode",
-    invalid_type_error: "Invalid transport mode selected",
-  }),
-  rating: z.number()
-    .min(1, "Rating must be at least 1")
-    .max(5, "Rating must not exceed 5"),
-  company_name: z.string()
-    .min(1, "Company name is required")
-    .max(100, "Company name must not exceed 100 characters"),
-  origin: z.string()
-    .min(1, "Origin is required")
-    .max(100, "Origin must not exceed 100 characters"),
-  destination: z.string()
-    .min(1, "Destination is required")
-    .max(100, "Destination must not exceed 100 characters"),
-  start_date: z.date({
-    required_error: "Please select a start date",
-    invalid_type_error: "Invalid start date",
-  }),
-  end_date: z.date({
-    required_error: "Please select an end date",
-    invalid_type_error: "Invalid end date",
-  }),
-}).refine((data) => {
-  if (data.start_date && data.end_date) {
-    return data.end_date >= data.start_date;
-  }
-  return true;
-}, {
-  message: "End date must be after start date",
-  path: ["end_date"],
-});
+const formSchema = z
+  .object({
+    email: z.string().email("Invalid email address"),
+    age_group: z.enum(AGE_GROUPS, {
+      required_error: "Please select your age group",
+      invalid_type_error: "Invalid age group selected",
+    }),
+    trip_type: z.enum(TRIP_TYPES, {
+      required_error: "Please select a trip type",
+      invalid_type_error: "Invalid trip type selected",
+    }),
+    description: z
+      .string()
+      .min(10, "Description must be at least 10 characters")
+      .max(1000, "Description must not exceed 1000 characters"),
+    transport_mode: z.enum(TRANSPORT_MODES, {
+      required_error: "Please select a transport mode",
+      invalid_type_error: "Invalid transport mode selected",
+    }),
+    rating: z
+      .number()
+      .min(1, "Rating must be at least 1")
+      .max(5, "Rating must not exceed 5"),
+    company_name: z
+      .string()
+      .min(1, "Company name is required")
+      .max(100, "Company name must not exceed 100 characters"),
+    origin: z
+      .string()
+      .min(1, "Origin is required")
+      .max(100, "Origin must not exceed 100 characters"),
+    destination: z
+      .string()
+      .min(1, "Destination is required")
+      .max(100, "Destination must not exceed 100 characters"),
+    start_date: z.date({
+      required_error: "Please select a start date",
+      invalid_type_error: "Invalid start date",
+    }),
+    end_date: z.date({
+      required_error: "Please select an end date",
+      invalid_type_error: "Invalid end date",
+    }),
+  })
+  .refine(
+    (data) => {
+      if (data.start_date && data.end_date) {
+        return data.end_date >= data.start_date;
+      }
+      return true;
+    },
+    {
+      message: "End date must be after start date",
+      path: ["end_date"],
+    }
+  );
 
 export function FormReview() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -111,40 +140,50 @@ export function FormReview() {
           formData.append(key, value.toString());
         }
       });
-      await createReviewAction(null, formData);
+      const result = await createReviewAction(null, formData) as ServerActionResponse;
+
+      if (result?.errors?.root === "openai_quota_exceeded") {
+        toast.error(
+          "We're currently experiencing high demand with our AI analysis service. Your review has been saved, but the AI analysis will be processed later. Thank you for your patience!",
+          {
+            duration: 8000,
+            position: "top-center",
+            style: {
+              background: "#ef4444",
+              color: "#fff",
+              padding: "16px",
+              borderRadius: "8px",
+              maxWidth: "500px",
+            },
+          }
+        );
+        // Redirect to the review page without AI analysis
+        if (result.review_id) {
+          window.location.href = `/reviews/${result.review_id}`;
+        }
+        return;
+      }
+
+      if (result?.errors) {
+        throw new Error(result.errors.root || "An error occurred");
+      }
     } catch (error) {
       console.error("Form submission error:", error);
 
       if (error instanceof Error) {
-        if (error.message.includes("429") || error.message.includes("quota")) {
-          toast.error(
-            "We're currently experiencing high demand. Please try again later or contact support.",
-            {
-              duration: 5000,
-              position: "top-center",
-              style: {
-                background: "#ef4444",
-                color: "#fff",
-                padding: "16px",
-                borderRadius: "8px",
-              },
-            }
-          );
-        } else {
-          toast.error(
-            "An error occurred while submitting your review. Please try again.",
-            {
-              duration: 5000,
-              position: "top-center",
-              style: {
-                background: "#ef4444",
-                color: "#fff",
-                padding: "16px",
-                borderRadius: "8px",
-              },
-            }
-          );
-        }
+        toast.error(
+          "An error occurred while submitting your review. Please try again.",
+          {
+            duration: 5000,
+            position: "top-center",
+            style: {
+              background: "#ef4444",
+              color: "#fff",
+              padding: "16px",
+              borderRadius: "8px",
+            },
+          }
+        );
       }
     } finally {
       setIsSubmitting(false);
@@ -175,7 +214,10 @@ export function FormReview() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Age Group</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your age group" />
@@ -200,7 +242,10 @@ export function FormReview() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Trip Type</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select trip type" />
@@ -225,7 +270,10 @@ export function FormReview() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Transport Mode</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select transport mode" />
@@ -271,7 +319,10 @@ export function FormReview() {
                     className="flex flex-row space-x-2"
                   >
                     {[1, 2, 3, 4, 5].map((value) => (
-                      <FormItem key={value} className="flex items-center space-x-3 space-y-0">
+                      <FormItem
+                        key={value}
+                        className="flex items-center space-x-3 space-y-0"
+                      >
                         <FormControl>
                           <RadioGroupItem value={value.toString()} />
                         </FormControl>
@@ -292,7 +343,10 @@ export function FormReview() {
               <FormItem>
                 <FormLabel>Origin</FormLabel>
                 <FormControl>
-                  <Input placeholder="Where did you start your trip?" {...field} />
+                  <Input
+                    placeholder="Where did you start your trip?"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -325,9 +379,8 @@ export function FormReview() {
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground",
-                          "h-10"
+                          "w-[240px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
                         )}
                       >
                         {field.value ? (
@@ -347,8 +400,6 @@ export function FormReview() {
                       disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
                       }
-                      initialFocus
-                      className="rounded-md border"
                     />
                   </PopoverContent>
                 </Popover>
@@ -369,9 +420,8 @@ export function FormReview() {
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground",
-                          "h-10"
+                          "w-[240px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
                         )}
                       >
                         {field.value ? (
@@ -392,7 +442,6 @@ export function FormReview() {
                         date > new Date() || date < new Date("1900-01-01")
                       }
                       initialFocus
-                      className="rounded-md border"
                     />
                   </PopoverContent>
                 </Popover>
@@ -423,11 +472,7 @@ export function FormReview() {
           )}
         />
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={isSubmitting}
-        >
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -441,4 +486,3 @@ export function FormReview() {
     </Form>
   );
 }
-
