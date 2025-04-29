@@ -1,6 +1,7 @@
 import { Hero } from "@/components/sections/review-page/hero-section";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaReviewWithRelations } from "@/types/prisma/prisma-types";
+import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
 import { Suspense } from "react";
 
 export default async function ReviewPage({
@@ -24,6 +25,9 @@ export default async function ReviewPage({
       },
     });
 
+  // Format review for analysis
+  const formattedReview = formatReviewForAnalysis(reviewAnalysis);
+
   if (!id) {
     return <div>Review not found</div>;
   }
@@ -34,12 +38,7 @@ export default async function ReviewPage({
 
   return (
     <main className="flex flex-col min-h-screen items-center">
-      <h1>Review</h1>
-
-      <div className="flex flex-col gap-4">
-        <h2>Review</h2>
-        <p>{reviewAnalysis.description}</p>
-      </div>
+      <Hero review={formattedReview} />
 
       <div className="flex flex-col gap-4">
         <h2>Sentiment</h2>

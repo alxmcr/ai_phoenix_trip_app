@@ -1,7 +1,13 @@
 import { ReviewData } from "@/types/db/review";
 import { PrismaReview } from "@/types/prisma/prisma-types";
 
-export function formatReviewForAnalysis(review: PrismaReview): ReviewData {
+export function formatReviewForAnalysis(
+  review: PrismaReview | null
+): ReviewData {
+  if (!review) {
+    throw new Error("Review is null or undefined");
+  }
+
   return {
     review_id: review.review_id,
     rating: review.rating ?? 0,
