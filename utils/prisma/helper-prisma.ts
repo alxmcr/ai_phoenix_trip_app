@@ -1,5 +1,6 @@
 import { ReviewData } from "@/types/db/review";
-import { PrismaReview } from "@/types/prisma/prisma-types";
+import { SentimentData } from "@/types/db/sentiment";
+import { PrismaReview, PrismaSentiment } from "@/types/prisma/prisma-types";
 
 export function formatReviewForAnalysis(
   review: PrismaReview | null
@@ -23,5 +24,24 @@ export function formatReviewForAnalysis(
     age_group: review.age_group ?? "",
     created_at: review.created_at?.toISOString() ?? new Date().toISOString(),
     updated_at: review.updated_at?.toISOString() ?? new Date().toISOString(),
+  };
+}
+
+export function formatSentimentForAnalysis(
+  sentiment: PrismaSentiment | null
+): SentimentData {
+  if (!sentiment) {
+    throw new Error("Sentiment is null or undefined");
+  }
+
+  return {
+    sentiment_id: sentiment.sentiment_id,
+    review_id: sentiment.review_id,
+    score: sentiment.score?.toNumber() ?? 0,
+    emotion_tone: sentiment.emotion_tone ?? "",
+    label: sentiment.label ?? "",
+    summary: sentiment.summary ?? "",
+    created_at: sentiment.created_at?.toISOString() ?? new Date().toISOString(),
+    updated_at: sentiment.updated_at?.toISOString() ?? new Date().toISOString(),
   };
 }

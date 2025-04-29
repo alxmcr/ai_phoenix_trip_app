@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReviewData } from "@/types/db/review";
-import { copyToClipboard } from "@/utils/copy-to-clipboard";
+import { copyToClipboard } from "@/utils/ui/copy-to-clipboard";
 import { helperFormatDate } from "@/utils/util-dates";
 import { Copy, Facebook, MessageCircle, Twitter } from "lucide-react";
 

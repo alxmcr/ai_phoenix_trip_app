@@ -6,7 +6,6 @@ import { AnalyzerResponse } from "@/types/openai/analyzer";
 import { ReviewServerActionResponse } from "@/types/server-actions/review-server-action";
 import { parseFormData } from "@/utils/form/helpers-form";
 import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const schema = z.object({
