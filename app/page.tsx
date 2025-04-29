@@ -1,13 +1,15 @@
 "use client";
 
 import { FormReview } from "@/components/forms/form-review";
-import Hero from "@/components/sections/home-page/hero";
+import HeroSection from "@/components/sections/home-page/hero-section";
+import PartnersSection from "@/components/sections/home-page/partners-section";
 import { Toaster } from "react-hot-toast";
 
 export default function Home() {
   return (
     <main className="flex flex-col min-h-screen items-center">
-      <Hero />
+      <HeroSection />
+      <PartnersSection />
       <FormReview />
       <Toaster />
     </main>
