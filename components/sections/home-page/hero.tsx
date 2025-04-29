@@ -3,9 +3,16 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export default function Hero() {
   const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // After mounting, we have access to the theme
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <section className="py-20 md:py-28 px-4 md:px-0 container">
@@ -31,17 +38,26 @@ export default function Hero() {
           </div>
         </div>
         <div className="relative h-[300px] md:h-[400px] lg:h-[500px] rounded-lg overflow-hidden">
-          <Image
-            src={
-              resolvedTheme === "dark"
-                ? "/illustrations/home-page/night.jpg"
-                : "/illustrations/home-page/daylight.jpg"
-            }
-            alt="AI analyzing trip data"
-            fill
-            className="object-cover"
-            priority
-          />
+          <div className="relative w-full h-full transition-opacity duration-500">
+            <Image
+              src="/illustrations/home-page/daylight.jpg"
+              alt="AI analyzing trip data"
+              fill
+              className={`object-cover transition-opacity duration-500 ${
+                mounted && resolvedTheme === "dark" ? "opacity-0" : "opacity-100"
+              }`}
+              priority
+            />
+            <Image
+              src="/illustrations/home-page/night.jpg"
+              alt="AI analyzing trip data"
+              fill
+              className={`object-cover transition-opacity duration-500 ${
+                mounted && resolvedTheme === "dark" ? "opacity-100" : "opacity-0"
+              }`}
+              priority
+            />
+          </div>
         </div>
       </div>
     </section>
