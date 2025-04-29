@@ -1,6 +1,10 @@
+import BoxFormReviewSubmitting from "@/components/boxes/box-form-review-submitting";
 import { Card, CardContent } from "@/components/ui/card";
+import React from "react";
 
 export default function ShareTravelExperienceSection() {
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
   return (
     <section
       id="form"
@@ -18,7 +22,9 @@ export default function ShareTravelExperienceSection() {
           </div>
 
           <Card>
-            <CardContent className="pt-6"></CardContent>
+            <CardContent className="pt-6">
+              <BoxFormReviewSubmitting isSubmitting={isSubmitting} />
+            </CardContent>
           </Card>
         </div>
       </div>
