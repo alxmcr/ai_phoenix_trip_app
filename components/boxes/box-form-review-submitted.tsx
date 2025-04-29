@@ -1,15 +1,6 @@
 import { Loader2 } from "lucide-react";
 
-type Props = {
-  review_id: string | null;
-};
-
-export default function BoxFormReviewSubmitted({ review_id }: Props) {
-  // Check if the review_id is valid
-  if (!review_id) {
-    return <div>Invalid review ID</div>;
-  }
-
+export default function BoxFormReviewSubmitted() {
   return (
     <div className="flex flex-col items-center text-center py-8">
       <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center mb-6">
@@ -30,8 +21,7 @@ export default function BoxFormReviewSubmitted({ review_id }: Props) {
       </div>
       <h3 className="text-2xl font-bold mb-2">Thank You!</h3>
       <p className="text-muted-foreground mb-6 max-w-md">
-        {`We've received your trip experience. Your review ID is `}
-        <span className="font-semibold">{review_id}</span>.
+        {`We've received your trip experience.`}
       </p>
       <div className="w-full max-w-md p-6 bg-muted rounded-lg mb-6">
         <p className="text-center mb-4">
