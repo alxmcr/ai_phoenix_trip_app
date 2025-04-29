@@ -3,10 +3,9 @@
 import { parseAnalyzerOpenAIChatCompletion } from "@/helpers/openai/parse-analyzer-response";
 import { ReviewAnalyzer } from "@/helpers/openai/review-analyzer";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
-import { ActionableData } from "@/types/db/actionable";
-import { RecommendationData } from "@/types/db/recommendation";
 import { parseFormData } from "@/utils/form/helpers-form";
 import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
+import { ReviewServerActionResponse } from "@/types/server-actions/review-server-action";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -46,7 +45,10 @@ const schema = z.object({
   }),
 });
 
-export async function createReviewAction(prevState: any, formData: FormData) {
+export async function createReviewAction(
+  prevState: ReviewServerActionResponse | null,
+  formData: FormData
+) {
   console.log("🚀 ~ createReviewAction ~ prevState:", prevState);
   console.log("🚀 ~ createReviewAction ~ formData:", formData);
   try {
