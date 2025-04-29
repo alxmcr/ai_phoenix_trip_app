@@ -131,6 +131,8 @@ export function FormReview() {
           },
         }
       );
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
