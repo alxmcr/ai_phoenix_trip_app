@@ -1,9 +1,8 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { createReviewAction } from "@/app/actions/create-review-action";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -14,7 +13,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
@@ -23,97 +26,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { ReviewServerActionResponse } from "@/types/server-actions/review-server-action";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { createReviewAction } from "@/app/actions/create-review-action";
+import React from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useState } from "react";
-
-// Define types for the server action response
-type ServerActionResponse = {
-  errors?: {
-    root?: string;
-    [key: string]: string[] | string | undefined;
-  };
-  review_id?: string;
-};
-
-// Define constants for select options
-const AGE_GROUPS = ["18-24", "25-34", "35-44", "45-54", "55+"] as const;
-const TRIP_TYPES = ["business", "leisure", "family", "solo"] as const;
-const TRANSPORT_MODES = ["air", "train", "bus", "car"] as const;
-
-// Create type from constants
-type AgeGroup = (typeof AGE_GROUPS)[number];
-type TripType = (typeof TRIP_TYPES)[number];
-type TransportMode = (typeof TRANSPORT_MODES)[number];
-
-const formSchema = z
-  .object({
-    email: z.string().email("Invalid email address"),
-    age_group: z.enum(AGE_GROUPS, {
-      required_error: "Please select your age group",
-      invalid_type_error: "Invalid age group selected",
-    }),
-    trip_type: z.enum(TRIP_TYPES, {
-      required_error: "Please select a trip type",
-      invalid_type_error: "Invalid trip type selected",
-    }),
-    description: z
-      .string()
-      .min(10, "Description must be at least 10 characters")
-      .max(1000, "Description must not exceed 1000 characters"),
-    transport_mode: z.enum(TRANSPORT_MODES, {
-      required_error: "Please select a transport mode",
-      invalid_type_error: "Invalid transport mode selected",
-    }),
-    rating: z
-      .number()
-      .min(1, "Rating must be at least 1")
-      .max(5, "Rating must not exceed 5"),
-    company_name: z
-      .string()
-      .min(1, "Company name is required")
-      .max(100, "Company name must not exceed 100 characters"),
-    origin: z
-      .string()
-      .min(1, "Origin is required")
-      .max(100, "Origin must not exceed 100 characters"),
-    destination: z
-      .string()
-      .min(1, "Destination is required")
-      .max(100, "Destination must not exceed 100 characters"),
-    start_date: z.date({
-      required_error: "Please select a start date",
-      invalid_type_error: "Invalid start date",
-    }),
-    end_date: z.date({
-      required_error: "Please select an end date",
-      invalid_type_error: "Invalid end date",
-    }),
-  })
-  .refine(
-    (data) => {
-      if (data.start_date && data.end_date) {
-        return data.end_date >= data.start_date;
-      }
-      return true;
-    },
-    {
-      message: "End date must be after start date",
-      path: ["end_date"],
-    }
-  );
+import * as z from "zod";
+import BoxFormReviewSubmitted from "../boxes/box-form-review-submitted";
+import BoxFormReviewSubmitting from "../boxes/box-form-review-submitting";
+import {
+  AGE_GROUPS,
+  formSchema,
+  TRANSPORT_MODES,
+  TRIP_TYPES,
+} from "./form-review.schema";
 
 export function FormReview() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [review_id, setReviewId] = React.useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isSubmitted, setIsSubmitted] = React.useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -140,7 +76,10 @@ export function FormReview() {
           formData.append(key, value.toString());
         }
       });
-      const result = await createReviewAction(null, formData) as ServerActionResponse;
+      const result = (await createReviewAction(
+        null,
+        formData
+      )) as ReviewServerActionResponse;
 
       if (result?.errors?.root === "openai_quota_exceeded") {
         toast.error(
@@ -188,6 +127,14 @@ export function FormReview() {
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (isSubmitted) {
+    return <BoxFormReviewSubmitted review_id={review_id} />;
+  }
+
+  if (isSubmitting) {
+    return <BoxFormReviewSubmitting isSubmitting={isSubmitting} />;
   }
 
   return (
@@ -479,7 +426,7 @@ export function FormReview() {
               Submitting...
             </>
           ) : (
-            "Submit Review"
+            "Submit Trip Experience"
           )}
         </Button>
       </form>

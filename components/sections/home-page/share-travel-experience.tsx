@@ -1,13 +1,7 @@
-import BoxFormReviewSubmitted from "@/components/boxes/box-form-review-submitted";
-import BoxFormReviewSubmitting from "@/components/boxes/box-form-review-submitting";
+import CardFormReview from "@/components/cards/card-form-review";
 import { Card, CardContent } from "@/components/ui/card";
-import React from "react";
 
 export default function ShareTravelExperienceSection() {
-  const [review_id, setReviewId] = React.useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
-
   return (
     <section
       id="form"
@@ -26,10 +20,7 @@ export default function ShareTravelExperienceSection() {
 
           <Card>
             <CardContent className="pt-6">
-              {isSubmitting && (
-                <BoxFormReviewSubmitting isSubmitting={isSubmitting} />
-              )}
-              {isSubmitted && <BoxFormReviewSubmitted review_id={review_id} />}
+              <CardFormReview />
             </CardContent>
           </Card>
         </div>
