@@ -16,7 +16,7 @@ import {
 import { ImpactIcon } from "../icons/5x5/impact-icon";
 import { PriorityIcon } from "../icons/5x5/priority-icon";
 
-interface InsightsTabsProps {
+interface Props {
   actionables: ActionableData[];
   recommendations: RecommendationData[];
 }
@@ -24,7 +24,7 @@ interface InsightsTabsProps {
 export function InsightsTabs({
   actionables,
   recommendations,
-}: InsightsTabsProps) {
+}: Props) {
   return (
     <Tabs defaultValue="actionables" className="w-full">
       <TabsList className="grid w-full grid-cols-2 mb-6 h-15">
