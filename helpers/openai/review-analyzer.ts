@@ -26,6 +26,8 @@ export class ReviewAnalyzer {
   async analyzeReview(review: ReviewData) {
     try {
       const prompt = buildPromptReview(review);
+      console.log("🚀 ~ ReviewAnalyzer ~ analyzeReview ~ prompt:", prompt)
+      console.log(OpenAIMessageRoles.SYSTEM)
 
       // Create a response from OpenAI
       const response = await clientOpenAI.responses.create({
