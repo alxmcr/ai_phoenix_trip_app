@@ -1,3 +1,5 @@
+import { Prisma } from "@/prisma/app/generated/prisma";
+
 export type PrismaReview = {
   review_id: string;
   rating: number | null;
@@ -17,7 +19,7 @@ export type PrismaReview = {
 
 export interface PrismaSentiment {
   sentiment_id: string;
-  score: number | null;
+  score: Prisma.Decimal | null;
   label: string | null;
   summary: string | null;
   emotion_tone: string | null;
