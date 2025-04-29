@@ -82,7 +82,9 @@ export async function PUT(
 
     // If review_id is being updated, check if it exists in another record
     if (body.review_id) {
-      const existingSentiment = await dbPool.findUniqueByReviewId(body.review_id);
+      const existingSentiment = await dbPool.findUniqueByReviewId(
+        body.review_id
+      );
       if (existingSentiment && existingSentiment.sentiment_id !== id) {
         return NextResponse.json(
           { error: "A sentiment with this review_id already exists" },
@@ -102,6 +104,8 @@ export async function PUT(
       status: HttpResponseCode.OK,
     });
   } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       { error: "Internal server error" },
       { status: HttpResponseCode.INTERNAL_SERVER_ERROR }
