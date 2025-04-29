@@ -1,11 +1,11 @@
 "use server";
 
-import { parseAnalyzerOpenAIChatCompletion } from "@/helpers/openai/parse-analyzer-response";
 import { ReviewAnalyzer } from "@/helpers/openai/review-analyzer";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
+import { AnalyzerResponse } from "@/types/openai/analyzer";
+import { ReviewServerActionResponse } from "@/types/server-actions/review-server-action";
 import { parseFormData } from "@/utils/form/helpers-form";
 import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
-import { ReviewServerActionResponse } from "@/types/server-actions/review-server-action";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -110,10 +110,10 @@ export async function createReviewAction(
     const formattedReview = formatReviewForAnalysis(newReview);
     const response = await reviewAnalyzer.analyzeReview(formattedReview);
 
+    console.log("🚀 ~ createReviewAction ~ response:", response);
+
     // Parse the response
-    const parsedResponse = parseAnalyzerOpenAIChatCompletion(
-      response.choices[0].message.content || ""
-    );
+    const parsedResponse: AnalyzerResponse = JSON.parse(response.output_text);
 
     // Extract the sentiment, actionables, and recommendations from the response
     const { sentiment, actionables, recommendations } = parsedResponse;
