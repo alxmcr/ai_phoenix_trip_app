@@ -106,6 +106,14 @@ export function FormReview() {
       if (result?.errors) {
         throw new Error(result.errors.root || "An error occurred");
       }
+
+      if (!result.review_id) {
+        throw new Error("Review ID is missing");
+      }
+
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      setReviewId(result.review_id);
     } catch (error) {
       console.error("Form submission error:", error);
 
