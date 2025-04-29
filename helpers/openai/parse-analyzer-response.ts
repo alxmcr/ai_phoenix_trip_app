@@ -1,12 +1,14 @@
 import { AnalyzerResponse } from '../../types/openai/analyzer';
 
 export function parseAnalyzerOpenAIChatCompletion(response: string): AnalyzerResponse {
+  console.log("🚀 ~ parseAnalyzerOpenAIChatCompletion ~ response:", response)
   try {
     // Remove any potential markdown code block formatting
     const cleanResponse = response.replace(/```json\n?|\n?```/g, '').trim();
 
     // Parse the JSON string
     const parsedResponse = JSON.parse(cleanResponse) as AnalyzerResponse;
+    console.log("🚀 ~ parseAnalyzerOpenAIChatCompletion ~ parsedResponse:", parsedResponse)
 
     // Validate the structure
     if (!parsedResponse.sentiment || !parsedResponse.actionables || !parsedResponse.recommendations) {

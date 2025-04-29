@@ -1,11 +1,11 @@
 "use server";
 
-import { parseAnalyzerOpenAIChatCompletion } from "@/helpers/openai/parse-analyzer-response";
 import { ReviewAnalyzer } from "@/helpers/openai/review-analyzer";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
+import { AnalyzerResponse } from "@/types/openai/analyzer";
+import { ReviewServerActionResponse } from "@/types/server-actions/review-server-action";
 import { parseFormData } from "@/utils/form/helpers-form";
 import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
-import { ReviewServerActionResponse } from "@/types/server-actions/review-server-action";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -110,10 +110,10 @@ export async function createReviewAction(
     const formattedReview = formatReviewForAnalysis(newReview);
     const response = await reviewAnalyzer.analyzeReview(formattedReview);
 
+    console.log("🚀 ~ createReviewAction ~ response:", response);
+
     // Parse the response
-    const parsedResponse = parseAnalyzerOpenAIChatCompletion(
-      response.choices[0].message.content || ""
-    );
+    const parsedResponse: AnalyzerResponse = JSON.parse(response.output_text);
 
     // Extract the sentiment, actionables, and recommendations from the response
     const { sentiment, actionables, recommendations } = parsedResponse;
@@ -146,16 +146,25 @@ export async function createReviewAction(
       })),
     });
 
-    // Redirect to the review page
-    redirect(`/reviews/${review_id}`);
+    // Build url to redirect to
+    const url = `/reviews/${review_id}`;
+
+    console.log("🚀 ~ createReviewAction ~ url:", url);
+
+    // Return the review ID instead of redirecting
+    return {
+      review_id,
+    };
   } catch (error) {
     console.error(error);
 
     // Check if it's an OpenAI quota error
-    if (error instanceof Error &&
-        (error.message.includes("429") ||
-         error.message.includes("quota") ||
-         error.message.includes("exceeded"))) {
+    if (
+      error instanceof Error &&
+      (error.message.includes("429") ||
+        error.message.includes("quota") ||
+        error.message.includes("exceeded"))
+    ) {
       return {
         errors: {
           root: "openai_quota_exceeded",

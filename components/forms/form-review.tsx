@@ -28,7 +28,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { ReviewServerActionResponse } from "@/types/server-actions/review-server-action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
@@ -44,9 +43,10 @@ import {
   TRANSPORT_MODES,
   TRIP_TYPES,
 } from "./form-review.schema";
+import { useRouter } from "next/navigation";
 
 export function FormReview() {
-  const [review_id, setReviewId] = React.useState<string | null>(null);
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
 
@@ -76,69 +76,57 @@ export function FormReview() {
           formData.append(key, value.toString());
         }
       });
-      const result = (await createReviewAction(
-        null,
-        formData
-      )) as ReviewServerActionResponse;
 
-      if (result?.errors?.root === "openai_quota_exceeded") {
-        toast.error(
-          "We're currently experiencing high demand with our AI analysis service. Your review has been saved, but the AI analysis will be processed later. Thank you for your patience!",
-          {
-            duration: 8000,
-            position: "top-center",
-            style: {
-              background: "#ef4444",
-              color: "#fff",
-              padding: "16px",
-              borderRadius: "8px",
-              maxWidth: "500px",
-            },
-          }
-        );
-        // Redirect to the review page without AI analysis
-        if (result.review_id) {
-          window.location.href = `/reviews/${result.review_id}`;
+      const result = await createReviewAction(null, formData);
+
+      if (result.review_id) {
+        // Redirect to the review page
+        router.push(`/reviews/${result.review_id}`);
+        setIsSubmitted(true);
+      } else if (result.errors) {
+        // Handle errors
+        const errorMessage = Object.values(result.errors).flat().join(", ");
+        if (errorMessage.includes("quota") || errorMessage.includes("exceeded")) {
+          toast.error(
+            "We're currently experiencing high demand with our AI analysis service. Your review has been saved, but the AI analysis will be processed later. Thank you for your patience!",
+            {
+              duration: 8000,
+              position: "top-center",
+              style: {
+                background: "#ef4444",
+                color: "#fff",
+                padding: "16px",
+                borderRadius: "8px",
+                maxWidth: "500px",
+              },
+            }
+          );
+        } else {
+          throw new Error("Failed to create review");
         }
-        return;
       }
-
-      if (result?.errors) {
-        throw new Error(result.errors.root || "An error occurred");
-      }
-
-      if (!result.review_id) {
-        throw new Error("Review ID is missing");
-      }
-
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setReviewId(result.review_id);
     } catch (error) {
       console.error("Form submission error:", error);
-
-      if (error instanceof Error) {
-        toast.error(
-          "An error occurred while submitting your review. Please try again.",
-          {
-            duration: 5000,
-            position: "top-center",
-            style: {
-              background: "#ef4444",
-              color: "#fff",
-              padding: "16px",
-              borderRadius: "8px",
-            },
-          }
-        );
-      }
+      toast.error(
+        "An error occurred while submitting your review. Please try again.",
+        {
+          duration: 5000,
+          position: "top-center",
+          style: {
+            background: "#ef4444",
+            color: "#fff",
+            padding: "16px",
+            borderRadius: "8px",
+          },
+        }
+      );
     } finally {
       setIsSubmitting(false);
     }
   }
 
   if (isSubmitted) {
-    return <BoxFormReviewSubmitted review_id={review_id} />;
+    return <BoxFormReviewSubmitted />;
   }
 
   if (isSubmitting) {
