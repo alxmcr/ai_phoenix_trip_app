@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/review-page/hero-section";
+import HeroSkeleton from "@/components/skeletons/hero-skeleton";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaReviewWithRelations } from "@/types/prisma/prisma-types";
 import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
@@ -38,7 +39,9 @@ export default async function ReviewPage({
 
   return (
     <main className="flex flex-col min-h-screen items-center">
-      <Hero review={formattedReview} />
+      <Suspense fallback={<HeroSkeleton />}>
+        <Hero review={formattedReview} />
+      </Suspense>
 
       <div className="flex flex-col gap-4">
         <h2>Sentiment</h2>
