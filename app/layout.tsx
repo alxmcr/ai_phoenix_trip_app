@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/providers/theme-provider";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +29,8 @@ export const metadata: Metadata = {
     description:
       "Get AI-powered insights from passenger trip experiences with sentiment analysis, actionable recommendations, and more.",
     url: "https://ai-phoenix-trip.vercel.app",
-    siteName: "Phoenix Trip - AI-powered insights from passenger trip experiences",
+    siteName:
+      "Phoenix Trip - AI-powered insights from passenger trip experiences",
     images: [
       {
         url: "https://ai-phoenix-trip.vercel.app/og.png", // Must be an absolute URL
@@ -63,11 +67,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Header />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );
