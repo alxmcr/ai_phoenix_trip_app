@@ -1,4 +1,7 @@
+import { Hero } from "@/components/sections/review-page/hero-section";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
+import { PrismaReviewWithRelations } from "@/types/prisma/prisma-types";
+import { Suspense } from "react";
 
 export default async function ReviewPage({
   params,
@@ -28,5 +31,9 @@ export default async function ReviewPage({
     return <div>Review not found</div>;
   }
 
-  return <div>{JSON.stringify(review, null, 2)}</div>;
+  return (
+    <main className="flex flex-col min-h-screen items-center">
+      {JSON.stringify(review, null, 2)}
+    </main>
+  );
 }
