@@ -43,8 +43,10 @@ import {
   TRANSPORT_MODES,
   TRIP_TYPES,
 } from "./form-review.schema";
+import { useRouter } from "next/navigation";
 
 export function FormReview() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
 
@@ -75,26 +77,16 @@ export function FormReview() {
         }
       });
 
-      try {
-        await createReviewAction(null, formData);
-        // If we get here, the review was created successfully
-        setIsSubmitted(true);
-        // We don't need to set review_id since we're redirecting
-      } catch (error) {
-        // Check if it's a redirect error
-        if (error instanceof Error && error.message === "NEXT_REDIRECT") {
-          // The redirect will be handled by Next.js
-          setIsSubmitted(true);
-          return;
-        }
+      const result = await createReviewAction(null, formData);
 
-        // Check if it's an OpenAI quota error
-        if (
-          error instanceof Error &&
-          (error.message.includes("429") ||
-            error.message.includes("quota") ||
-            error.message.includes("exceeded"))
-        ) {
+      if (result.review_id) {
+        // Redirect to the review page
+        router.push(`/reviews/${result.review_id}`);
+        setIsSubmitted(true);
+      } else if (result.errors) {
+        // Handle errors
+        const errorMessage = Object.values(result.errors).flat().join(", ");
+        if (errorMessage.includes("quota") || errorMessage.includes("exceeded")) {
           toast.error(
             "We're currently experiencing high demand with our AI analysis service. Your review has been saved, but the AI analysis will be processed later. Thank you for your patience!",
             {
@@ -109,12 +101,9 @@ export function FormReview() {
               },
             }
           );
-          return;
+        } else {
+          throw new Error("Failed to create review");
         }
-
-        throw error;
-      } finally {
-        setIsSubmitting(false);
       }
     } catch (error) {
       console.error("Form submission error:", error);

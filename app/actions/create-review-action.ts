@@ -151,8 +151,10 @@ export async function createReviewAction(
 
     console.log("🚀 ~ createReviewAction ~ url:", url);
 
-    // Redirect to the review page
-    redirect(url);
+    // Return the review ID instead of redirecting
+    return {
+      review_id,
+    };
   } catch (error) {
     console.error(error);
 
