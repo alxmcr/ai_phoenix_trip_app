@@ -34,7 +34,31 @@ export default async function ReviewPage({
 
   return (
     <main className="flex flex-col min-h-screen items-center">
-      {JSON.stringify(review, null, 2)}
+      <h1>Review</h1>
+
+      <div className="flex flex-col gap-4">
+        <h2>Review</h2>
+        <p>{review.description}</p>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <h2>Sentiment</h2>
+        <p>{review.sentiment?.summary}</p>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <h2>Actionables</h2>
+        {review.actionables?.map((actionable) => (
+          <p key={actionable.actionable_id}>{actionable.title}</p>
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <h2>Recommendations</h2>
+        {review.recommendations?.map((recommendation) => (
+          <p key={recommendation.recommendation_id}>{recommendation.title}</p>
+        ))}
+      </div>
     </main>
   );
 }
