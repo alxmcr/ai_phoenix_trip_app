@@ -33,6 +33,16 @@ export default function Footer() {
                     Logos by Worldvectorlogo
                   </a>
                 </li>
+                <li>
+                  <a href="https://www.vecteezy.com/free-vector/sunset">
+                    Sunset Vectors by Vecteezy
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.vecteezy.com/free-vector/mountain-night">
+                    Mountain Night Vectors by Vecteezy
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
