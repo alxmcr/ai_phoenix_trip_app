@@ -1,10 +1,10 @@
 "use client";
 
-import { FormReview } from "@/components/forms/form-review";
 import FeaturesSection from "@/components/sections/home-page/features";
 import HeroSection from "@/components/sections/home-page/hero-section";
 import HowItWorksSection from "@/components/sections/home-page/how-it-works";
 import PartnersSection from "@/components/sections/home-page/partners-section";
+import ShareTravelExperienceSection from "@/components/sections/home-page/share-travel-experience";
 import { Toaster } from "react-hot-toast";
 
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
       <PartnersSection />
       <HowItWorksSection />
       <FeaturesSection />
-      <FormReview />
+      <ShareTravelExperienceSection />
       <Toaster />
     </main>
   );
