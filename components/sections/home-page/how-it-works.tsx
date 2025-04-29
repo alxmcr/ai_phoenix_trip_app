@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function HowItWorks() {
+export default function HowItWorksSection() {
   return (
     <section id="how-it-works" className="py-20 px-4 md:px-0">
       <div className="container">
