@@ -14,7 +14,7 @@ export default async function ReviewPage({
   const prisma = new PrismaClient();
 
   // Find review by id
-  const review: PrismaReviewWithRelations | null =
+  const reviewAnalysis: PrismaReviewWithRelations | null =
     await prisma.review.findUnique({
       where: { review_id: id },
       include: {
@@ -28,7 +28,7 @@ export default async function ReviewPage({
     return <div>Review not found</div>;
   }
 
-  if (!review) {
+  if (!reviewAnalysis) {
     return <div>Review not found</div>;
   }
 
@@ -38,24 +38,24 @@ export default async function ReviewPage({
 
       <div className="flex flex-col gap-4">
         <h2>Review</h2>
-        <p>{review.description}</p>
+        <p>{reviewAnalysis.description}</p>
       </div>
 
       <div className="flex flex-col gap-4">
         <h2>Sentiment</h2>
-        <p>{review.sentiment?.summary}</p>
+        <p>{reviewAnalysis.sentiment?.summary}</p>
       </div>
 
       <div className="flex flex-col gap-4">
         <h2>Actionables</h2>
-        {review.actionables?.map((actionable) => (
+        {reviewAnalysis.actionables?.map((actionable) => (
           <p key={actionable.actionable_id}>{actionable.title}</p>
         ))}
       </div>
 
       <div className="flex flex-col gap-4">
         <h2>Recommendations</h2>
-        {review.recommendations?.map((recommendation) => (
+        {reviewAnalysis.recommendations?.map((recommendation) => (
           <p key={recommendation.recommendation_id}>{recommendation.title}</p>
         ))}
       </div>
