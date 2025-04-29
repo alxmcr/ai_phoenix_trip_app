@@ -113,6 +113,8 @@ export function FormReview() {
         }
 
         throw error;
+      } finally {
+        setIsSubmitting(false);
       }
     } catch (error) {
       console.error("Form submission error:", error);
@@ -129,8 +131,6 @@ export function FormReview() {
           },
         }
       );
-    } finally {
-      setIsSubmitting(false);
     }
   }
 
