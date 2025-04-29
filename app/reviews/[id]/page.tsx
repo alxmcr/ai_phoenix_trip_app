@@ -1,8 +1,13 @@
 import { Hero } from "@/components/sections/review-page/hero-section";
+import { SentimentSection } from "@/components/sections/review-page/sentiment-section";
 import HeroSkeleton from "@/components/skeletons/hero-skeleton";
+import { SentimentSkeleton } from "@/components/skeletons/sentiment-skeleton";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaReviewWithRelations } from "@/types/prisma/prisma-types";
-import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
+import {
+  formatReviewForAnalysis,
+  formatSentimentForAnalysis,
+} from "@/utils/prisma/helper-prisma";
 import { Suspense } from "react";
 
 export default async function ReviewPage({
@@ -28,6 +33,9 @@ export default async function ReviewPage({
 
   // Format review for analysis
   const formattedReview = formatReviewForAnalysis(reviewAnalysis);
+  const formattedSentiment = formatSentimentForAnalysis(
+    reviewAnalysis?.sentiment ?? null
+  );
 
   if (!id) {
     return <div>Review not found</div>;
@@ -43,10 +51,9 @@ export default async function ReviewPage({
         <Hero review={formattedReview} />
       </Suspense>
 
-      <div className="flex flex-col gap-4">
-        <h2>Sentiment</h2>
-        <p>{reviewAnalysis.sentiment?.summary}</p>
-      </div>
+      <Suspense fallback={<SentimentSkeleton />}>
+        <SentimentSection sentiment={formattedSentiment} />
+      </Suspense>
 
       <div className="flex flex-col gap-4">
         <h2>Actionables</h2>
