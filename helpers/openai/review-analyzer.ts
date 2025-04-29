@@ -13,7 +13,7 @@ export class ReviewAnalyzer {
   private maxTokens: number;
 
   constructor() {
-    this.model = OpenAIModels.GPT_3_5_TURBO;
+    this.model = OpenAIModels.GPT_4_O_MINI;
     this.temperature = OpenAITemperatures.BALANCED_CREATIVE;
     this.directiveSystem =
       DEFINITION_SYSTEM_TRAVEL_ASSISTANT_REVIEW_ANALYZER_JSON;
