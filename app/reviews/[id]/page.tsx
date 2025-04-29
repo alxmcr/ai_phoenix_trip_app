@@ -14,14 +14,15 @@ export default async function ReviewPage({
   const prisma = new PrismaClient();
 
   // Find review by id
-  const review = await prisma.review.findUnique({
-    where: { review_id: id },
-    include: {
-      sentiment: true,
-      actionables: true,
-      recommendations: true,
-    },
-  });
+  const review: PrismaReviewWithRelations | null =
+    await prisma.review.findUnique({
+      where: { review_id: id },
+      include: {
+        sentiment: true,
+        actionables: true,
+        recommendations: true,
+      },
+    });
 
   if (!id) {
     return <div>Review not found</div>;
