@@ -146,16 +146,23 @@ export async function createReviewAction(
       })),
     });
 
+    // Build url to redirect to
+    const url = `/reviews/${review_id}`;
+
+    console.log("🚀 ~ createReviewAction ~ url:", url);
+
     // Redirect to the review page
-    redirect(`/reviews/${review_id}`);
+    redirect(url);
   } catch (error) {
     console.error(error);
 
     // Check if it's an OpenAI quota error
-    if (error instanceof Error &&
-        (error.message.includes("429") ||
-         error.message.includes("quota") ||
-         error.message.includes("exceeded"))) {
+    if (
+      error instanceof Error &&
+      (error.message.includes("429") ||
+        error.message.includes("quota") ||
+        error.message.includes("exceeded"))
+    ) {
       return {
         errors: {
           root: "openai_quota_exceeded",
