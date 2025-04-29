@@ -1,6 +1,7 @@
 "use client";
 
 import { FormReview } from "@/components/forms/form-review";
+import FeaturesSection from "@/components/sections/home-page/features";
 import HeroSection from "@/components/sections/home-page/hero-section";
 import HowItWorksSection from "@/components/sections/home-page/how-it-works";
 import PartnersSection from "@/components/sections/home-page/partners-section";
@@ -12,6 +13,7 @@ export default function Home() {
       <HeroSection />
       <PartnersSection />
       <HowItWorksSection />
+      <FeaturesSection />
       <FormReview />
       <Toaster />
     </main>
