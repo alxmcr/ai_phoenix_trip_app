@@ -3,8 +3,6 @@
 import { parseAnalyzerOpenAIChatCompletion } from "@/helpers/openai/parse-analyzer-response";
 import { ReviewAnalyzer } from "@/helpers/openai/review-analyzer";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
-import { ActionableData } from "@/types/db/actionable";
-import { RecommendationData } from "@/types/db/recommendation";
 import { parseFormData } from "@/utils/form/helpers-form";
 import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
 import { redirect } from "next/navigation";
