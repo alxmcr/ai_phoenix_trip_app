@@ -5,17 +5,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ActionableData } from "@/types/db/actionable";
 import { RecommendationData } from "@/types/db/recommendation";
+import { getPriorityColor } from "@/utils/ui/priority-color";
 import {
-  AlertTriangle,
   BarChart,
   Briefcase,
-  CheckCircle,
-  Clock,
   FileText,
   Lightbulb,
-  Target,
-  Zap,
+  Target
 } from "lucide-react";
+import { ImpactIcon } from "../icons/5x5/impact-icon";
+import { PriorityIcon } from "../icons/5x5/priority-icon";
 
 interface InsightsTabsProps {
   actionables: ActionableData[];
@@ -26,41 +25,6 @@ export function InsightsTabs({
   actionables,
   recommendations,
 }: InsightsTabsProps) {
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "bg-rose-100 text-rose-800";
-      case "medium":
-        return "bg-amber-100 text-amber-800";
-      case "low":
-        return "bg-emerald-100 text-emerald-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getPriorityIcon = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return <AlertTriangle className="h-5 w-5 text-rose-500" />;
-      case "medium":
-        return <Clock className="h-5 w-5 text-amber-500" />;
-      case "low":
-        return <CheckCircle className="h-5 w-5 text-emerald-500" />;
-    }
-  };
-
-  const getImpactIcon = (impact: string) => {
-    switch (impact) {
-      case "high":
-        return <Zap className="h-5 w-5 text-rose-500" />;
-      case "medium":
-        return <Target className="h-5 w-5 text-amber-500" />;
-      case "low":
-        return <BarChart className="h-5 w-5 text-emerald-500" />;
-    }
-  };
-
   return (
     <Tabs defaultValue="actionables" className="w-full">
       <TabsList className="grid w-full grid-cols-2 mb-6 h-15">
@@ -84,7 +48,7 @@ export function InsightsTabs({
                 <Card key={item.actionable_id}>
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      {getPriorityIcon(item.priority)}
+                      <PriorityIcon priority={item.priority} />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="text-lg font-semibold">
@@ -139,7 +103,7 @@ export function InsightsTabs({
                 <Card key={item.recommendation_id}>
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      {getImpactIcon(item.impact)}
+                      <ImpactIcon impact={item.impact} />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="text-lg font-semibold">
