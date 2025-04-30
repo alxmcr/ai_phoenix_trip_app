@@ -5,7 +5,7 @@ type Props = {
 };
 
 export function PriorityIcon({ priority = "" }: Props) {
-  switch (priority) {
+  switch (priority.toLowerCase()) {
     case "high":
       return <AlertTriangle className="h-5 w-5 text-rose-500" />;
     case "medium":

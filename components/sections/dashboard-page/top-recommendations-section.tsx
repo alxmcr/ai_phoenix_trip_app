@@ -47,17 +47,17 @@ export function TopRecommendationsSection({ recommendations = [] }: Props) {
                 <h3 className="font-semibold">{recommendation.title}</h3>
                 <div className="flex gap-2">
                   <span className="text-xs text-muted-foreground">Impact:</span>
-                  <ImpactBadge impact={recommendation.impact.toLowerCase()} />
+                  <ImpactBadge impact={recommendation.impact} />
                 </div>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
                 {recommendation.description}
               </p>
               <div className="mt-3 flex items-center justify-between">
-                <Badge variant="outline">{recommendation.target_area.toLowerCase()}</Badge>
+                <Badge variant="outline">{recommendation.target_area}</Badge>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted-foreground">Effort:</span>
-                  <EffortBadge effort={recommendation.effort_level.toLowerCase()} />
+                  <EffortBadge effort={recommendation.effort_level} />
                 </div>
               </div>
             </div>

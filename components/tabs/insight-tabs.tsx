@@ -109,7 +109,7 @@ export function InsightsTabs({ actionables, recommendations }: Props) {
                           {item.data_driven && (
                             <Badge
                               variant="secondary"
-                              className="flex items-center gap-1"
+                              className="flex items-center gap-1 bg-green-400 text-black"
                             >
                               <BarChart className="h-3 w-3" />
                               Data-Driven
