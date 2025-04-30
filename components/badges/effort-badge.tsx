@@ -7,12 +7,12 @@ type Props = {
 export function EffortBadge({ effort = "" }: Props) {
   switch (effort) {
     case "high":
-      return <Badge variant="destructive">{effort}</Badge>;
+      return <Badge variant="destructive">{effort.toUpperCase()}</Badge>;
     case "medium":
-      return <Badge variant="default">{effort}</Badge>;
+      return <Badge variant="default">{effort.toUpperCase()}</Badge>;
     case "low":
-      return <Badge className="bg-green-600">{effort}</Badge>;
+      return <Badge className="bg-green-300">{effort.toUpperCase()}</Badge>;
     default:
-      return <Badge variant="outline">{effort}</Badge>;
+      return <Badge variant="outline">{effort.toUpperCase()}</Badge>;
   }
 }

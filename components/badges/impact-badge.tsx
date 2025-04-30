@@ -7,12 +7,12 @@ type Props = {
 export function ImpactBadge({ impact = "" }: Props) {
   switch (impact) {
     case "high":
-      return <Badge className="bg-green-600">{impact}</Badge>;
+      return <Badge className="bg-green-300">{impact.toUpperCase()}</Badge>;
     case "medium":
-      return <Badge variant="default">{impact}</Badge>;
+      return <Badge variant="default">{impact.toUpperCase()}</Badge>;
     case "low":
-      return <Badge variant="secondary">{impact}</Badge>;
+      return <Badge variant="secondary">{impact.toUpperCase()}</Badge>;
     default:
-      return <Badge variant="outline">{impact}</Badge>;
+      return <Badge variant="outline">{impact.toUpperCase()}</Badge>;
   }
 }
