@@ -34,6 +34,12 @@ export function formatReviewForAnalysis(
   };
 }
 
+export function formatReviewsForAnalysis(
+  reviews: PrismaReview[]
+): ReviewData[] {
+  return reviews.map((review) => formatReviewForAnalysis(review));
+}
+
 export function formatSentimentForAnalysis(
   sentiment: PrismaSentiment | null
 ): SentimentData {
