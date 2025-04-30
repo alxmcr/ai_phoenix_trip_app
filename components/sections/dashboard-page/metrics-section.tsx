@@ -29,13 +29,17 @@ export function MetricsSection({ metrics }: Props) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{metrics.total_reviews}</div>
-          <p className="text-xs text-muted-foreground">
-            {metrics.percentage_increase_total_reviews_last_30_days > 0
-              ? "+"
-              : "-"}
-            {metrics.percentage_increase_total_reviews_last_30_days.toFixed(1)}%
-            from last month
-          </p>
+          {metrics.total_actionables_last_30_days > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              {metrics.percentage_increase_total_reviews_last_30_days > 0
+                ? "+"
+                : "-"}
+              {metrics.percentage_increase_total_reviews_last_30_days.toFixed(
+                1
+              )}
+              % from last month
+            </p>
+          ) : null}
         </CardContent>
       </Card>
 
@@ -48,13 +52,15 @@ export function MetricsSection({ metrics }: Props) {
           <div className="text-2xl font-bold">
             {metrics.avg_rating.toFixed(1)} / 5.0
           </div>
-          <p className="text-xs text-muted-foreground">
-            {metrics.percentage_increase_avg_rating_last_30_days > 0
-              ? "+"
-              : "-"}
-            {metrics.percentage_increase_avg_rating_last_30_days.toFixed(1)}{" "}
-            from last month
-          </p>
+          {metrics.percentage_increase_avg_rating_last_30_days > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              {metrics.percentage_increase_avg_rating_last_30_days > 0
+                ? "+"
+                : "-"}
+              {metrics.percentage_increase_avg_rating_last_30_days.toFixed(1)}{" "}
+              from last month
+            </p>
+          ) : null}
         </CardContent>
       </Card>
 
@@ -69,15 +75,18 @@ export function MetricsSection({ metrics }: Props) {
           <div className="text-2xl font-bold">
             {metrics.avg_sentiment_score.toFixed(1)}%
           </div>
-          <p className="text-xs text-muted-foreground">
-            {metrics.percentage_increase_avg_sentiment_score_last_30_days > 0
-              ? "+"
-              : "-"}
-            {metrics.percentage_increase_avg_sentiment_score_last_30_days.toFixed(
-              1
-            )}
-            % from last month
-          </p>
+
+          {metrics.percentage_increase_avg_sentiment_score_last_30_days > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              {metrics.percentage_increase_avg_sentiment_score_last_30_days > 0
+                ? "+"
+                : "-"}
+              {metrics.percentage_increase_avg_sentiment_score_last_30_days.toFixed(
+                1
+              )}
+              % from last month
+            </p>
+          ) : null}
         </CardContent>
       </Card>
 
