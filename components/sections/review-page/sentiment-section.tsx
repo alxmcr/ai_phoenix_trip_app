@@ -54,7 +54,7 @@ export function SentimentSection({ sentiment }: Props) {
                 sentiment.score
               )}`}
             >
-              {(sentiment.score * 10).toFixed(2)}%
+              {sentiment.score.toFixed(1)} / 5.0
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               Sentiment Score

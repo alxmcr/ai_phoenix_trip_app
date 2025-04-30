@@ -28,7 +28,9 @@ export function MetricsSection({ metrics }: Props) {
           <Users className="h-4 w-4 text-blue-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{metrics.total_reviews}</div>
+          <div className="text-2xl font-bold">
+            {metrics.total_reviews} / {metrics.total_reviews_last_30_days}
+          </div>
           {metrics.percentage_increase_total_reviews_last_30_days > 0 ? (
             <p className="text-xs text-muted-foreground">
               {metrics.percentage_increase_total_reviews_last_30_days > 0
@@ -50,7 +52,8 @@ export function MetricsSection({ metrics }: Props) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {metrics.avg_rating.toFixed(1)} / 5.0
+            {metrics.avg_rating.toFixed(1)} / 5.0 (
+            {metrics.avg_rating_last_30_days.toFixed(1)})
           </div>
           {metrics.percentage_increase_avg_rating_last_30_days > 0 ? (
             <p className="text-xs text-muted-foreground">
