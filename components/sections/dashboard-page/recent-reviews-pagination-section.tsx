@@ -4,6 +4,7 @@ import { GridReviews } from "@/components/grids/grid-reviews";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -30,7 +31,7 @@ interface Props {
 export function RecentReviewsPaginationSection({
   initialReviews = [],
   totalReviews = 0,
-  pageSize = 6
+  pageSize = 6,
 }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [reviews, setReviews] = useState<ReviewData[]>(initialReviews);
@@ -41,11 +42,13 @@ export function RecentReviewsPaginationSection({
   const fetchReviews = async (page: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/reviews?page=${page}&pageSize=${pageSize}`);
+      const response = await fetch(
+        `/api/reviews?page=${page}&pageSize=${pageSize}`
+      );
       const data = await response.json();
       setReviews(data.data);
     } catch (error) {
-      console.error('Error fetching reviews:', error);
+      console.error("Error fetching reviews:", error);
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +79,7 @@ export function RecentReviewsPaginationSection({
             e.preventDefault();
             handlePageChange(currentPage - 1);
           }}
-          className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+          className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
         />
       </PaginationItem>
     );
@@ -156,7 +159,9 @@ export function RecentReviewsPaginationSection({
             e.preventDefault();
             handlePageChange(currentPage + 1);
           }}
-          className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+          className={
+            currentPage === totalPages ? "pointer-events-none opacity-50" : ""
+          }
         />
       </PaginationItem>
     );
@@ -167,9 +172,11 @@ export function RecentReviewsPaginationSection({
   return (
     <section className="container px-4 md:px-0">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Reviews</CardTitle>
-          <Users className="h-4 w-4 text-blue-500" />
+        <CardHeader>
+          <CardTitle>Reviews</CardTitle>
+          <CardDescription>
+            Browse and search through customer reviews
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -182,9 +189,7 @@ export function RecentReviewsPaginationSection({
         </CardContent>
         <CardFooter>
           <Pagination>
-            <PaginationContent>
-              {renderPaginationItems()}
-            </PaginationContent>
+            <PaginationContent>{renderPaginationItems()}</PaginationContent>
           </Pagination>
         </CardFooter>
       </Card>
