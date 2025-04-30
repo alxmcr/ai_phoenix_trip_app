@@ -5,7 +5,7 @@ type Props = {
 };
 
 export function ImpactIcon({ impact = "" }: Props) {
-  switch (impact) {
+  switch (impact.toLowerCase()) {
     case "high":
       return <Zap className="h-5 w-5 text-rose-500" />;
     case "medium":
