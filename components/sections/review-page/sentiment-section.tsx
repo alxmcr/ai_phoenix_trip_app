@@ -12,13 +12,24 @@ import { getLabelColor } from "@/utils/ui/get-label-color";
 import { getScoreColor } from "@/utils/ui/get-score-color";
 
 interface Props {
-  sentiment: SentimentData;
+  sentiment: SentimentData | null;
 }
 
 export function SentimentSection({ sentiment }: Props) {
   // Check if the sentiment is valid
   if (!sentiment) {
-    return <div>No sentiment data available</div>;
+    return (
+      <section className="mb-8 px-4 md:px-0 container">
+        <h2 className="text-2xl font-bold tracking-tight mb-4">
+          Sentiment Analysis
+        </h2>
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-muted-foreground">
+            No sentiment data available for this review.
+          </p>
+        </div>
+      </section>
+    );
   }
 
   return (
