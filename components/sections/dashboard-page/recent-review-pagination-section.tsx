@@ -1,3 +1,5 @@
+"use client";
+
 import { TransportIcon } from "@/components/icons/4x4/transport-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

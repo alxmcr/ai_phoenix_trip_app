@@ -1,10 +1,11 @@
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
+import { RecentReviewPaginationSection } from "@/components/sections/dashboard-page/recent-review-pagination-section";
 import { TopRecommendationsSection } from "@/components/sections/dashboard-page/top-recommendations-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import { getMetrics } from "@/utils/db/metrics/get-metrics";
-import { getTopRecommendations } from "@/utils/db/utils-recomendations";
 import { getActionables } from "@/utils/db/utils-actionables";
+import { getTopRecommendations } from "@/utils/db/utils-recomendations";
 import { Suspense } from "react";
 
 export default async function DashboardPage() {
@@ -24,6 +25,9 @@ export default async function DashboardPage() {
           <ActionablesSection actionables={actionables} />
           <TopRecommendationsSection recommendations={recommendations} />
         </section>
+      </Suspense>
+      <Suspense fallback={<DashboardSkeleton />}>
+        <RecentReviewPaginationSection />
       </Suspense>
     </main>
   );
