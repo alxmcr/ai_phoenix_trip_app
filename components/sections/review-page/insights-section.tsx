@@ -1,9 +1,6 @@
-import InsightsSkeleton from "@/components/skeletons/insights-skeleton";
 import { InsightsTabs } from "@/components/tabs/insight-tabs";
 import { ActionableData } from "@/types/db/actionable";
 import { RecommendationData } from "@/types/db/recommendation";
-import { ReviewData } from "@/types/db/review";
-import { Suspense } from "react";
 
 interface Props {
   actionables: ActionableData[];

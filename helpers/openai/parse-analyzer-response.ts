@@ -1,46 +1,60 @@
-import { AnalyzerResponse } from '../../types/openai/analyzer';
+import { AnalyzerResponse } from "../../types/openai/analyzer";
 
-export function parseAnalyzerOpenAIChatCompletion(response: string): AnalyzerResponse {
-  console.log("🚀 ~ parseAnalyzerOpenAIChatCompletion ~ response:", response)
+export function parseAnalyzerOpenAIChatCompletion(
+  response: string
+): AnalyzerResponse {
   try {
     // Remove any potential markdown code block formatting
-    const cleanResponse = response.replace(/```json\n?|\n?```/g, '').trim();
+    const cleanResponse = response.replace(/```json\n?|\n?```/g, "").trim();
 
     // Parse the JSON string
     const parsedResponse = JSON.parse(cleanResponse) as AnalyzerResponse;
-    console.log("🚀 ~ parseAnalyzerOpenAIChatCompletion ~ parsedResponse:", parsedResponse)
+    console.log(
+      "🚀 ~ parseAnalyzerOpenAIChatCompletion ~ parsedResponse:",
+      parsedResponse
+    );
 
     // Validate the structure
-    if (!parsedResponse.sentiment || !parsedResponse.actionables || !parsedResponse.recommendations) {
-      throw new Error('Invalid response structure');
+    if (
+      !parsedResponse.sentiment ||
+      !parsedResponse.actionables ||
+      !parsedResponse.recommendations
+    ) {
+      throw new Error("Invalid response structure");
     }
 
     // Validate sentiment object
-    if (!parsedResponse.sentiment.score ||
-        !parsedResponse.sentiment.label ||
-        !parsedResponse.sentiment.summary ||
-        !parsedResponse.sentiment.emotion_tone) {
-      throw new Error('Invalid sentiment structure');
+    if (
+      !parsedResponse.sentiment.score ||
+      !parsedResponse.sentiment.label ||
+      !parsedResponse.sentiment.summary ||
+      !parsedResponse.sentiment.emotion_tone
+    ) {
+      throw new Error("Invalid sentiment structure");
     }
 
     // Validate actionables array
-    if (!Array.isArray(parsedResponse.actionables) ||
-        parsedResponse.actionables.length < 4 ||
-        parsedResponse.actionables.length > 6) {
-      throw new Error('Invalid actionables array length');
+    if (
+      !Array.isArray(parsedResponse.actionables) ||
+      parsedResponse.actionables.length < 4 ||
+      parsedResponse.actionables.length > 6
+    ) {
+      throw new Error("Invalid actionables array length");
     }
 
     // Validate recommendations array
-    if (!Array.isArray(parsedResponse.recommendations) ||
-        parsedResponse.recommendations.length < 2 ||
-        parsedResponse.recommendations.length > 3) {
-      throw new Error('Invalid recommendations array length');
+    if (
+      !Array.isArray(parsedResponse.recommendations) ||
+      parsedResponse.recommendations.length < 2 ||
+      parsedResponse.recommendations.length > 3
+    ) {
+      throw new Error("Invalid recommendations array length");
     }
 
     return parsedResponse;
   } catch (error) {
     if (error instanceof SyntaxError) {
-      throw new Error('Invalid JSON format in OpenAI response');
+      throw new Error("Invalid JSON format in OpenAI response");
     }
     throw error;
   }
