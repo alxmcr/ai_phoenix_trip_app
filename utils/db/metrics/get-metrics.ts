@@ -63,6 +63,15 @@ export async function getMetrics(): Promise<DashboardMetrics> {
       Number(avg_sentiment_score_last_30_days._avg.score)) *
     100;
 
+  const total_actionables = await prisma.actionable.count();
+  const total_actionables_last_30_days = await prisma.actionable.count({
+    where: {
+      created_at: {
+        gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+      },
+    },
+  });
+
   const metrics: DashboardMetrics = {
     total_reviews,
     total_reviews_last_30_days,
@@ -75,8 +84,8 @@ export async function getMetrics(): Promise<DashboardMetrics> {
       avg_sentiment_score_last_30_days._avg.score
     ),
     percentage_increase_avg_sentiment_score_last_30_days,
-    total_actionables: 0,
-    total_actionables_last_30_days: 0,
+    total_actionables,
+    total_actionables_last_30_days,
   };
   console.log("🚀 ~ getMetrics ~ metrics:", metrics);
 

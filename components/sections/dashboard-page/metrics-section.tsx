@@ -29,7 +29,7 @@ export function MetricsSection({ metrics }: Props) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{metrics.total_reviews}</div>
-          {metrics.total_actionables_last_30_days > 0 ? (
+          {metrics.percentage_increase_total_reviews_last_30_days > 0 ? (
             <p className="text-xs text-muted-foreground">
               {metrics.percentage_increase_total_reviews_last_30_days > 0
                 ? "+"
@@ -98,8 +98,16 @@ export function MetricsSection({ metrics }: Props) {
           <BarChart3 className="h-4 w-4 text-purple-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">42</div>
-          <p className="text-xs text-muted-foreground">+12 from last month</p>
+          <div className="text-2xl font-bold">{metrics.total_actionables}</div>
+          <p className="text-xs text-muted-foreground">
+            {metrics.total_actionables_last_30_days > 0 ? (
+              <p className="text-xs text-muted-foreground">
+                {metrics.total_actionables_last_30_days > 0 ? "+" : "-"}
+                {`${metrics.total_actionables_last_30_days.toFixed(0)}
+                from last month`}
+              </p>
+            ) : null}
+          </p>
         </CardContent>
       </Card>
     </div>
