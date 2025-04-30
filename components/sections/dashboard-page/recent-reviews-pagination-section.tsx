@@ -1,7 +1,22 @@
 "use client";
 
 import { GridReviews } from "@/components/grids/grid-reviews";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { ReviewData } from "@/types/db/review";
 import { Users } from "lucide-react";
 
@@ -20,6 +35,24 @@ export function RecentReviewsPaginationSection({ reviews = [] }: Props) {
         <CardContent>
           <GridReviews reviews={reviews} />
         </CardContent>
+        <CardFooter>
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </CardFooter>
       </Card>
     </section>
   );
