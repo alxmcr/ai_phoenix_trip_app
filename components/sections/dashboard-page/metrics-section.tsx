@@ -99,15 +99,13 @@ export function MetricsSection({ metrics }: Props) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{metrics.total_actionables}</div>
-          <p className="text-xs text-muted-foreground">
-            {metrics.total_actionables_last_30_days > 0 ? (
-              <p className="text-xs text-muted-foreground">
-                {metrics.total_actionables_last_30_days > 0 ? "+" : "-"}
-                {`${metrics.total_actionables_last_30_days.toFixed(0)}
+          {metrics.total_actionables_last_30_days > 0 ? (
+            <p className="text-xs text-muted-foreground">
+              {metrics.total_actionables_last_30_days > 0 ? "+" : "-"}
+              {`${metrics.total_actionables_last_30_days.toFixed(0)}
                 from last month`}
-              </p>
-            ) : null}
-          </p>
+            </p>
+          ) : null}
         </CardContent>
       </Card>
     </div>

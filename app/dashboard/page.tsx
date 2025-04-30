@@ -8,7 +8,7 @@ export default async function DashboardPage() {
   const metrics = await getMetrics();
 
   return (
-    <main className="flex flex-col min-h-screen items-center w-full">
+    <main className="flex flex-col gap-4 min-h-screen items-center w-full">
       <h1 className="mb-6 text-3xl font-bold tracking-tight">Dashboard</h1>
 
       <Suspense fallback={<DashboardSkeleton />}>
