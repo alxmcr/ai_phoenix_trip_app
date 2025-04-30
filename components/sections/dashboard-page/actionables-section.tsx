@@ -30,7 +30,7 @@ export function ActionablesSection({ actionables = [] }: Props) {
   }
 
   return (
-    <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 container px-4 md:px-0">
+    <section className="grid gap-4 md:grid-cols-2 container px-4 py-4 md:px-0">
       <Card className="col-span-1">
         <CardHeader>
           <CardTitle>Actionable Insights</CardTitle>

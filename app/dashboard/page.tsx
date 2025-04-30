@@ -2,10 +2,12 @@ import { ActionablesSection } from "@/components/sections/dashboard-page/actiona
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import { getMetrics } from "@/utils/db/metrics/get-metrics";
+import { getActionables } from "@/utils/db/utils-actionables";
 import { Suspense } from "react";
 
 export default async function DashboardPage() {
   const metrics = await getMetrics();
+  const actionables = await getActionables();
 
   return (
     <main className="flex flex-col gap-4 min-h-screen items-center w-full">
@@ -15,7 +17,7 @@ export default async function DashboardPage() {
         <MetricsSection metrics={metrics} />
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
-        <ActionablesSection actionables={[]} />
+        <ActionablesSection actionables={actionables} />
       </Suspense>
     </main>
   );
