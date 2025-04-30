@@ -19,8 +19,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { ReviewData } from "@/types/db/review";
-import { Users } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface Props {
   initialReviews: ReviewData[];
@@ -179,13 +178,18 @@ export function RecentReviewsPaginationSection({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="min-h-[400px]">
-            {isLoading ? (
-              <div className="flex items-center justify-center h-full">
+          <div className="min-h-[400px] relative">
+            <div
+              className={`transition-opacity duration-300 ${
+                isLoading ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              <GridReviews reviews={reviews} />
+            </div>
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
               </div>
-            ) : (
-              <GridReviews reviews={reviews} />
             )}
           </div>
         </CardContent>
