@@ -2,8 +2,8 @@ import { z } from "zod";
 
 // Define constants for select options
 export const AGE_GROUPS = ["18-24", "25-34", "35-44", "45-54", "55+"] as const;
-export const TRIP_TYPES = ["business", "leisure", "family", "solo"] as const;
-export const TRANSPORT_MODES = ["air", "train", "bus", "car"] as const;
+export const TRIP_TYPES = ["Business", "Leisure", "Family", "Solo"] as const;
+export const TRANSPORT_MODES = ["Airplane", "Train", "Bus", "Car", "Ship"] as const;
 
 export const formSchema = z
   .object({
