@@ -1,10 +1,14 @@
 import { Hero } from "@/components/sections/review-page/hero-section";
+import { InsightsSection } from "@/components/sections/review-page/insights-section";
 import { SentimentSection } from "@/components/sections/review-page/sentiment-section";
 import HeroSkeleton from "@/components/skeletons/hero-skeleton";
+import InsightsSkeleton from "@/components/skeletons/insights-skeleton";
 import { SentimentSkeleton } from "@/components/skeletons/sentiment-skeleton";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaReviewWithRelations } from "@/types/prisma/prisma-types";
 import {
+  formatActionablesForAnalysis,
+  formatRecommendationsForAnalysis,
   formatReviewForAnalysis,
   formatSentimentForAnalysis,
 } from "@/utils/prisma/helper-prisma";
@@ -36,6 +40,12 @@ export default async function ReviewPage({
   const formattedSentiment = formatSentimentForAnalysis(
     reviewAnalysis?.sentiment ?? null
   );
+  const formattedActionables = formatActionablesForAnalysis(
+    reviewAnalysis?.actionables ?? []
+  );
+  const formattedRecommendations = formatRecommendationsForAnalysis(
+    reviewAnalysis?.recommendations ?? []
+  );
 
   if (!id) {
     return <div>Review not found</div>;
@@ -55,19 +65,12 @@ export default async function ReviewPage({
         <SentimentSection sentiment={formattedSentiment} />
       </Suspense>
 
-      <div className="flex flex-col gap-4">
-        <h2>Actionables</h2>
-        {reviewAnalysis.actionables?.map((actionable) => (
-          <p key={actionable.actionable_id}>{actionable.title}</p>
-        ))}
-      </div>
-
-      <div className="flex flex-col gap-4">
-        <h2>Recommendations</h2>
-        {reviewAnalysis.recommendations?.map((recommendation) => (
-          <p key={recommendation.recommendation_id}>{recommendation.title}</p>
-        ))}
-      </div>
+      <Suspense fallback={<InsightsSkeleton />}>
+        <InsightsSection
+          actionables={formattedActionables}
+          recommendations={formattedRecommendations}
+        />
+      </Suspense>
     </main>
   );
 }

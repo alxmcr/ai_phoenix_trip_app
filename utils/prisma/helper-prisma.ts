@@ -1,6 +1,13 @@
+import { ActionableData } from "@/types/db/actionable";
+import { RecommendationData } from "@/types/db/recommendation";
 import { ReviewData } from "@/types/db/review";
 import { SentimentData } from "@/types/db/sentiment";
-import { PrismaReview, PrismaSentiment } from "@/types/prisma/prisma-types";
+import {
+  PrismaActionable,
+  PrismaRecommendation,
+  PrismaReview,
+  PrismaSentiment,
+} from "@/types/prisma/prisma-types";
 
 export function formatReviewForAnalysis(
   review: PrismaReview | null
@@ -44,4 +51,42 @@ export function formatSentimentForAnalysis(
     created_at: sentiment.created_at?.toISOString() ?? new Date().toISOString(),
     updated_at: sentiment.updated_at?.toISOString() ?? new Date().toISOString(),
   };
+}
+
+export function formatActionablesForAnalysis(
+  actionables: PrismaActionable[]
+): ActionableData[] {
+  return actionables.map((actionable) => ({
+    actionable_id: actionable.actionable_id,
+    review_id: actionable.review_id,
+    department: actionable.department ?? "",
+    category: actionable.category ?? "",
+    source_aspect: actionable.source_aspect ?? "",
+    title: actionable.title ?? "",
+    description: actionable.description ?? "",
+    priority: actionable.priority ?? "",
+    created_at:
+      actionable.created_at?.toISOString() ?? new Date().toISOString(),
+    updated_at:
+      actionable.updated_at?.toISOString() ?? new Date().toISOString(),
+  }));
+}
+
+export function formatRecommendationsForAnalysis(
+  recommendations: PrismaRecommendation[]
+): RecommendationData[] {
+  return recommendations.map((recommendation) => ({
+    recommendation_id: recommendation.recommendation_id,
+    review_id: recommendation.review_id,
+    data_driven: recommendation.data_driven ?? false,
+    target_area: recommendation.target_area ?? "",
+    effort_level: recommendation.effort_level ?? "",
+    title: recommendation.title ?? "",
+    description: recommendation.description ?? "",
+    impact: recommendation.impact ?? "",
+    created_at:
+      recommendation.created_at?.toISOString() ?? new Date().toISOString(),
+    updated_at:
+      recommendation.updated_at?.toISOString() ?? new Date().toISOString(),
+  }));
 }
