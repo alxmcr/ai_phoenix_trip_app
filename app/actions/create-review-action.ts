@@ -48,11 +48,8 @@ export async function createReviewAction(
   prevState: ReviewServerActionResponse | null,
   formData: FormData
 ) {
-  console.log("🚀 ~ createReviewAction ~ prevState:", prevState);
-  console.log("🚀 ~ createReviewAction ~ formData:", formData);
   try {
     const parsedFormData = parseFormData(formData);
-    console.log("🚀 ~ createReviewAction ~ parsedFormData:", parsedFormData);
 
     const validatedFields = schema.safeParse(parsedFormData);
 
@@ -109,8 +106,6 @@ export async function createReviewAction(
     const formattedReview = formatReviewForAnalysis(newReview);
     const response = await reviewAnalyzer.analyzeReview(formattedReview);
 
-    console.log("🚀 ~ createReviewAction ~ response:", response);
-
     // Parse the response
     const parsedResponse: AnalyzerResponse = JSON.parse(response.output_text);
 
@@ -144,11 +139,6 @@ export async function createReviewAction(
         review_id,
       })),
     });
-
-    // Build url to redirect to
-    const url = `/reviews/${review_id}`;
-
-    console.log("🚀 ~ createReviewAction ~ url:", url);
 
     // Return the review ID instead of redirecting
     return {

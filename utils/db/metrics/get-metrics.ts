@@ -44,7 +44,6 @@ export async function getMetrics(): Promise<DashboardMetrics> {
       score: true,
     },
   });
-  console.log("🚀 ~ getMetrics ~ avg_sentiment_score:", avg_sentiment_score);
 
   const avg_sentiment_score_last_30_days = await prisma.sentiment.aggregate({
     _avg: {
@@ -87,7 +86,6 @@ export async function getMetrics(): Promise<DashboardMetrics> {
     total_actionables,
     total_actionables_last_30_days,
   };
-  console.log("🚀 ~ getMetrics ~ metrics:", metrics);
 
   return metrics;
 }

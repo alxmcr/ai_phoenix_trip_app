@@ -197,8 +197,6 @@ const recommendationData: Prisma.RecommendationCreateInput[] = [
 ];
 
 export async function main() {
-  console.log("Starting seed...");
-
   // First create all reviews
   for (const review of reviewData) {
     await prisma.review.create({
@@ -226,8 +224,6 @@ export async function main() {
       data: recommendation,
     });
   }
-
-  console.log("Seed completed successfully.");
 }
 
 main();
