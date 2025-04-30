@@ -1,3 +1,4 @@
+import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import { getMetrics } from "@/utils/db/metrics/get-metrics";
@@ -12,6 +13,9 @@ export default async function DashboardPage() {
 
       <Suspense fallback={<DashboardSkeleton />}>
         <MetricsSection metrics={metrics} />
+      </Suspense>
+      <Suspense fallback={<DashboardSkeleton />}>
+        <ActionablesSection actionables={[]} />
       </Suspense>
     </main>
   );
