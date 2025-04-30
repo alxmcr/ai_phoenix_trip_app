@@ -5,14 +5,14 @@ type Props = {
 };
 
 export function ImpactBadge({ impact = "" }: Props) {
-  switch (impact) {
+  switch (impact.toLowerCase()) {
     case "high":
-      return <Badge className="bg-green-300">{impact.toUpperCase()}</Badge>;
+      return <Badge className="bg-red-300">{impact}</Badge>;
     case "medium":
-      return <Badge variant="default">{impact.toUpperCase()}</Badge>;
+      return <Badge className="bg-yellow-300">{impact}</Badge>;
     case "low":
-      return <Badge variant="secondary">{impact.toUpperCase()}</Badge>;
+      return <Badge className="bg-green-300">{impact}</Badge>;
     default:
-      return <Badge variant="outline">{impact.toUpperCase()}</Badge>;
+      return <Badge variant="outline">{impact}</Badge>;
   }
 }

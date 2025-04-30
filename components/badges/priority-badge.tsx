@@ -5,14 +5,14 @@ type Props = {
 };
 
 export function PriorityBadge({ priority = "" }: Props) {
-  switch (priority) {
+  switch (priority.toLowerCase()) {
     case "high":
-      return <Badge variant="destructive">{priority.toLocaleUpperCase()}</Badge>;
+      return <Badge variant="destructive">{priority}</Badge>;
     case "medium":
-      return <Badge variant="default">{priority.toLocaleUpperCase()}</Badge>;
+      return <Badge variant="default">{priority}</Badge>;
     case "low":
-      return <Badge variant="secondary">{priority.toLocaleUpperCase()}</Badge>;
+      return <Badge variant="secondary">{priority}</Badge>;
     default:
-      return <Badge variant="outline">{priority.toLocaleUpperCase()}</Badge>;
+      return <Badge variant="outline">{priority}</Badge>;
   }
 }

@@ -39,7 +39,7 @@ export function ActionablesSection({ actionables = [] }: Props) {
             <div key={insight.actionable_id} className="rounded-lg border p-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold">{insight.title}</h3>
-                <PriorityBadge priority={insight.priority.toLowerCase()} />
+                <PriorityBadge priority={insight.priority} />
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
                 {insight.description}
