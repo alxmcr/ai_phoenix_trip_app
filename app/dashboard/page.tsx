@@ -1,5 +1,6 @@
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
+import { TopRecommendationsSection } from "@/components/sections/dashboard-page/top-recommendations-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import { getMetrics } from "@/utils/db/metrics/get-metrics";
 import { getActionables } from "@/utils/db/utils-actionables";
@@ -18,6 +19,7 @@ export default async function DashboardPage() {
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
         <ActionablesSection actionables={actionables} />
+        <TopRecommendationsSection recommendations={recommendations} />
       </Suspense>
     </main>
   );
