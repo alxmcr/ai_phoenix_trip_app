@@ -1,5 +1,5 @@
 export const getPriorityColor = (priority: string) => {
-  switch (priority) {
+  switch (priority.toLowerCase()) {
     case "high":
       return "bg-rose-100 text-rose-800";
     case "medium":
