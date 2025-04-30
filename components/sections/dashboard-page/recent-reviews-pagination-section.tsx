@@ -179,13 +179,15 @@ export function RecentReviewsPaginationSection({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {isLoading ? (
-            <div className="flex items-center justify-center h-32">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-            </div>
-          ) : (
-            <GridReviews reviews={reviews} />
-          )}
+          <div className="min-h-[400px]">
+            {isLoading ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+              </div>
+            ) : (
+              <GridReviews reviews={reviews} />
+            )}
+          </div>
         </CardContent>
         <CardFooter>
           <Pagination>
