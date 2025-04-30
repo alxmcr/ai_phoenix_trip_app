@@ -1,6 +1,6 @@
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
-import { RecentReviewPaginationSection } from "@/components/sections/dashboard-page/recent-review-pagination-section";
+import { RecentReviewsPaginationSection } from "@/components/sections/dashboard-page/recent-reviews-pagination-section";
 import { TopRecommendationsSection } from "@/components/sections/dashboard-page/top-recommendations-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import { getMetrics } from "@/utils/db/metrics/get-metrics";
@@ -27,7 +27,7 @@ export default async function DashboardPage() {
         </section>
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
-        <RecentReviewPaginationSection />
+        <RecentReviewsPaginationSection reviews={[]} />
       </Suspense>
     </main>
   );
