@@ -3,12 +3,14 @@ import { MetricsSection } from "@/components/sections/dashboard-page/metrics-sec
 import { TopRecommendationsSection } from "@/components/sections/dashboard-page/top-recommendations-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import { getMetrics } from "@/utils/db/metrics/get-metrics";
+import { getTopRecommendations } from "@/utils/db/utils-recomendations";
 import { getActionables } from "@/utils/db/utils-actionables";
 import { Suspense } from "react";
 
 export default async function DashboardPage() {
   const metrics = await getMetrics();
   const actionables = await getActionables();
+  const recommendations = await getTopRecommendations();
 
   return (
     <main className="flex flex-col gap-4 min-h-screen items-center w-full">
@@ -18,8 +20,10 @@ export default async function DashboardPage() {
         <MetricsSection metrics={metrics} />
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
-        <ActionablesSection actionables={actionables} />
-        <TopRecommendationsSection recommendations={recommendations} />
+        <section className="grid gap-4 md:grid-cols-2 container px-4 py-4 md:px-0">
+          <ActionablesSection actionables={actionables} />
+          <TopRecommendationsSection recommendations={recommendations} />
+        </section>
       </Suspense>
     </main>
   );
