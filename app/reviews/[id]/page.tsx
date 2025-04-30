@@ -36,24 +36,18 @@ export default async function ReviewPage({
     });
 
   // Format review for analysis
-  const formattedReview = formatReviewForAnalysis(reviewAnalysis);
-  const formattedSentiment = formatSentimentForAnalysis(
-    reviewAnalysis?.sentiment ?? null
-  );
+  const formattedReview = reviewAnalysis
+    ? formatReviewForAnalysis(reviewAnalysis)
+    : null;
+  const formattedSentiment = reviewAnalysis?.sentiment
+    ? formatSentimentForAnalysis(reviewAnalysis.sentiment)
+    : null;
   const formattedActionables = formatActionablesForAnalysis(
     reviewAnalysis?.actionables ?? []
   );
   const formattedRecommendations = formatRecommendationsForAnalysis(
     reviewAnalysis?.recommendations ?? []
   );
-
-  if (!id) {
-    return <div>Review not found</div>;
-  }
-
-  if (!reviewAnalysis) {
-    return <div>Review not found</div>;
-  }
 
   return (
     <main className="flex flex-col min-h-screen items-center">

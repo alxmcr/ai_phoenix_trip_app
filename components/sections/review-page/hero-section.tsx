@@ -9,7 +9,7 @@ import { helperFormatDate } from "@/utils/util-dates";
 import { Copy, Facebook, MessageCircle, Twitter } from "lucide-react";
 
 interface Props {
-  review: ReviewData;
+  review: ReviewData | null;
 }
 
 export function Hero({ review }: Props) {
