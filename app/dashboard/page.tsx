@@ -10,10 +10,12 @@ import { getRecentReviewsPaginated } from "@/utils/db/utils-reviews-paginated";
 import { Suspense } from "react";
 
 export default async function DashboardPage() {
+  const page = 1;
+  const pageSize = 6;
+  const reviews = await getRecentReviewsPaginated(page, pageSize);
   const metrics = await getMetrics();
   const actionables = await getActionables();
   const recommendations = await getTopRecommendations();
-  const reviews = await getRecentReviewsPaginated(1, 6);
 
   return (
     <main className="flex flex-col gap-4 min-h-screen items-center w-full">
