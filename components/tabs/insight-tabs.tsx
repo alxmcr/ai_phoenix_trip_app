@@ -6,13 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ActionableData } from "@/types/db/actionable";
 import { RecommendationData } from "@/types/db/recommendation";
 import { getPriorityColor } from "@/utils/ui/priority-color";
-import {
-  BarChart,
-  Briefcase,
-  FileText,
-  Lightbulb,
-  Target
-} from "lucide-react";
+import { BarChart, Briefcase, FileText, Lightbulb, Target } from "lucide-react";
 import { ImpactIcon } from "../icons/5x5/impact-icon";
 import { PriorityIcon } from "../icons/5x5/priority-icon";
 
@@ -21,10 +15,7 @@ interface Props {
   recommendations: RecommendationData[];
 }
 
-export function InsightsTabs({
-  actionables,
-  recommendations,
-}: Props) {
+export function InsightsTabs({ actionables, recommendations }: Props) {
   return (
     <Tabs defaultValue="actionables" className="w-full">
       <TabsList className="grid w-full grid-cols-2 mb-6 h-15">
@@ -141,7 +132,9 @@ export function InsightsTabs({
                           </Badge>
                           <Badge
                             variant="outline"
-                            className={getPriorityColor(item.effort_level)}
+                            className={getPriorityColor(
+                              item.effort_level.toLocaleLowerCase()
+                            )}
                           >
                             Effort: {item.effort_level.toLocaleUpperCase()}
                           </Badge>
