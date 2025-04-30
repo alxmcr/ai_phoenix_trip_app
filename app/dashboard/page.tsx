@@ -7,12 +7,14 @@ import { getMetrics } from "@/utils/db/metrics/get-metrics";
 import { getActionables } from "@/utils/db/utils-actionables";
 import { getTopRecommendations } from "@/utils/db/utils-recomendations";
 import { getRecentReviewsPaginated } from "@/utils/db/utils-reviews-paginated";
+import prisma from "@/lib/prisma";
 import { Suspense } from "react";
 
 export default async function DashboardPage() {
   const page = 1;
   const pageSize = 6;
   const reviews = await getRecentReviewsPaginated(page, pageSize);
+  const totalReviews = await prisma.review.count();
   const metrics = await getMetrics();
   const actionables = await getActionables();
   const recommendations = await getTopRecommendations();
@@ -31,7 +33,11 @@ export default async function DashboardPage() {
         </section>
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
-        <RecentReviewsPaginationSection reviews={reviews} />
+        <RecentReviewsPaginationSection
+          initialReviews={reviews}
+          totalReviews={totalReviews}
+          pageSize={pageSize}
+        />
       </Suspense>
     </main>
   );
