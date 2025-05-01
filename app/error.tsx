@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { AlertCircle, Home } from 'lucide-react';
 
 export default function Error({
   error,
@@ -26,12 +27,14 @@ export default function Error({
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] p-4 text-center">
+      <AlertCircle className="w-16 h-16 text-destructive mb-4" />
       <h2 className="text-2xl font-bold mb-4">Oops! Something went wrong</h2>
       <p className="text-muted-foreground mb-6 max-w-md">
         {getUserFriendlyMessage(error)}
       </p>
       <Link href="/">
         <Button variant="default">
+          <Home className="w-4 h-4 mr-2" />
           Return to Home
         </Button>
       </Link>
