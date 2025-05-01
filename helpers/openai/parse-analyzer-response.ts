@@ -9,10 +9,6 @@ export function parseAnalyzerOpenAIChatCompletion(
 
     // Parse the JSON string
     const parsedResponse = JSON.parse(cleanResponse) as AnalyzerResponse;
-    console.log(
-      "🚀 ~ parseAnalyzerOpenAIChatCompletion ~ parsedResponse:",
-      parsedResponse
-    );
 
     // Validate the structure
     if (
