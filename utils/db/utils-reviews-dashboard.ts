@@ -1,10 +1,9 @@
-// Prisma: Summary of reviews
-// Created at 'X': 100 reviews
-// Created at 'Y': 50 reviews
-
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { CountByDateMetric } from "@/types/dashboard/types-dashboard";
 
+// Prisma: Summary of reviews
+// Created at 'X': 100 reviews
+// Created at 'Y': 50 reviews
 // Created at 'W': 10 reviews
 export async function getReviewsByDate() {
   // Array of created_at dates
