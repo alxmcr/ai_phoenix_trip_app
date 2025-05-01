@@ -1,4 +1,4 @@
-import { TimelineReviews } from "@/components/charts/timelines/timeline-reviews";
+import { TimelineReviews } from "@/components/charts-2/timelines/timeline-reviews";
 
 export function ChartReviewsSection() {
   return (

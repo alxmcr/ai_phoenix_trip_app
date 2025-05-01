@@ -1,6 +1,6 @@
-import { DepartmentBarChartMixedActionable } from "@/components/charts/bar-charts/department-bar-chart-mixed-actionable";
-import { LineChartLabelReviews } from "@/components/charts/line-charts/line-chart-label-reviews";
-import { PriorityPieChartLabel } from "@/components/charts/pie-charts/priority-pie-chart-label";
+import { DepartmentBarChartMixedActionable } from "@/components/charts-2/bar-charts/department-bar-chart-mixed-actionable";
+import { LineChartLabelReviews } from "@/components/charts-2/line-charts/line-chart-label-reviews";
+import { PriorityPieChartLabel } from "@/components/charts-2/pie-charts/priority-pie-chart-label";
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { ChartReviewsSection } from "@/components/sections/dashboard-page/chart-reviews-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
