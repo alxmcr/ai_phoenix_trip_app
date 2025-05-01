@@ -1,6 +1,6 @@
 "use client";
 
-import { Area, AreaChart, Tooltip as RechartsTooltip, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, Tooltip as RechartsTooltip, ResponsiveContainer, XAxis, YAxis, TooltipProps } from "recharts";
 
 import {
   Card,
@@ -15,7 +15,7 @@ interface CountReviewsTimelineProps {
   data: CountByDateMetric[];
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
       <div className="rounded-lg border bg-background p-2 shadow-sm">
