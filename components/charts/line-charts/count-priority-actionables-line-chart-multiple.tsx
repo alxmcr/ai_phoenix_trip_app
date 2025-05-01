@@ -1,7 +1,7 @@
 "use client";
 
 import { TrendingUp } from "lucide-react";
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -17,10 +17,26 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DatePriorityCount } from "@/types/dashboard/types-dashboard";
+import { ChartConfig } from "@/components/ui/chart";
 
 type Props = {
   data: DatePriorityCount[];
 };
+
+const chartConfig = {
+  high: {
+    label: "High Priority",
+    color: "#ef4444",
+  },
+  medium: {
+    label: "Medium Priority",
+    color: "#f59e0b",
+  },
+  low: {
+    label: "Low Priority",
+    color: "#10b981",
+  },
+} satisfies ChartConfig;
 
 export function CountPriorityActionablesLineChartMultiple({ data }: Props) {
   // Convert data to chartData format
@@ -39,45 +55,62 @@ export function CountPriorityActionablesLineChartMultiple({ data }: Props) {
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
-        <LineChart
-          accessibilityLayer
-          data={chartData}
-          margin={{
-            left: 12,
-            right: 12,
-          }}
-        >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="month"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          <Line
-            dataKey="desktop"
-            type="monotone"
-            stroke="var(--color-desktop)"
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            dataKey="mobile"
-            type="monotone"
-            stroke="var(--color-mobile)"
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            dataKey="tablet"
-            type="monotone"
-            stroke="var(--color-tablet)"
-            strokeWidth={2}
-            dot={false}
-          />
-        </LineChart>
+        <ChartContainer config={chartConfig}>
+          <LineChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              left: 12,
+              right: 12,
+              top: 12,
+              bottom: 12,
+            }}
+            width={500}
+            height={300}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => {
+                const date = new Date(value);
+                return date.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                });
+              }}
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => value.toString()}
+            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <Line
+              dataKey="high"
+              type="monotone"
+              stroke="#ef4444"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              dataKey="medium"
+              type="monotone"
+              stroke="#f59e0b"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              dataKey="low"
+              type="monotone"
+              stroke="#10b981"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
+        </ChartContainer>
       </CardContent>
       <CardFooter>
         <div className="flex w-full items-start gap-2 text-sm">
