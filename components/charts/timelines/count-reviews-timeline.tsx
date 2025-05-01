@@ -1,6 +1,6 @@
 "use client";
 
-import { Area, AreaChart, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
+import { Area, AreaChart, Tooltip as RechartsTooltip, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getReviewsByDate } from "@/utils/db/utils-reviews-dashboard";
 import { CountByDateMetric } from "@/types/dashboard/types-dashboard";
 
 interface CountReviewsTimelineProps {

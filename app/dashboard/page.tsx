@@ -1,7 +1,6 @@
 import { CountDepartmentsActionablesBarChart } from "@/components/charts/bar-charts/count-departments-actionables-bar-chart";
 import { AvgPriorityActionablesLineChart } from "@/components/charts/line-charts/avg-priority-actionables-line-chart";
 import { CountEffortLevelRecommendationsPieChart } from "@/components/charts/pie-charts/count-effort-level-recommendations-pie-chart";
-import { CountReviewsTimeline } from "@/components/charts/timelines/count-reviews-timeline";
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { ChartReviewsSection } from "@/components/sections/dashboard-page/chart-reviews-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
