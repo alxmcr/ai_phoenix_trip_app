@@ -15,6 +15,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
 import { DatePriorityCount } from "@/types/dashboard/types-dashboard";
 import { ChartConfig } from "@/components/ui/chart";
@@ -90,24 +92,28 @@ export function CountPriorityActionablesLineChartMultiple({ data }: Props) {
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Line
               dataKey="high"
-              type="monotone"
+              type="natural"
               stroke="#ef4444"
               strokeWidth={2}
               dot={false}
             />
             <Line
               dataKey="medium"
-              type="monotone"
+              type="natural"
               stroke="#f59e0b"
               strokeWidth={2}
               dot={false}
             />
             <Line
               dataKey="low"
-              type="monotone"
+              type="natural"
               stroke="#10b981"
               strokeWidth={2}
               dot={false}
+            />
+            <ChartLegend
+              verticalAlign="bottom"
+              content={<ChartLegendContent />}
             />
           </LineChart>
         </ChartContainer>
