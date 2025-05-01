@@ -1,9 +1,9 @@
-import { LineChartLabelReviews } from "@/components/charts/line-charts/line-chart-label-reviews";
+import { TimelineReviews } from "@/components/charts/timelines/timeline-reviews";
 
 export function ChartReviewsSection() {
   return (
     <section className="container px-4 md:px-0">
-      <LineChartLabelReviews />
+      <TimelineReviews />
     </section>
   );
 }
