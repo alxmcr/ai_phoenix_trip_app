@@ -48,7 +48,7 @@ An innovative AI-powered platform designed to analyze and enhance passenger trip
 
 1. Clone the repository:
 ```bash
-git clone [your-repository-url]
+git clone https://github.com/alxmcr/ai_phoenix_trip_app
 cd ai_phoenix_trip_app
 ```
 
