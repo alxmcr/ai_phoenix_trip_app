@@ -24,10 +24,11 @@ export default async function DashboardPage() {
     <main className="flex flex-col gap-4 min-h-screen items-center w-full">
       <h1 className="mb-6 text-3xl font-bold tracking-tight">Dashboard</h1>
 
-      <Suspense fallback={<DashboardSkeleton />}></Suspense>
-        <ChartReviewsSection />
       <Suspense fallback={<DashboardSkeleton />}>
         <MetricsSection metrics={metrics} />
+      </Suspense>
+      <Suspense fallback={<DashboardSkeleton />}>
+        <ChartReviewsSection />
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
         <section className="grid gap-4 md:grid-cols-2 container px-4 py-4 md:px-0">
