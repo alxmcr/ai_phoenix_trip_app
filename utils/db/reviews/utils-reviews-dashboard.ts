@@ -17,7 +17,6 @@ export async function getReviewsByDate() {
     },
   });
 
-  console.log('Fetched reviews:', createdAtDates);
 
   const reviewsByDate = createdAtDates.reduce((acc, review) => {
     const date = review.created_at?.toISOString().split("T")[0];
@@ -32,7 +31,6 @@ export async function getReviewsByDate() {
     return acc;
   }, {} as Record<string, number>);
 
-  console.log('Reviews by date:', reviewsByDate);
 
   const reviewsByDateArray: CountByDateMetric[] = Object.entries(
     reviewsByDate
