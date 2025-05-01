@@ -1,13 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { AlertCircle, Home } from 'lucide-react';
+import { useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, Home } from "lucide-react";
 
 export default function Error({
   error,
-  reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
@@ -19,10 +18,10 @@ export default function Error({
 
   // Function to get a user-friendly error message
   const getUserFriendlyMessage = (error: Error) => {
-    if (error.message.includes('database')) {
-      return 'We are experiencing some technical difficulties. Our team has been notified and is working to resolve the issue.';
+    if (error.message.includes("database")) {
+      return "We are experiencing some technical difficulties. Our team has been notified and is working to resolve the issue.";
     }
-    return 'Something unexpected happened. Please try again later or contact support if the problem persists.';
+    return "Something unexpected happened. Please try again later or contact support if the problem persists.";
   };
 
   return (

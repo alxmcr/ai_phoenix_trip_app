@@ -5,9 +5,9 @@ export interface DashboardMetrics {
   total_reviews: number;
   total_reviews_last_30_days: number;
   percentage_increase_total_reviews_last_30_days: number;
-  avg_rating: number;
-  avg_rating_last_30_days: number;
-  percentage_increase_avg_rating_last_30_days: number;
+  avg_rating_review: number;
+  avg_rating_review_last_30_days: number;
+  percentage_increase_avg_rating_review_last_30_days: number;
   avg_sentiment_score: number;
   avg_sentiment_score_last_30_days: number;
   percentage_increase_avg_sentiment_score_last_30_days: number;
@@ -29,7 +29,7 @@ export function MetricsSection({ metrics }: Props) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {metrics.total_reviews} / {metrics.total_reviews_last_30_days}
+            {metrics.total_reviews}
           </div>
           {metrics.percentage_increase_total_reviews_last_30_days > 0 ? (
             <p className="text-xs text-muted-foreground">
@@ -47,20 +47,21 @@ export function MetricsSection({ metrics }: Props) {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
+          <CardTitle className="text-sm font-medium">Review: Average Rating</CardTitle>
           <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {metrics.avg_rating.toFixed(1)} / 5.0 (
-            {metrics.avg_rating_last_30_days.toFixed(1)})
+            {metrics.avg_rating_review.toFixed(1)} / 5.0
           </div>
-          {metrics.percentage_increase_avg_rating_last_30_days > 0 ? (
+          {metrics.percentage_increase_avg_rating_review_last_30_days > 0 ? (
             <p className="text-xs text-muted-foreground">
-              {metrics.percentage_increase_avg_rating_last_30_days > 0
+              {metrics.percentage_increase_avg_rating_review_last_30_days > 0
                 ? "+"
                 : "-"}
-              {metrics.percentage_increase_avg_rating_last_30_days.toFixed(1)}{" "}
+              {metrics.percentage_increase_avg_rating_review_last_30_days.toFixed(
+                1
+              )}{" "}
               from last month
             </p>
           ) : null}
@@ -76,7 +77,7 @@ export function MetricsSection({ metrics }: Props) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {metrics.avg_sentiment_score.toFixed(1)}%
+            {metrics.avg_sentiment_score.toFixed(1)} / 5.0
           </div>
 
           {metrics.percentage_increase_avg_sentiment_score_last_30_days > 0 ? (
