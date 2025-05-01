@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import { TimelineReviews } from "../charts/timelines/timeline-reviews";
+import { TimelineReviews } from "../charts-2/timelines/timeline-reviews";
 
 export function CardTimelineReviews() {
   return (

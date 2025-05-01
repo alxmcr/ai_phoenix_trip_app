@@ -1,5 +1,9 @@
-import { CardTimelineReviews } from "@/components/cards/card-timeline-reviews";
+import { CountDepartmentsActionablesBarChart } from "@/components/charts/bar-charts/count-departments-actionables-bar-chart";
+import { AvgPriorityActionablesLineChart } from "@/components/charts/line-charts/avg-priority-actionables-line-chart";
+import { CountEffortLevelRecommendationsPieChart } from "@/components/charts/pie-charts/count-effort-level-recommendations-pie-chart";
+import { CountReviewsTimeline } from "@/components/charts/timelines/count-reviews-timeline";
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
+import { ChartReviewsSection } from "@/components/sections/dashboard-page/chart-reviews-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
 import { RecentReviewsPaginationSection } from "@/components/sections/dashboard-page/recent-reviews-pagination-section";
 import { TopRecommendationsSection } from "@/components/sections/dashboard-page/top-recommendations-section";
@@ -24,16 +28,11 @@ export default async function DashboardPage() {
     <main className="flex flex-col gap-4 min-h-screen items-center w-full">
       <h1 className="mb-6 text-3xl font-bold tracking-tight">Dashboard</h1>
 
-      <Suspense fallback={<DashboardSkeleton />}></Suspense>
-        <CardTimelineReviews />
       <Suspense fallback={<DashboardSkeleton />}>
         <MetricsSection metrics={metrics} />
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
-        <section className="grid gap-4 md:grid-cols-2 container px-4 py-4 md:px-0">
-          <ActionablesSection actionables={actionables} />
-          <TopRecommendationsSection recommendations={recommendations} />
-        </section>
+        <ChartReviewsSection />
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
         <RecentReviewsPaginationSection
@@ -41,6 +40,20 @@ export default async function DashboardPage() {
           totalReviews={totalReviews}
           pageSize={pageSize}
         />
+      </Suspense>
+
+      <Suspense fallback={<DashboardSkeleton />}>
+        <section className="grid gap-4 lg:grid-cols-3 container px-4 py-4 md:px-0">
+          <AvgPriorityActionablesLineChart />
+          <CountEffortLevelRecommendationsPieChart />
+          <CountDepartmentsActionablesBarChart />
+        </section>
+      </Suspense>
+      <Suspense fallback={<DashboardSkeleton />}>
+        <section className="grid gap-4 md:grid-cols-2 container px-4 py-4 md:px-0">
+          <ActionablesSection actionables={actionables} />
+          <TopRecommendationsSection recommendations={recommendations} />
+        </section>
       </Suspense>
     </main>
   );

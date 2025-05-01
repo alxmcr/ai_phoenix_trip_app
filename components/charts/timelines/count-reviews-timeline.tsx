@@ -133,7 +133,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function TimelineReviews() {
+export function CountReviewsTimeline() {
   const [timeRange, setTimeRange] = React.useState("90d")
 
   const filteredData = chartData.filter((item) => {
