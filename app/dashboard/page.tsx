@@ -25,7 +25,8 @@ export default async function DashboardPage() {
   const metrics = await getMetrics();
   const actionables = await getActionables();
   const recommendations = await getTopRecommendations();
-  const priorityActionablesByDate = await getCountPriorityActionablesByCreatedAt();
+  const priorityActionablesByDate =
+    await getCountPriorityActionablesByCreatedAt();
   const countEffortRecommendations = await getCountEffortRecommendations();
   const countActionablesByDepartment = await getCountActionablesByDepartment();
 
@@ -48,16 +49,26 @@ export default async function DashboardPage() {
       </Suspense>
 
       <Suspense fallback={<DashboardSkeleton />}>
-        <section className="grid gap-4 lg:grid-cols-3 container px-4 py-4 md:px-0">
-          <CountPriorityActionablesLineChartMultiple data={priorityActionablesByDate} />
-          <CountEffortLevelRecommendationsPieChart data={countEffortRecommendations} />
-          <CountDepartmentsActionablesBarChart data={countActionablesByDepartment} />
+        <section className="grid gap-4 lg:grid-cols-2 container px-4 py-4 md:px-0">
+          <CountPriorityActionablesLineChartMultiple
+            data={priorityActionablesByDate}
+          />
+          <CountEffortLevelRecommendationsPieChart
+            data={countEffortRecommendations}
+          />
         </section>
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
         <section className="grid gap-4 md:grid-cols-2 container px-4 py-4 md:px-0">
           <ActionablesSection actionables={actionables} />
           <TopRecommendationsSection recommendations={recommendations} />
+        </section>
+      </Suspense>
+      <Suspense fallback={<DashboardSkeleton />}>
+        <section className="container px-4 py-4 md:px-0">
+          <CountDepartmentsActionablesBarChart
+            data={countActionablesByDepartment}
+          />
         </section>
       </Suspense>
     </main>
