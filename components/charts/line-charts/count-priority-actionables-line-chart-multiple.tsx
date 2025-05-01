@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import {
@@ -12,14 +11,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DatePriorityCount } from "@/types/dashboard/types-dashboard";
-import { ChartConfig } from "@/components/ui/chart";
 
 type Props = {
   data: DatePriorityCount[];
