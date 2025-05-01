@@ -1,4 +1,5 @@
 import { DepartmentBarChartMixedActionable } from "@/components/charts/bar-charts/department-bar-chart-mixed-actionable";
+import { LineChartLabelReviews } from "@/components/charts/line-charts/line-chart-label-reviews";
 import { PriorityPieChartLabel } from "@/components/charts/pie-charts/priority-pie-chart-label";
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { ChartReviewsSection } from "@/components/sections/dashboard-page/chart-reviews-section";
@@ -33,12 +34,10 @@ export default async function DashboardPage() {
         <ChartReviewsSection />
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
-        <section className="grid gap-4 lg:grid-cols-2 container px-4 py-4 md:px-0">
+        <section className="grid gap-4 lg:grid-cols-3 container px-4 py-4 md:px-0">
+          <LineChartLabelReviews />
+          <PriorityPieChartLabel />
           <DepartmentBarChartMixedActionable />
-          <div className="grid gap-4 md:grid-cols-2">
-            <PriorityPieChartLabel />
-            <DepartmentBarChartMixedActionable />
-          </div>
         </section>
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
