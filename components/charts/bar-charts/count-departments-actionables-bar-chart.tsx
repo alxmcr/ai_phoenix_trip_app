@@ -17,6 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { DepartmentCount } from "@/types/dashboard/types-dashboard";
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
   { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
@@ -51,7 +52,16 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function CountDepartmentsActionablesBarChart() {
+type Props = {
+  data: DepartmentCount[];
+};
+
+export function CountDepartmentsActionablesBarChart({ data }: Props) {
+  const chartData = data.map((item) => ({
+    department: item.department,
+    count: item.count,
+  }));
+
   return (
     <Card>
       <CardHeader>
