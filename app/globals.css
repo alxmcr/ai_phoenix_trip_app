@@ -113,8 +113,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-  --chart-bar: 15 100% 35%;
-  --chart-bar-label: var(--card-foreground);
+  --chart-bar: 67 100% 50%;
+  --chart-bar-label: 67 100% 50%;
   --chart-bar-label-bg: var(--card);
 }
 
