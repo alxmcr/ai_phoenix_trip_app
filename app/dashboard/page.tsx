@@ -1,6 +1,7 @@
-import { DepartmentBarChartMixedActionable } from "@/components/charts-2/bar-charts/department-bar-chart-mixed-actionable";
-import { LineChartLabelReviews } from "@/components/charts-2/line-charts/line-chart-label-reviews";
-import { PriorityPieChartLabel } from "@/components/charts-2/pie-charts/priority-pie-chart-label";
+import { CountDepartmentsActionablesBarChart } from "@/components/charts/bar-charts/count-departments-actionables-bar-chart";
+import { AvgPriorityActionablesLineChart } from "@/components/charts/line-charts/avg-priority-actionables-line-chart";
+import { CountEffortLevelRecommendationsPieChart } from "@/components/charts/pie-charts/count-effort-level-recommendations-pie-chart";
+import { CountReviewsTimeline } from "@/components/charts/timelines/count-reviews-timeline";
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { ChartReviewsSection } from "@/components/sections/dashboard-page/chart-reviews-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
@@ -35,9 +36,9 @@ export default async function DashboardPage() {
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
         <section className="grid gap-4 lg:grid-cols-3 container px-4 py-4 md:px-0">
-          <LineChartLabelReviews />
-          <PriorityPieChartLabel />
-          <DepartmentBarChartMixedActionable />
+          <AvgPriorityActionablesLineChart />
+          <CountEffortLevelRecommendationsPieChart />
+          <CountDepartmentsActionablesBarChart />
         </section>
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
