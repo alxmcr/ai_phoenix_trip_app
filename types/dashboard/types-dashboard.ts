@@ -16,3 +16,8 @@ export type GroupedActionables = {
 export type DatePriorityCount = {
   date: string;
 } & PriorityCount;
+
+export interface CountEffortRecommendations {
+  effort: string;
+  count: number;
+}
