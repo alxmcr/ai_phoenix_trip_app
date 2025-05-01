@@ -35,6 +35,14 @@ export default async function DashboardPage() {
         <ChartReviewsSection />
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
+        <RecentReviewsPaginationSection
+          initialReviews={reviews}
+          totalReviews={totalReviews}
+          pageSize={pageSize}
+        />
+      </Suspense>
+
+      <Suspense fallback={<DashboardSkeleton />}>
         <section className="grid gap-4 lg:grid-cols-3 container px-4 py-4 md:px-0">
           <AvgPriorityActionablesLineChart />
           <CountEffortLevelRecommendationsPieChart />
@@ -46,13 +54,6 @@ export default async function DashboardPage() {
           <ActionablesSection actionables={actionables} />
           <TopRecommendationsSection recommendations={recommendations} />
         </section>
-      </Suspense>
-      <Suspense fallback={<DashboardSkeleton />}>
-        <RecentReviewsPaginationSection
-          initialReviews={reviews}
-          totalReviews={totalReviews}
-          pageSize={pageSize}
-        />
       </Suspense>
     </main>
   );
