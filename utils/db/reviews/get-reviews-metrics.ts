@@ -17,13 +17,13 @@ export async function getMetrics(): Promise<DashboardMetrics> {
       total_reviews_last_30_days) *
     100;
 
-  const avg_rating = await prisma.review.aggregate({
+  const avg_rating_review = await prisma.review.aggregate({
     _avg: {
       rating: true,
     },
   });
 
-  const avg_rating_last_30_days = await prisma.review.aggregate({
+  const avg_rating_review_last_30_days = await prisma.review.aggregate({
     _avg: {
       rating: true,
     },
@@ -34,7 +34,7 @@ export async function getMetrics(): Promise<DashboardMetrics> {
     },
   });
 
-  const percentage_increase_avg_rating_last_30_days =
+  const percentage_increase_avg_rating_review_last_30_days =
     ((total_reviews - total_reviews_last_30_days) /
       total_reviews_last_30_days) *
     100;
@@ -75,9 +75,9 @@ export async function getMetrics(): Promise<DashboardMetrics> {
     total_reviews,
     total_reviews_last_30_days,
     percentage_increase_total_reviews_last_30_days,
-    avg_rating: avg_rating._avg.rating ?? 0,
-    avg_rating_last_30_days: avg_rating_last_30_days._avg.rating ?? 0,
-    percentage_increase_avg_rating_last_30_days,
+    avg_rating_review: avg_rating_review._avg.rating ?? 0,
+    avg_rating_review_last_30_days: avg_rating_review_last_30_days._avg.rating ?? 0,
+    percentage_increase_avg_rating_review_last_30_days,
     avg_sentiment_score: Number(avg_sentiment_score._avg.score),
     avg_sentiment_score_last_30_days: Number(
       avg_sentiment_score_last_30_days._avg.score
