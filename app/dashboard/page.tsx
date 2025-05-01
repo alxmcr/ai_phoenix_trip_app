@@ -1,5 +1,5 @@
-import { CardTimelineReviews } from "@/components/cards/card-timeline-reviews";
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
+import { BarChartReviewsSection } from "@/components/sections/dashboard-page/bar-chart-reviews-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
 import { RecentReviewsPaginationSection } from "@/components/sections/dashboard-page/recent-reviews-pagination-section";
 import { TopRecommendationsSection } from "@/components/sections/dashboard-page/top-recommendations-section";
@@ -25,7 +25,7 @@ export default async function DashboardPage() {
       <h1 className="mb-6 text-3xl font-bold tracking-tight">Dashboard</h1>
 
       <Suspense fallback={<DashboardSkeleton />}></Suspense>
-        <CardTimelineReviews />
+        <BarChartReviewsSection />
       <Suspense fallback={<DashboardSkeleton />}>
         <MetricsSection metrics={metrics} />
       </Suspense>
