@@ -17,31 +17,31 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Phoenix Trip",
-    default: "Phoenix Trip",
+    template: "AI Phoenix Trip - AI-powered insights from passenger trip experiences",
+    default: "AI Phoenix Trip",
   },
   icons: {
-    icon: "logos/logo-phoenix-trip-ai-16x16.svg",
-    apple: "logos/logo-phoenix-trip-ai-16x16.svg",
+    icon: "logos/16x16/logo-phoenix-trip-ai-16x16.svg",
+    apple: "logos/32x32/logo-phoenix-trip-ai-32x32.svg",
   },
   openGraph: {
-    title: "Phoenix Trip - AI-powered insights from passenger trip experiences",
+    title: "AI Phoenix Trip - AI-powered insights from passenger trip experiences",
     description:
       "Get AI-powered insights from passenger trip experiences with sentiment analysis, actionable recommendations, and more.",
     url: "https://ai-phoenix-trip.vercel.app",
     siteName:
-      "Phoenix Trip - AI-powered insights from passenger trip experiences",
+      "AI Phoenix Trip - AI-powered insights from passenger trip experiences",
     images: [
       {
-        url: "https://ai-phoenix-trip.vercel.app/og.png", // Must be an absolute URL
+        url: "https://ai-phoenix-trip.vercel.app/bg-seo/bg-seo-phoenix.png", // Must be an absolute URL
         width: 800,
         height: 600,
       },
       {
-        url: "https://ai-phoenix-trip.vercel.app/og-alt.png", // Must be an absolute URL
+        url: "https://ai-phoenix-trip.vercel.app/bg-seo/bg-seo-phoenix.png", // Must be an absolute URL
         width: 1800,
         height: 1600,
-        alt: "Phoenix Trip",
+        alt: "AI Phoenix Trip",
       },
     ],
     videos: [
