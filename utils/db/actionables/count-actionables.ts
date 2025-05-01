@@ -14,7 +14,7 @@ import {
 ]
 */
 
-export async function getCountActionablesByCreatedAt() {
+export async function getCountPriorityActionablesByCreatedAt() {
   const actionables = await prisma.actionable.findMany({
     where: {
       created_at: {

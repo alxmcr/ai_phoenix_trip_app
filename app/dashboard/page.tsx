@@ -8,6 +8,7 @@ import { RecentReviewsPaginationSection } from "@/components/sections/dashboard-
 import { TopRecommendationsSection } from "@/components/sections/dashboard-page/top-recommendations-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import prisma from "@/lib/prisma";
+import { getCountPriorityActionablesByCreatedAt } from "@/utils/db/actionables/count-actionables";
 import { getActionables } from "@/utils/db/actionables/utils-actionables";
 import { getTopRecommendations } from "@/utils/db/recommendations/utils-recomendations";
 import { getMetrics } from "@/utils/db/reviews/get-reviews-metrics";
@@ -22,6 +23,7 @@ export default async function DashboardPage() {
   const metrics = await getMetrics();
   const actionables = await getActionables();
   const recommendations = await getTopRecommendations();
+  const priorityActionablesByDate = await getCountPriorityActionablesByCreatedAt();
 
   return (
     <main className="flex flex-col gap-4 min-h-screen items-center w-full">
@@ -43,7 +45,7 @@ export default async function DashboardPage() {
 
       <Suspense fallback={<DashboardSkeleton />}>
         <section className="grid gap-4 lg:grid-cols-3 container px-4 py-4 md:px-0">
-          <CountPriorityActionablesLineChartMultiple />
+          <CountPriorityActionablesLineChartMultiple data={priorityActionablesByDate} />
           <CountEffortLevelRecommendationsPieChart />
           <CountDepartmentsActionablesBarChart />
         </section>
