@@ -47,7 +47,6 @@ export function CountPriorityActionablesLineChartMultiple({ data }: Props) {
     medium: item.medium,
     low: item.low,
   }));
-  console.log("🚀 ~ chartData ~ chartData:", chartData)
 
   return (
     <Card>
