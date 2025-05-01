@@ -1,6 +1,6 @@
 "use client";
 
-import { Area, AreaChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { Area, AreaChart, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer } from "recharts";
 
 import {
   Card,
@@ -15,6 +15,38 @@ import { CountByDateMetric } from "@/types/dashboard/types-dashboard";
 interface CountReviewsTimelineProps {
   data: CountByDateMetric[];
 }
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="rounded-lg border bg-background p-2 shadow-sm">
+        <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">
+              Date
+            </span>
+            <span className="font-bold text-muted-foreground">
+              {new Date(label).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[0.70rem] uppercase text-muted-foreground">
+              Reviews
+            </span>
+            <span className="font-bold">
+              {payload[0].value}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+};
 
 export function CountReviewsTimeline({ data }: CountReviewsTimelineProps) {
   // Convert the response to the format expected by the chart
@@ -59,14 +91,7 @@ export function CountReviewsTimeline({ data }: CountReviewsTimelineProps) {
                 tickLine={false}
                 axisLine={false}
               />
-              <Tooltip
-                labelFormatter={(value) => {
-                  return new Date(value).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  });
-                }}
-              />
+              <RechartsTooltip content={<CustomTooltip />} />
               <Area
                 type="monotone"
                 dataKey="count"
