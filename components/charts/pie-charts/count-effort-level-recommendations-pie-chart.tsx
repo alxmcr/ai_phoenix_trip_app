@@ -16,47 +16,42 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
-];
+import { CountEffortRecommendations } from "@/types/dashboard/types-dashboard";
+
+type Props = {
+  data: CountEffortRecommendations[];
+};
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
+  low: {
+    label: "Low",
     color: "hsl(var(--chart-1))",
   },
-  safari: {
-    label: "Safari",
+  medium: {
+    label: "Medium",
     color: "hsl(var(--chart-2))",
   },
-  firefox: {
-    label: "Firefox",
+  high: {
+    label: "High",
     color: "hsl(var(--chart-3))",
-  },
-  edge: {
-    label: "Edge",
-    color: "hsl(var(--chart-4))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
   },
 } satisfies ChartConfig;
 
-export function CountEffortLevelRecommendationsPieChart() {
+export function CountEffortLevelRecommendationsPieChart({ data }: Props) {
+  const chartData = data.map((item) => ({
+    effort: item.effort,
+    count: item.count,
+    fill: chartConfig[item.effort as keyof typeof chartConfig].color,
+  }));
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart - Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Recommendations by Effort Level</CardTitle>
+        <CardDescription>Distribution of recommendations based on implementation effort</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -65,16 +60,17 @@ export function CountEffortLevelRecommendationsPieChart() {
         >
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-            <Pie data={chartData} dataKey="visitors" label nameKey="browser" />
+            <Pie data={chartData} dataKey="count" nameKey="effort" label />
+            <ChartLegend verticalAlign="bottom" content={<ChartLegendContent />} />
           </PieChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Distribution of recommendations by implementation effort <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Shows the proportion of recommendations categorized by their required effort level
         </div>
       </CardFooter>
     </Card>
