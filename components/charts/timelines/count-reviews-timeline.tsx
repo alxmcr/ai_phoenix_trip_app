@@ -81,6 +81,7 @@ export function CountReviewsTimeline({ data }: CountReviewsTimelineProps) {
                 tickFormatter={(value) => {
                   const date = new Date(value);
                   return date.toLocaleDateString("en-US", {
+                    year: "numeric",
                     month: "short",
                     day: "numeric",
                   });

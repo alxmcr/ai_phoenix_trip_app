@@ -6,17 +6,20 @@ import { CountByDateMetric } from "@/types/dashboard/types-dashboard";
 // Created at 'Y': 50 reviews
 // Created at 'W': 10 reviews
 export async function getReviewsByDate() {
-  // Array of created_at dates
   const prisma = new PrismaClient();
 
   const createdAtDates = await prisma.review.findMany({
     select: {
       created_at: true,
     },
+    orderBy: {
+      created_at: 'asc'
+    },
   });
 
+  console.log('Fetched reviews:', createdAtDates);
+
   const reviewsByDate = createdAtDates.reduce((acc, review) => {
-    // Extract the date from the created_at field
     const date = review.created_at?.toISOString().split("T")[0];
     if (!date) {
       return acc;
@@ -29,7 +32,8 @@ export async function getReviewsByDate() {
     return acc;
   }, {} as Record<string, number>);
 
-  // Convert the reviewsByDate object to an array of objects
+  console.log('Reviews by date:', reviewsByDate);
+
   const reviewsByDateArray: CountByDateMetric[] = Object.entries(
     reviewsByDate
   ).map(([date, count]) => ({
