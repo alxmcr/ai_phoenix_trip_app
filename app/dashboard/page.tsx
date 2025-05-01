@@ -1,3 +1,4 @@
+import { DepartmentBarChartMixedActionable } from "@/components/charts/bar-charts/department-bar-chart-mixed-actionable";
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { ChartReviewsSection } from "@/components/sections/dashboard-page/chart-reviews-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
@@ -29,6 +30,15 @@ export default async function DashboardPage() {
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
         <ChartReviewsSection />
+      </Suspense>
+      <Suspense fallback={<DashboardSkeleton />}>
+        <section className="grid gap-4 md:grid-cols-2 container px-4 py-4 md:px-0">
+          <DepartmentBarChartMixedActionable />
+          <div className="grid gap-4 grid-cols-2">
+            <DepartmentBarChartMixedActionable />
+            <DepartmentBarChartMixedActionable />
+          </div>
+        </section>
       </Suspense>
       <Suspense fallback={<DashboardSkeleton />}>
         <section className="grid gap-4 md:grid-cols-2 container px-4 py-4 md:px-0">
