@@ -26,27 +26,14 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-// Define a color palette with good contrast
-const colorPalette = [
-  "hsl(210, 70%, 70%)", // Light Blue
-  "hsl(120, 70%, 70%)", // Light Green
-  "hsl(30, 70%, 70%)",  // Light Orange
-  "hsl(270, 70%, 70%)", // Light Purple
-  "hsl(0, 70%, 70%)",   // Light Red
-  "hsl(60, 70%, 70%)",  // Light Yellow
-  "hsl(180, 70%, 70%)", // Light Cyan
-  "hsl(300, 70%, 70%)", // Light Magenta
-];
-
 type Props = {
   data: DepartmentCount[];
 };
 
 export function CountDepartmentsActionablesBarChart({ data }: Props) {
-  const chartData = data.map((item, index) => ({
+  const chartData = data.map((item) => ({
     name: item.department,
     value: item.count,
-    color: colorPalette[index % colorPalette.length], // Assign colors cyclically
   }));
 
   return (
@@ -62,7 +49,7 @@ export function CountDepartmentsActionablesBarChart({ data }: Props) {
             data={chartData}
             layout="vertical"
             margin={{
-              left: 100, // Increased left margin for y-axis labels
+              left: 100,
               right: 20,
               top: 20,
               bottom: 20,
@@ -74,25 +61,51 @@ export function CountDepartmentsActionablesBarChart({ data }: Props) {
               dataKey="name"
               type="category"
               tickLine={false}
-              tickMargin={20} // Increased tick margin
+              tickMargin={20}
               axisLine={false}
-              width={80} // Fixed width for y-axis
-              tick={{ fontSize: 12 }} // Adjust font size
+              width={80}
+              tick={{ fontSize: 12 }}
             />
             <XAxis dataKey="value" type="number" hide />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  const data = payload[0].payload;
+                  return (
+                    <ChartTooltipContent>
+                      <div className="flex flex-col gap-1">
+                        <p className="font-medium">{data.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Actionables: {data.value}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {((data.value / chartData.reduce((acc: number, curr: { value: number }) => acc + curr.value, 0)) * 100).toFixed(1)}% of total
+                        </p>
+                      </div>
+                    </ChartTooltipContent>
+                  );
+                }
+                return null;
+              }}
             />
             <Bar
               dataKey="value"
               layout="vertical"
               radius={5}
-            >
-              {chartData.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={colorPalette[index % colorPalette.length]} />
-              ))}
-            </Bar>
+              fill="hsl(var(--chart-bar))"
+              label={{
+                position: 'right',
+                fill: 'hsl(var(--chart-bar-label))',
+                fontSize: 12,
+                fontWeight: 'bold',
+                formatter: (value: number) => value.toString(),
+                style: {
+                  textShadow: '0 0 2px hsl(var(--chart-bar-label-bg))',
+                  padding: '0 2px',
+                },
+              }}
+            />
           </BarChart>
         </ChartContainer>
       </CardContent>
