@@ -1,6 +1,6 @@
 "use client";
 
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { Area, AreaChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 import {
   Card,
@@ -43,9 +43,10 @@ export function CountReviewsTimeline({ data }: CountReviewsTimelineProps) {
                   <stop offset="95%" stopColor="#8884d8" stopOpacity={0.1}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="date"
+                tickLine={false}
+                axisLine={false}
                 tickFormatter={(value) => {
                   const date = new Date(value);
                   return date.toLocaleDateString("en-US", {
@@ -54,7 +55,10 @@ export function CountReviewsTimeline({ data }: CountReviewsTimelineProps) {
                   });
                 }}
               />
-              <YAxis />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+              />
               <Tooltip
                 labelFormatter={(value) => {
                   return new Date(value).toLocaleDateString("en-US", {
