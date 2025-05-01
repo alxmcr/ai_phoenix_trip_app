@@ -8,7 +8,7 @@ import { RecentReviewsPaginationSection } from "@/components/sections/dashboard-
 import { TopRecommendationsSection } from "@/components/sections/dashboard-page/top-recommendations-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import prisma from "@/lib/prisma";
-import { getCountPriorityActionablesByCreatedAt } from "@/utils/db/actionables/count-actionables";
+import { getCountPriorityActionablesByCreatedAt } from "@/utils/db/actionables/count-priority-actionables";
 import { getActionables } from "@/utils/db/actionables/utils-actionables";
 import { getCountEffortRecommendations } from "@/utils/db/recommendations/count-effort-recommendations";
 import { getTopRecommendations } from "@/utils/db/recommendations/utils-recomendations";
