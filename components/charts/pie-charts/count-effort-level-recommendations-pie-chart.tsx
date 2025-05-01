@@ -51,7 +51,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function EffortLevelRecommendationsPieChart() {
+export function CountEffortLevelRecommendationsPieChart() {
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
