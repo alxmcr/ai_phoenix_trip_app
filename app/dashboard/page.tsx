@@ -8,10 +8,10 @@ import { RecentReviewsPaginationSection } from "@/components/sections/dashboard-
 import { TopRecommendationsSection } from "@/components/sections/dashboard-page/top-recommendations-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import prisma from "@/lib/prisma";
-import { getMetrics } from "@/utils/db/metrics/get-metrics";
-import { getActionables } from "@/utils/db/utils-actionables";
-import { getTopRecommendations } from "@/utils/db/utils-recomendations";
-import { getRecentReviewsPaginated } from "@/utils/db/utils-reviews-paginated";
+import { getActionables } from "@/utils/db/actionables/utils-actionables";
+import { getMetrics } from "@/utils/db/reviews/get-reviews-metrics";
+import { getTopRecommendations } from "@/utils/db/recommendations/utils-recomendations";
+import { getRecentReviewsPaginated } from "@/utils/db/reviews/utils-reviews-paginated";
 import { Suspense } from "react";
 
 export default async function DashboardPage() {

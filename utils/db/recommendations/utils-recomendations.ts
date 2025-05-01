@@ -1,8 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { formatRecommendationsForAnalysis } from "../prisma/helper-prisma";
 import { RecommendationData } from "@/types/db/recommendation";
+import { formatRecommendationsForAnalysis } from "../../prisma/helper-prisma";
 
 export async function getTopRecommendations(): Promise<RecommendationData[]> {
   const recommendations = await prisma.recommendation.findMany({

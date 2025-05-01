@@ -3,7 +3,7 @@ import { DBPoolReviews } from "@/helpers/db/db-pool-reviews";
 import pool from "@/lib/db/db-config";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaClientValidationError } from "@/prisma/app/generated/prisma/runtime/library";
-import { buildReviewWhereFilter } from "@/utils/db/filters/review-prisma-where";
+import { buildReviewWhereFilter } from "@/utils/db/reviews/review-prisma-where";
 import { NextRequest, NextResponse } from "next/server";
 
 // POST /api/reviews

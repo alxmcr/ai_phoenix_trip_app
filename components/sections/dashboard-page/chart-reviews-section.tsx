@@ -1,5 +1,5 @@
 import { CountReviewsTimeline } from "@/components/charts/timelines/count-reviews-timeline";
-import { getReviewsByDate } from "@/utils/db/utils-reviews-dashboard";
+import { getReviewsByDate } from "@/utils/db/reviews/utils-reviews-dashboard";
 
 export async function ChartReviewsSection() {
   const data = await getReviewsByDate();

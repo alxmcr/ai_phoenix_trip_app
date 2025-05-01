@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { ReviewData } from "@/types/db/review";
-import { formatReviewsForAnalysis } from "../prisma/helper-prisma";
+import { formatReviewsForAnalysis } from "@/utils/prisma/helper-prisma";
 
 export async function getRecentReviewsPaginated(
   page: number,

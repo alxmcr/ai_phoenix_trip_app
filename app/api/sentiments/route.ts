@@ -3,7 +3,7 @@ import { DBPoolSentiments } from "@/helpers/db/db-pool-sentiments";
 import pool from "@/lib/db/db-config";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaClientValidationError } from "@/prisma/app/generated/prisma/runtime/library";
-import { buildSentimentWhereFilter } from "@/utils/db/filters/sentiment-prisma-where";
+import { buildSentimentWhereFilter } from "@/utils/db/sentiments/sentiment-prisma-where";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/sentiments?page=1&pageSize=10&sortBy=created_at&sortOrder=desc

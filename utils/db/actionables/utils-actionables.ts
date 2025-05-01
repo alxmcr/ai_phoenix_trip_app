@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { formatActionablesForAnalysis } from "../prisma/helper-prisma";
+import { formatActionablesForAnalysis } from "../../prisma/helper-prisma";
 
 // Pagination actionables
 export async function getActionables() {
