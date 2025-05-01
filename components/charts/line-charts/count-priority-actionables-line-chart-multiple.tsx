@@ -18,12 +18,12 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80, tablet: 100 },
-  { month: "February", desktop: 305, mobile: 200, tablet: 100 },
-  { month: "March", desktop: 237, mobile: 120, tablet: 100 },
-  { month: "April", desktop: 73, mobile: 190, tablet: 100 },
-  { month: "May", desktop: 209, mobile: 130, tablet: 100 },
-  { month: "June", desktop: 214, mobile: 140, tablet: 100 },
+  { month: "January", desktop: 186, mobile: 80, tablet: 10 },
+  { month: "February", desktop: 305, mobile: 200, tablet: 70 },
+  { month: "March", desktop: 237, mobile: 120, tablet: 30 },
+  { month: "April", desktop: 73, mobile: 190, tablet: 50 },
+  { month: "May", desktop: 209, mobile: 130, tablet: 75 },
+  { month: "June", desktop: 214, mobile: 140, tablet: 5 },
 ];
 
 const chartConfig = {
@@ -36,12 +36,12 @@ const chartConfig = {
     color: "hsl(var(--chart-2))",
   },
   tablet: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
+    label: "Tablet",
+    color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
 
-export function Component() {
+export function CountPriorityActionablesLineChartMultiple() {
   return (
     <Card>
       <CardHeader>

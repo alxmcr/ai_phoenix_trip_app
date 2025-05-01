@@ -1,5 +1,5 @@
 import { CountDepartmentsActionablesBarChart } from "@/components/charts/bar-charts/count-departments-actionables-bar-chart";
-import { AvgPriorityActionablesLineChart } from "@/components/charts/line-charts/avg-priority-actionables-line-chart";
+import { CountPriorityActionablesLineChartMultiple } from "@/components/charts/line-charts/count-priority-actionables-line-chart-multiple";
 import { CountEffortLevelRecommendationsPieChart } from "@/components/charts/pie-charts/count-effort-level-recommendations-pie-chart";
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { ChartReviewsSection } from "@/components/sections/dashboard-page/chart-reviews-section";
@@ -9,8 +9,8 @@ import { TopRecommendationsSection } from "@/components/sections/dashboard-page/
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import prisma from "@/lib/prisma";
 import { getActionables } from "@/utils/db/actionables/utils-actionables";
-import { getMetrics } from "@/utils/db/reviews/get-reviews-metrics";
 import { getTopRecommendations } from "@/utils/db/recommendations/utils-recomendations";
+import { getMetrics } from "@/utils/db/reviews/get-reviews-metrics";
 import { getRecentReviewsPaginated } from "@/utils/db/reviews/utils-reviews-paginated";
 import { Suspense } from "react";
 
@@ -43,7 +43,7 @@ export default async function DashboardPage() {
 
       <Suspense fallback={<DashboardSkeleton />}>
         <section className="grid gap-4 lg:grid-cols-3 container px-4 py-4 md:px-0">
-          <AvgPriorityActionablesLineChart />
+          <CountPriorityActionablesLineChartMultiple />
           <CountEffortLevelRecommendationsPieChart />
           <CountDepartmentsActionablesBarChart />
         </section>
