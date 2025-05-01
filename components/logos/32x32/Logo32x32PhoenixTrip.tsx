@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Logo32x32PhoenixTrip() {
   return (
     <Image
-      src="/logos/logo-phoenix-trip-ai-32x32.svg"
+      src="/logos/32x32/logo-phoenix-trip-ai-32x32.svg"
       alt="Phoenix Trip"
       width={32}
       height={32}

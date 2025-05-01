@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -15,49 +15,81 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+  ],
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ai-phoenix-trip.vercel.app"),
   title: {
     template: "%s | Phoenix Trip",
-    default: "Phoenix Trip",
+    default: "Phoenix Trip - AI-powered insights from passenger trip experiences",
+  },
+  description: "Get AI-powered insights from passenger trip experiences with sentiment analysis, actionable recommendations, and more.",
+  keywords: ["Phoenix Trip", "AI insights", "passenger experience", "sentiment analysis", "travel analytics"],
+  authors: [{ name: "Phoenix Trip Team" }],
+  creator: "Phoenix Trip",
+  publisher: "Phoenix Trip",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
   icons: {
-    icon: "logos/logo-phoenix-trip-ai-16x16.svg",
-    apple: "logos/logo-phoenix-trip-ai-16x16.svg",
+    icon: [
+      { url: "logos/16x16/logo-phoenix-trip-ai-16x16.svg", sizes: "16x16", type: "image/svg+xml" },
+      { url: "logos/32x32/logo-phoenix-trip-ai-32x32.svg", sizes: "32x32", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "logos/32x32/logo-phoenix-trip-ai-32x32.svg", sizes: "32x32", type: "image/svg+xml" },
+    ],
   },
   openGraph: {
     title: "Phoenix Trip - AI-powered insights from passenger trip experiences",
-    description:
-      "Get AI-powered insights from passenger trip experiences with sentiment analysis, actionable recommendations, and more.",
+    description: "Get AI-powered insights from passenger trip experiences with sentiment analysis, actionable recommendations, and more.",
     url: "https://ai-phoenix-trip.vercel.app",
-    siteName:
-      "Phoenix Trip - AI-powered insights from passenger trip experiences",
-    images: [
-      {
-        url: "https://ai-phoenix-trip.vercel.app/og.png", // Must be an absolute URL
-        width: 800,
-        height: 600,
-      },
-      {
-        url: "https://ai-phoenix-trip.vercel.app/og-alt.png", // Must be an absolute URL
-        width: 1800,
-        height: 1600,
-        alt: "Phoenix Trip",
-      },
-    ],
-    videos: [
-      {
-        url: "https://ai-phoenix-trip.vercel.app/video.mp4", // Must be an absolute URL
-        width: 800,
-        height: 600,
-      },
-    ],
-    audio: [
-      {
-        url: "https://ai-phoenix-trip.vercel.app/audio.mp3", // Must be an absolute URL
-      },
-    ],
+    siteName: "Phoenix Trip",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/og-images/og-phoenix.png",
+        width: 1200,
+        height: 630,
+        alt: "Phoenix Trip - AI-powered insights",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Phoenix Trip - AI-powered insights from passenger trip experiences",
+    description: "Get AI-powered insights from passenger trip experiences with sentiment analysis, actionable recommendations, and more.",
+    images: ["/og-images/og-phoenix.png"],
+    creator: "@phoenixtrip",
+    site: "@phoenixtrip",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "your-google-site-verification",
+  },
+  alternates: {
+    canonical: "https://ai-phoenix-trip.vercel.app",
   },
 };
 
