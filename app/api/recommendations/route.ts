@@ -3,7 +3,7 @@ import { DBPoolRecommendations } from "@/helpers/db/db-pool-recommendations";
 import pool from "@/lib/db/db-config";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaClientValidationError } from "@/prisma/app/generated/prisma/runtime/library";
-import { buildRecommendationWhereFilter } from "@/utils/db/filters/recommendation-prisma-where";
+import { buildRecommendationWhereFilter } from "@/utils/db/recommendations/recommendation-prisma-where";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/recommendations?page=1&pageSize=10&sortBy=created_at&sortOrder=desc

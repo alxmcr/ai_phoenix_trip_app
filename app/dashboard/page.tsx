@@ -1,7 +1,6 @@
 import { CountDepartmentsActionablesBarChart } from "@/components/charts/bar-charts/count-departments-actionables-bar-chart";
-import { AvgPriorityActionablesLineChart } from "@/components/charts/line-charts/avg-priority-actionables-line-chart";
+import { CountPriorityActionablesLineChartMultiple } from "@/components/charts/line-charts/count-priority-actionables-line-chart-multiple";
 import { CountEffortLevelRecommendationsPieChart } from "@/components/charts/pie-charts/count-effort-level-recommendations-pie-chart";
-import { CountReviewsTimeline } from "@/components/charts/timelines/count-reviews-timeline";
 import { ActionablesSection } from "@/components/sections/dashboard-page/actionables-section";
 import { ChartReviewsSection } from "@/components/sections/dashboard-page/chart-reviews-section";
 import { MetricsSection } from "@/components/sections/dashboard-page/metrics-section";
@@ -9,10 +8,11 @@ import { RecentReviewsPaginationSection } from "@/components/sections/dashboard-
 import { TopRecommendationsSection } from "@/components/sections/dashboard-page/top-recommendations-section";
 import { DashboardSkeleton } from "@/components/skeletons/dashboard-skeleton";
 import prisma from "@/lib/prisma";
-import { getMetrics } from "@/utils/db/metrics/get-metrics";
-import { getActionables } from "@/utils/db/utils-actionables";
-import { getTopRecommendations } from "@/utils/db/utils-recomendations";
-import { getRecentReviewsPaginated } from "@/utils/db/utils-reviews-paginated";
+import { getCountPriorityActionablesByCreatedAt } from "@/utils/db/actionables/count-actionables";
+import { getActionables } from "@/utils/db/actionables/utils-actionables";
+import { getTopRecommendations } from "@/utils/db/recommendations/utils-recomendations";
+import { getMetrics } from "@/utils/db/reviews/get-reviews-metrics";
+import { getRecentReviewsPaginated } from "@/utils/db/reviews/utils-reviews-paginated";
 import { Suspense } from "react";
 
 export default async function DashboardPage() {
@@ -23,6 +23,7 @@ export default async function DashboardPage() {
   const metrics = await getMetrics();
   const actionables = await getActionables();
   const recommendations = await getTopRecommendations();
+  const priorityActionablesByDate = await getCountPriorityActionablesByCreatedAt();
 
   return (
     <main className="flex flex-col gap-4 min-h-screen items-center w-full">
@@ -44,7 +45,7 @@ export default async function DashboardPage() {
 
       <Suspense fallback={<DashboardSkeleton />}>
         <section className="grid gap-4 lg:grid-cols-3 container px-4 py-4 md:px-0">
-          <AvgPriorityActionablesLineChart />
+          <CountPriorityActionablesLineChartMultiple data={priorityActionablesByDate} />
           <CountEffortLevelRecommendationsPieChart />
           <CountDepartmentsActionablesBarChart />
         </section>

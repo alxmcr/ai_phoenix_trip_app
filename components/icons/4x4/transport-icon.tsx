@@ -1,4 +1,4 @@
-import { Bus, Leaf, Plane, Ship, Train, Truck } from "lucide-react";
+import { Bus, Leaf, Plane, Ship, Train } from "lucide-react";
 
 type Props = {
   mode: string;

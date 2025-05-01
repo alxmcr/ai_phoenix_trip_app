@@ -3,7 +3,7 @@ import { DBPoolActionables } from "@/helpers/db/db-pool-actionables";
 import pool from "@/lib/db/db-config";
 import { PrismaClient } from "@/prisma/app/generated/prisma";
 import { PrismaClientValidationError } from "@/prisma/app/generated/prisma/runtime/library";
-import { buildActionableWhereFilter } from "@/utils/db/filters/actionable-prisma-where";
+import { buildActionableWhereFilter } from "@/utils/db/actionables/actionable-prisma-where";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/actionables?page=1&pageSize=10&sortBy=created_at&sortOrder=desc
