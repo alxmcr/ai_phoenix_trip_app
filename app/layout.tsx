@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-images/og-phoenix.png",
+        url: "og-images/og-phoenix.png",
         width: 1200,
         height: 630,
         alt: "Phoenix Trip - AI-powered insights",
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Phoenix Trip - AI-powered insights from passenger trip experiences",
     description: "Get AI-powered insights from passenger trip experiences with sentiment analysis, actionable recommendations, and more.",
-    images: ["/og-images/og-phoenix.png"],
+    images: ["og-images/og-phoenix.png"],
     creator: "@phoenixtrip",
     site: "@phoenixtrip",
   },
