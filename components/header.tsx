@@ -34,7 +34,8 @@ export default function Header() {
             role="navigation"
             aria-label="Main navigation"
             className="flex items-center gap-6"
-          >enu           <Link
+          >
+            <Link
               href="/dashboard"
               className="text-sm font-medium transition-colors hover:text-primary"
             >
