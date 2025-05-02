@@ -9,58 +9,13 @@ export default function Footer() {
             </div>
             <nav aria-label="Resource attributions">
               <div className="text-xs text-muted-foreground">
-                <h2 className="text-center font-medium mb-2">Resource Attributions</h2>
-                <ul className="space-y-1">
-                  <li>
-                    <a
-                      href="https://www.vecteezy.com/free-vector/travel"
-                      className="hover:text-primary transition-colors text-center"
-                      aria-label="Travel vector illustrations by Vecteezy"
-                    >
-                      Travel Vectors by Vecteezy
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://www.vecteezy.com/free-vector/background"
-                      aria-label="Background vector illustrations by Vecteezy"
-                    >
-                      Background Vectors by Vecteezy
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://www.vecteezy.com/free-vector/hawaii"
-                      aria-label="Hawaii vector illustrations by Vecteezy"
-                    >
-                      Hawaii Vectors by Vecteezy
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://worldvectorlogo.com/"
-                      aria-label="Logo resources by Worldvectorlogo"
-                    >
-                      Logos by Worldvectorlogo
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://www.vecteezy.com/free-vector/sunset"
-                      aria-label="Sunset vector illustrations by Vecteezy"
-                    >
-                      Sunset Vectors by Vecteezy
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="https://www.vecteezy.com/free-vector/mountain-night"
-                      aria-label="Mountain night vector illustrations by Vecteezy"
-                    >
-                      Mountain Night Vectors by Vecteezy
-                    </a>
-                  </li>
-                </ul>
+                <a
+                  href="/attributions"
+                  className="hover:text-primary transition-colors text-center block"
+                  aria-label="View resource attributions"
+                >
+                  View Resource Attributions
+                </a>
               </div>
             </nav>
           </div>
