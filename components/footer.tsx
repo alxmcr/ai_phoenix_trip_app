@@ -7,44 +7,17 @@ export default function Footer() {
             <div className="text-sm text-muted-foreground">
               © 2025 Phoenix Trip. All rights reserved.
             </div>
-            <div className="text-xs text-muted-foreground">
-              <p className="text-center">Attributions:</p>
-              <ul>
-                <li>
-                  <a
-                    href="https://www.vecteezy.com/free-vector/travel"
-                    className="hover:text-primary transition-colors text-center"
-                  >
-                    Travel Vectors by Vecteezy
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.vecteezy.com/free-vector/background">
-                    Background Vectors by Vecteezy
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.vecteezy.com/free-vector/hawaii">
-                    Hawaii Vectors by Vecteezy
-                  </a>
-                </li>
-                <li>
-                  <a href="https://worldvectorlogo.com/">
-                    Logos by Worldvectorlogo
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.vecteezy.com/free-vector/sunset">
-                    Sunset Vectors by Vecteezy
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.vecteezy.com/free-vector/mountain-night">
-                    Mountain Night Vectors by Vecteezy
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <nav aria-label="Resource attributions">
+              <div className="text-xs text-muted-foreground">
+                <a
+                  href="/attributions"
+                  className="hover:text-primary transition-colors text-center block"
+                  aria-label="View resource attributions"
+                >
+                  View Resource Attributions
+                </a>
+              </div>
+            </nav>
           </div>
         </div>
       </div>

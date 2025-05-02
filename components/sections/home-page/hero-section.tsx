@@ -15,10 +15,10 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="py-20 md:py-28 px-4 md:px-0 container">
+    <section className="py-20 md:py-28 px-4 md:px-0 container" aria-labelledby="hero-heading">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className="flex flex-col gap-6">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+          <h1 id="hero-heading" className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
             Unlock insights from passenger trip experiences with AI
           </h1>
           <p className="text-lg text-muted-foreground">
@@ -29,11 +29,11 @@ export default function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 mt-2">
             <Button asChild size="lg" className="gap-2">
               <Link href="#form">
-                Share your review <ArrowRight className="h-4 w-4" />
+                Share your travel experience <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/dashboard">View dashboard</Link>
+              <Link href="/dashboard">View analytics dashboard</Link>
             </Button>
           </div>
         </div>
@@ -41,7 +41,7 @@ export default function HeroSection() {
           <div className="relative w-full h-full transition-opacity duration-500">
             <Image
               src="/illustrations/home-page/daylight.jpg"
-              alt="AI analyzing trip data"
+              alt="Illustration showing AI analyzing passenger trip data during daylight"
               fill
               className={`object-cover transition-opacity duration-500 ${
                 mounted && resolvedTheme === "dark" ? "opacity-0" : "opacity-100"
@@ -50,7 +50,7 @@ export default function HeroSection() {
             />
             <Image
               src="/illustrations/home-page/night.jpg"
-              alt="AI analyzing trip data"
+              alt="Illustration showing AI analyzing passenger trip data during night time"
               fill
               className={`object-cover transition-opacity duration-500 ${
                 mounted && resolvedTheme === "dark" ? "opacity-100" : "opacity-0"

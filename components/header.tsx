@@ -17,8 +17,12 @@ export default function Header() {
     <header className="flex flex-col items-center md:flex-row md:justify-center sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-0">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center space-x-2">
-            <Logo32x32PhoenixTrip />
+          <Link
+            href="/"
+            className="flex items-center space-x-2"
+            aria-label="Phoenix Trip - Home"
+          >
+            <Logo32x32PhoenixTrip aria-hidden="true" />
             <span className="px-2 text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-400 text-transparent bg-clip-text">
               Phoenix Trip
             </span>
@@ -26,7 +30,11 @@ export default function Header() {
         </div>
 
         <div className="hidden md:flex items-center gap-6">
-          <nav className="flex items-center gap-6">
+          <nav
+            role="navigation"
+            aria-label="Main navigation"
+            className="flex items-center gap-6"
+          >
             <Link
               href="/dashboard"
               className="text-sm font-medium transition-colors hover:text-primary"
@@ -53,7 +61,9 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <ModeToggle />
             <Button asChild>
-              <Link href="/">Share Experience</Link>
+              <Link href="/" aria-label="Share your travel experience">
+                Share Experience
+              </Link>
             </Button>
           </div>
         </div>
@@ -64,19 +74,31 @@ export default function Header() {
             variant="ghost"
             size="icon"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
           >
             {isMenuOpen ? (
-              <X className="h-5 w-5" />
+              <X className="h-5 w-5" aria-hidden="true" />
             ) : (
-              <Menu className="h-5 w-5" />
+              <Menu className="h-5 w-5" aria-hidden="true" />
             )}
           </Button>
         </div>
       </div>
 
       {isMenuOpen && (
-        <div className="md:hidden container py-4 pb-6 px-2 md:px-0">
-          <nav className="flex flex-col gap-4">
+        <div
+          id="mobile-menu"
+          role="dialog"
+          aria-label="Mobile navigation menu"
+          className="md:hidden container py-4 pb-6 px-2 md:px-0"
+        >
+          <nav
+            role="navigation"
+            aria-label="Mobile navigation"
+            className="flex flex-col gap-4"
+          >
             {isLandingPage && (
               <>
                 <Link
