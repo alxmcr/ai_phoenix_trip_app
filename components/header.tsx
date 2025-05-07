@@ -99,6 +99,12 @@ export default function Header() {
             aria-label="Mobile navigation"
             className="flex flex-col gap-4"
           >
+            <Link
+              href="/dashboard"
+              className="text-sm font-medium transition-colors hover:text-primary"
+            >
+              Dashboard
+            </Link>
             {isLandingPage && (
               <>
                 <Link
