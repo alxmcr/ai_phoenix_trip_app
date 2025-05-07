@@ -43,11 +43,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "logos/16x16/logo-phoenix-trip-ai-16x16.svg", sizes: "16x16", type: "image/svg+xml" },
-      { url: "logos/32x32/logo-phoenix-trip-ai-32x32.svg", sizes: "32x32", type: "image/svg+xml" },
+      { url: "/logos/16x16/logo-phoenix-trip-ai-16x16.svg", sizes: "16x16", type: "image/svg+xml" },
+      { url: "/logos/32x32/logo-phoenix-trip-ai-32x32.svg", sizes: "32x32", type: "image/svg+xml" },
     ],
     apple: [
-      { url: "logos/32x32/logo-phoenix-trip-ai-32x32.svg", sizes: "32x32", type: "image/svg+xml" },
+      { url: "/logos/32x32/logo-phoenix-trip-ai-32x32.svg", sizes: "32x32", type: "image/svg+xml" },
     ],
   },
   openGraph: {
