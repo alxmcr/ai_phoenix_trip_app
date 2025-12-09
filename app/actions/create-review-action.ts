@@ -9,39 +9,17 @@ import { formatReviewForAnalysis } from "@/utils/prisma/helper-prisma";
 import { z } from "zod";
 
 const schema = z.object({
-  rating: z.number({
-    invalid_type_error: "Invalid Rating",
-  }),
-  start_date: z.date({
-    invalid_type_error: "Invalid Start Date",
-  }),
-  end_date: z.date({
-    invalid_type_error: "Invalid End Date",
-  }),
-  destination: z.string({
-    invalid_type_error: "Invalid Destination",
-  }),
-  company_name: z.string({
-    invalid_type_error: "Invalid Company Name",
-  }),
-  origin: z.string({
-    invalid_type_error: "Invalid Origin",
-  }),
-  trip_type: z.string({
-    invalid_type_error: "Invalid Trip Type",
-  }),
-  description: z.string({
-    invalid_type_error: "Invalid Description",
-  }),
-  transport_mode: z.string({
-    invalid_type_error: "Invalid Transport Mode",
-  }),
-  email: z.string({
-    invalid_type_error: "Invalid Email",
-  }),
-  age_group: z.string({
-    invalid_type_error: "Invalid Age Group",
-  }),
+  rating: z.number().min(1).max(5),
+  start_date: z.date(),
+  end_date: z.date(),
+  destination: z.string().min(1, "Destination is required"),
+  company_name: z.string().min(1, "Company name is required"),
+  origin: z.string().min(1, "Origin is required"),
+  trip_type: z.string().min(1, "Trip type is required"),
+  description: z.string().min(1, "Description is required"),
+  transport_mode: z.string().min(1, "Transport mode is required"),
+  email: z.string().email("Invalid email format"),
+  age_group: z.string().min(1, "Age group is required"),
 });
 
 export async function createReviewAction(
